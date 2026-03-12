@@ -16,6 +16,9 @@ export const translations = {
     resultPlaceholder: "Das Ergebnis erscheint hier.",
     tabs: {
       generator: "✨ Live Generator",
+      studio: "📂 Mein Studio",
+      flows: "⚡ Automatisierung",
+      marketplace: "💰 Marktplatz",
       extractor: "🔄 Prompt Extractor",
       mixer: "🎛️ Prompt Mixer",
       compare: "⚖️ Modell-Vergleich",
@@ -53,6 +56,9 @@ export const translations = {
     resultPlaceholder: "The result will appear here.",
     tabs: {
       generator: "✨ Live Generator",
+      studio: "📂 My Studio",
+      flows: "⚡ Automations",
+      marketplace: "💰 Marketplace",
       extractor: "🔄 Prompt Extractor",
       mixer: "🎛️ Prompt Mixer",
       compare: "⚖️ Model Compare",
@@ -90,6 +96,9 @@ export const translations = {
     resultPlaceholder: ".ستظهر النتيجة هنا",
     tabs: {
       generator: "✨ المولد المباشر",
+      studio: "📂 الاستوديو الخاص بي",
+      flows: "⚡ الأتمتة",
+      marketplace: "💰 السوق",
       extractor: "🔄 مستخرج التلقين",
       mixer: "🎛️ خلاط التلقينات",
       compare: "⚖️ مقارنة النماذج",
