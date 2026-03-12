@@ -1,0 +1,4 @@
+// Wir fügen die Supabase Auth Logik in den Login-Tab der App.jsx ein
+import { useState, useEffect } from 'react'
+import { supabase } from './supabaseClient'
+// ... (Wir importieren supabase dort und verknüpfen den E-Mail Login)
