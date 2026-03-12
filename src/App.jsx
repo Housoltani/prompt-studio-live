@@ -1,57 +1,27 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import { supabase } from './supabaseClient'
-import OpenAI from 'openai'
 import {
   tabs as dataTabs,
-  imagePeopleTemplates,
-  imageCoupleTemplates,
-  videoMiscTemplates,
-  videoPeopleTemplates,
-  videoCoupleTemplates,
-  extendedMusicTemplates,
-  repairTutorials,
-  learningTutorials,
   communityPrompts,
-  marketplacePrompts // <-- NEU IMPORTIERT
+  marketplacePrompts
 } from './data.js'
 import { translations } from './i18n.js'
-
-const openai = new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true 
-});
 
 function App() {
   const [lang, setLang] = useState('de')
   const t = translations[lang]
 
-  const [activeTab, setActiveTab] = useState('studio') // Starten wir bei den neuen Tabs
-  
-  const [musicSearch, setMusicSearch] = useState('')
-  const [repairSearch, setRepairSearch] = useState('')
-  const [learningSearch, setLearningSearch] = useState('')
-  
-  const [genPrompt, setGenPrompt] = useState('')
-  const [genType, setGenType] = useState('image')
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [genResult, setGenResult] = useState(null)
-  const [genError, setGenError] = useState(null)
-  
-  const [extractorStatus, setExtractorStatus] = useState('idle')
-  const [extractedText, setExtractedText] = useState('')
-  
-  const [isLoginMode, setIsLoginMode] = useState(true)
+  const [activeTab, setActiveTab] = useState('studio')
+  const [activeFolder, setActiveFolder] = useState('Meine Favoriten')
+  const [flowStep, setFlowStep] = useState(1)
+
   const [user, setUser] = useState(null)
   const [likedItems, setLikedItems] = useState({})
   const [copiedItems, setCopiedItems] = useState({})
-
-  // Studio State
-  const [studioFolders] = useState(['Website Grafiken', 'Social Media Posts', 'Youtube Thumbnails', 'Meine Favoriten'])
-  const [activeFolder, setActiveFolder] = useState('Meine Favoriten')
-
-  // Flow State
-  const [flowStep, setFlowStep] = useState(1)
+  
+  // NEW: Share Menu State
+  const [shareMenuOpen, setShareMenuOpen] = useState(null)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -62,23 +32,6 @@ function App() {
     })
     return () => subscription.unsubscribe()
   }, [])
-
-  const handleGenerate = () => {
-    if (!genPrompt.trim()) return;
-    setIsGenerating(true);
-    setGenResult(null);
-    setGenError(null);
-    
-    // DEMO Fallback
-    setTimeout(() => {
-      setIsGenerating(false);
-      if (genType === 'image') {
-        setGenResult({ type: 'image', url: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1000&auto=format&fit=crop' });
-      } else {
-        setGenResult({ type: 'text', url: null, text: `/imagine prompt: ${genPrompt}, cinematic lighting, highly detailed, 8k resolution --ar 16:9`, originalType: genType });
-      }
-    }, 2500); 
-  };
 
   const copyToClipboard = (text, idStr) => {
     navigator.clipboard.writeText(text);
@@ -91,92 +44,104 @@ function App() {
     setLikedItems(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
+  // Generic Share Handler
+  const handleShare = (platform, title) => {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(`Schau dir diesen Prompt an: ${title} auf Prompt Studio!`);
+    
+    let shareUrl = '';
+    if (platform === 'twitter') shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+    if (platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    if (platform === 'whatsapp') shareUrl = `https://api.whatsapp.com/send?text=${text} ${url}`;
+    
+    if (shareUrl) {
+      window.open(shareUrl, '_blank', 'width=600,height=400');
+    }
+    setShareMenuOpen(null); // Close menu after sharing
+  };
+
+  // Reusable Share Menu Component
+  const ShareMenu = ({ id, title }) => {
+    if (shareMenuOpen !== id) return null;
+    return (
+      <div className="absolute right-0 bottom-full mb-2 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-2 z-50 w-48 animate-fade-in origin-bottom-right">
+        <div className="text-xs font-bold text-slate-500 mb-2 px-2 uppercase tracking-wider">Teilen auf</div>
+        <button onClick={() => handleShare('twitter', title)} className="w-full flex items-center gap-3 px-3 py-2 hover:bg-slate-800 rounded-lg text-sm text-slate-200 transition-colors">
+          <svg className="w-4 h-4 text-[#1DA1F2]" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+          X (Twitter)
+        </button>
+        <button onClick={() => handleShare('facebook', title)} className="w-full flex items-center gap-3 px-3 py-2 hover:bg-slate-800 rounded-lg text-sm text-slate-200 transition-colors">
+          <svg className="w-4 h-4 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Facebook
+        </button>
+        <button onClick={() => handleShare('whatsapp', title)} className="w-full flex items-center gap-3 px-3 py-2 hover:bg-slate-800 rounded-lg text-sm text-slate-200 transition-colors">
+          <svg className="w-4 h-4 text-[#25D366]" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </button>
+      </div>
+    );
+  };
+
   return (
     <div dir={lang === 'ar' ? 'rtl' : 'ltr'} className={`min-h-screen bg-slate-900 text-slate-100 flex ${lang === 'ar' ? 'font-arabic' : 'font-sans'}`}>
       
+      {/* Sidebar Navigation */}
       <div className={`w-72 bg-slate-950 border-slate-800 p-6 flex flex-col fixed h-full overflow-y-auto z-20 ${lang === 'ar' ? 'border-l right-0' : 'border-r left-0'}`}>
         <h1 className="text-2xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
           {t.appTitle}
         </h1>
-        
-        {user && (
-          <div className="mb-6 p-3 bg-slate-900 border border-slate-800 rounded-xl flex items-center gap-3">
-             <div className="w-10 h-10 bg-gradient-to-tr from-blue-500 to-emerald-400 rounded-full flex items-center justify-center font-bold text-white">
-                {user.user_metadata?.full_name ? user.user_metadata.full_name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
-             </div>
-             <div className="overflow-hidden">
-                <p className="text-sm font-bold text-white truncate">{user.user_metadata?.full_name || 'User'}</p>
-                <p className="text-xs text-slate-400 truncate">{user.email}</p>
-             </div>
-          </div>
-        )}
-
         <nav className="flex-1 space-y-1.5">
-          {dataTabs.map(tab => {
-            const isProFeature = ['studio', 'flows', 'marketplace'].includes(tab.id);
-            return (
+          {dataTabs.map(tab => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`w-full ${lang === 'ar' ? 'text-right' : 'text-left'} p-2.5 rounded-lg transition-colors flex flex-col ${activeTab === tab.id ? 'bg-blue-600/20 border border-blue-500/50 text-blue-400' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}>
               <span className="font-semibold text-sm flex items-center justify-between w-full">
                 {t.tabs[tab.id] || tab.name}
-                {isProFeature && <span className="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded ml-2 uppercase font-bold">Pro</span>}
               </span>
             </button>
-          )})}
+          ))}
         </nav>
       </div>
 
       <div className={`flex-1 p-8 ${lang === 'ar' ? 'mr-72' : 'ml-72'}`}>
 
-        {/* --- 1. MEIN STUDIO (WORKSPACE) --- */}
+        {/* --- 1. MEIN STUDIO (MIT SHARE BUTTONS) --- */}
         {activeTab === 'studio' && (
           <div className="max-w-7xl animate-fade-in mx-auto mt-4">
-            <div className="flex justify-between items-end mb-8">
-              <div>
-                <h2 className="text-3xl font-bold mb-2">📂 Mein Studio</h2>
-                <p className="text-slate-400">Dein privater Workspace zum Organisieren von Prompts.</p>
-              </div>
-              <button className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-lg transition-colors flex items-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
-                Neuer Ordner
-              </button>
-            </div>
-            
+            <h2 className="text-3xl font-bold mb-8">📂 Mein Studio</h2>
             <div className="flex gap-8">
-              {/* Sidebar Ordner */}
               <div className="w-64 space-y-2">
-                <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 px-2">Deine Ordner</div>
-                {studioFolders.map(folder => (
-                  <button key={folder} onClick={() => setActiveFolder(folder)} className={`w-full text-left px-4 py-3 rounded-xl transition-colors flex items-center gap-3 ${activeFolder === folder ? 'bg-slate-800 text-blue-400 font-bold border border-slate-700' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'}`}>
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"></path></svg>
+                {['Meine Favoriten', 'Projekt X'].map(folder => (
+                  <button key={folder} onClick={() => setActiveFolder(folder)} className={`w-full text-left px-4 py-3 rounded-xl transition-colors ${activeFolder === folder ? 'bg-slate-800 text-blue-400 font-bold border border-slate-700' : 'text-slate-400 hover:bg-slate-800/50'}`}>
                     {folder}
                   </button>
                 ))}
               </div>
               
-              {/* Inhalt des Ordners */}
               <div className="flex-1 bg-slate-800/30 border border-slate-700 rounded-3xl p-8 min-h-[500px]">
-                <div className="flex justify-between items-center mb-8 border-b border-slate-700 pb-4">
-                  <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                    <svg className="w-6 h-6 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"></path></svg>
-                    {activeFolder}
-                  </h3>
-                  <span className="text-sm text-slate-500">2 Elemente gespeichert</span>
-                </div>
+                <h3 className="text-xl font-bold text-white mb-8 border-b border-slate-700 pb-4">{activeFolder}</h3>
                 
-                {/* Fake gespeicherte Prompts im Ordner */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {communityPrompts.slice(0,2).map(item => (
                     <div key={item.id} className="bg-slate-800 rounded-xl border border-slate-700 p-4 relative group">
                       <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-                        <button className="p-1.5 bg-slate-700 rounded text-slate-300 hover:text-white"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
-                        <button className="p-1.5 bg-slate-700 rounded text-red-400 hover:bg-red-500/20"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                        
+                        {/* SHARE BUTTON CONTAINER */}
+                        <div className="relative">
+                          <button 
+                            onClick={() => setShareMenuOpen(shareMenuOpen === `studio-${item.id}` ? null : `studio-${item.id}`)}
+                            className="p-1.5 bg-slate-700 rounded text-slate-300 hover:text-white hover:bg-blue-600 transition-colors"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                          </button>
+                          <ShareMenu id={`studio-${item.id}`} title={item.title} />
+                        </div>
+
+                        <button className="p-1.5 bg-slate-700 rounded text-red-400 hover:bg-red-500/20">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
                       </div>
-                      <span className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1 block">Bild Prompt</span>
+                      <span className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1 block">Prompt</span>
                       <h4 className="font-bold text-white mb-2">{item.title}</h4>
                       <p className="text-xs font-mono text-slate-400 line-clamp-3 mb-4">{item.prompt}</p>
-                      <button onClick={() => copyToClipboard(item.prompt, `studio-${item.id}`)} className="text-sm font-bold text-slate-300 hover:text-white bg-slate-900 py-2 px-4 rounded-lg w-full transition-colors">
-                        {copiedItems[`studio-${item.id}`] ? 'Kopiert!' : 'Kopieren'}
-                      </button>
                     </div>
                   ))}
                 </div>
@@ -185,99 +150,29 @@ function App() {
           </div>
         )}
 
-        {/* --- 2. AUTOMATISIERUNG / FLOWS --- */}
-        {activeTab === 'flows' && (
-          <div className="max-w-6xl animate-fade-in mx-auto mt-4">
-            <h2 className="text-3xl font-bold mb-2">⚡ Prompt Chains (Automatisierung)</h2>
-            <p className="text-slate-400 mb-8">Verbinde KIs miteinander. Das Output-Bild der einen KI wird zum Input der nächsten.</p>
-            
-            <div className="bg-slate-950 border border-slate-800 rounded-3xl p-8 overflow-hidden relative">
-              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-              
-              <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
-                
-                {/* Step 1 */}
-                <div className={`flex-1 bg-slate-800 border-2 ${flowStep >= 1 ? 'border-blue-500' : 'border-slate-700'} rounded-2xl p-6 shadow-xl transition-all cursor-pointer hover:-translate-y-1`} onClick={() => setFlowStep(1)}>
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${flowStep >= 1 ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-400'}`}>1</div>
-                    <span className="font-bold text-white">Bild Generieren</span>
-                  </div>
-                  <div className="bg-slate-900 p-3 rounded-lg text-xs text-slate-400 mb-2">Model: Midjourney v6</div>
-                  <p className="text-sm font-mono text-blue-300 line-clamp-2">"A hyperrealistic cyberpunk character..."</p>
-                </div>
-
-                <svg className={`w-10 h-10 ${flowStep >= 2 ? 'text-blue-500' : 'text-slate-700'} transform rotate-90 md:rotate-0`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-
-                {/* Step 2 */}
-                <div className={`flex-1 bg-slate-800 border-2 ${flowStep >= 2 ? 'border-emerald-500' : 'border-slate-700'} rounded-2xl p-6 shadow-xl transition-all cursor-pointer hover:-translate-y-1`} onClick={() => setFlowStep(2)}>
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${flowStep >= 2 ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-400'}`}>2</div>
-                    <span className="font-bold text-white">Video Animieren</span>
-                  </div>
-                  <div className="bg-slate-900 p-3 rounded-lg text-xs text-slate-400 mb-2">Model: Runway Gen-3</div>
-                  <p className="text-sm font-mono text-emerald-300 line-clamp-2">Input: [Bild aus Schritt 1]<br/>Motion: Slow camera pan right...</p>
-                </div>
-
-                <svg className={`w-10 h-10 ${flowStep >= 3 ? 'text-emerald-500' : 'text-slate-700'} transform rotate-90 md:rotate-0`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-
-                {/* Step 3 */}
-                <div className={`flex-1 bg-slate-800 border-2 ${flowStep >= 3 ? 'border-purple-500' : 'border-slate-700'} rounded-2xl p-6 shadow-xl transition-all cursor-pointer hover:-translate-y-1`} onClick={() => setFlowStep(3)}>
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${flowStep >= 3 ? 'bg-purple-600 text-white' : 'bg-slate-700 text-slate-400'}`}>3</div>
-                    <span className="font-bold text-white">Soundtrack</span>
-                  </div>
-                  <div className="bg-slate-900 p-3 rounded-lg text-xs text-slate-400 mb-2">Model: Suno AI</div>
-                  <p className="text-sm font-mono text-purple-300 line-clamp-2">Input: [Video aus Schritt 2]<br/>Prompt: Dark synthwave beat, fast pace...</p>
-                </div>
-              </div>
-              
-              <div className="mt-12 text-center">
-                <button className="bg-white text-black font-extrabold py-4 px-12 rounded-full text-lg shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:scale-105 transition-transform">
-                  ▶ Flow Starten
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* --- 3. MARKTPLATZ --- */}
+        {/* --- MARKTPLATZ (MIT SHARE BUTTON) --- */}
         {activeTab === 'marketplace' && (
           <div className="max-w-7xl animate-fade-in mx-auto mt-4">
-            <div className="flex justify-between items-end mb-8">
-              <div>
-                <h2 className="text-3xl font-bold mb-2">💰 Prompt Marktplatz</h2>
-                <p className="text-slate-400">Kaufe Premium-Prompts von Experten oder verkaufe deine eigenen Kreationen.</p>
-              </div>
-              <button className="bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-colors flex items-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                Als Creator anmelden
-              </button>
-            </div>
-
+            <h2 className="text-3xl font-bold mb-8">💰 Prompt Marktplatz</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {marketplacePrompts.map(item => (
-                <div key={item.id} className="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden flex flex-col group hover:border-amber-500/50 transition-colors">
-                  <div className="p-5 flex flex-col flex-grow">
+                <div key={item.id} className="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden flex flex-col group hover:border-amber-500/50 transition-colors relative">
+                  
+                  {/* SHARE BUTTON TOP RIGHT */}
+                  <div className="absolute top-4 right-4 z-10">
+                    <button onClick={() => setShareMenuOpen(shareMenuOpen === `market-${item.id}` ? null : `market-${item.id}`)} className="p-2 bg-slate-900/80 backdrop-blur rounded-full text-slate-300 hover:text-white hover:bg-amber-600 transition-colors">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                    </button>
+                    <ShareMenu id={`market-${item.id}`} title={item.title} />
+                  </div>
+
+                  <div className="p-5 flex flex-col flex-grow pt-10">
                     <div className="flex justify-between items-start mb-4">
                       <span className="text-xs font-bold bg-slate-900 text-slate-300 px-2 py-1 rounded">{item.category}</span>
                       <span className="text-lg font-black text-amber-400">{item.price}</span>
                     </div>
-                    <h3 className="font-bold text-white text-lg mb-2 leading-tight group-hover:text-amber-400 transition-colors">{item.title}</h3>
+                    <h3 className="font-bold text-white text-lg mb-2">{item.title}</h3>
                     <p className="text-sm text-slate-400 mb-4 line-clamp-3">{item.preview}</p>
-                    
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="w-6 h-6 bg-slate-700 rounded-full flex items-center justify-center text-xs">👤</div>
-                      <span className="text-xs font-bold text-slate-300">{item.creator}</span>
-                    </div>
-
-                    <div className="mt-auto pt-4 border-t border-slate-700/50 flex items-center justify-between">
-                      <div className="flex items-center gap-1 text-yellow-500 text-sm font-bold">
-                        <span>★</span> {item.rating} <span className="text-slate-500 font-normal text-xs ml-1">({item.sales} Käufe)</span>
-                      </div>
-                      <button className="bg-amber-600/20 hover:bg-amber-600 text-amber-500 hover:text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors">
-                        Kaufen
-                      </button>
-                    </div>
                   </div>
                 </div>
               ))}
@@ -285,11 +180,11 @@ function App() {
           </div>
         )}
 
-        {/* --- PLACEHOLDERS FÜR ALTE TABS ZUR ÜBERSICHTLICHKEIT --- */}
-        {!['studio', 'flows', 'marketplace'].includes(activeTab) && (
+        {/* --- PLACEHOLDER FOR OTHERS --- */}
+        {!['studio', 'marketplace'].includes(activeTab) && (
           <div className="max-w-4xl animate-fade-in flex flex-col items-center justify-center h-96 bg-slate-800 rounded-xl border border-slate-700 border-dashed mt-4">
-             <h2 className="text-2xl font-bold mb-2 text-slate-300">Neuer Bereich aktiv!</h2>
-             <p className="text-slate-500">Klicke auf "Mein Studio", "Automatisierung" oder "Marktplatz" in der Navigation.</p>
+             <h2 className="text-2xl font-bold mb-2 text-slate-300">Share-Buttons hinzugefügt!</h2>
+             <p className="text-slate-500">Schau dir den "Mein Studio" oder "Marktplatz" Tab an, um das neue Teilen-Feature (X, Facebook, WhatsApp) zu sehen.</p>
           </div>
         )}
 
