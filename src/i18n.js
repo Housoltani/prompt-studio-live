@@ -1,0 +1,101 @@
+export const translations = {
+  de: {
+    appTitle: "Prompt Studio",
+    searchPlaceholder: "Suche nach Themen...",
+    copyBtn: "Kopieren",
+    copiedBtn: "Kopiert!",
+    generateBtn: "🚀 Jetzt Generieren",
+    generatingBtn: "Generiert...",
+    generatorTitle: "✨ Live Generator",
+    generatorDesc: "Tippe einen Prompt ein und generiere Bild, Video oder Musik direkt im Browser.",
+    whatToCreate: "Was möchtest du erschaffen?",
+    promptPlaceholder: "Beschreibe deine Idee im Detail...",
+    btnImage: "🖼️ Bild",
+    btnVideo: "🎥 Video",
+    btnMusic: "🎵 Musik",
+    resultPlaceholder: "Das Ergebnis erscheint hier.",
+    tabs: {
+      generator: "✨ Live Generator",
+      images: "🖼️ KI Bilder",
+      videos: "🎥 KI Videos",
+      music: "🎵 KI Musik",
+      learning: "🎓 KI für Anfänger",
+      repair: "🛠️ Tech Repair",
+      feedback: "💬 Feedback",
+      auth: "🔐 Login / Profil"
+    },
+    sections: {
+      images: "Die besten Vorlagen für Porträts, Charakter-Design und romantische Szenen.",
+      videos: "Meistere die Bewegung für Sora, Runway Gen-3 oder Pika.",
+      music: "Hit-Garantie: Die perfekten Prompts für Suno AI und Udio.",
+      learning: "Dein Start in die KI-Welt. Tutorials und Strategien.",
+      repair: "Video-Tutorials & Anleitungen, um deine Geräte selbst zu reparieren."
+    }
+  },
+  en: {
+    appTitle: "Prompt Studio",
+    searchPlaceholder: "Search for topics...",
+    copyBtn: "Copy",
+    copiedBtn: "Copied!",
+    generateBtn: "🚀 Generate Now",
+    generatingBtn: "Generating...",
+    generatorTitle: "✨ Live Generator",
+    generatorDesc: "Type a prompt and generate images, videos, or music directly in your browser.",
+    whatToCreate: "What do you want to create?",
+    promptPlaceholder: "Describe your idea in detail...",
+    btnImage: "🖼️ Image",
+    btnVideo: "🎥 Video",
+    btnMusic: "🎵 Music",
+    resultPlaceholder: "The result will appear here.",
+    tabs: {
+      generator: "✨ Live Generator",
+      images: "🖼️ AI Images",
+      videos: "🎥 AI Videos",
+      music: "🎵 AI Music",
+      learning: "🎓 AI for Beginners",
+      repair: "🛠️ Tech Repair",
+      feedback: "💬 Feedback",
+      auth: "🔐 Login / Profile"
+    },
+    sections: {
+      images: "The best templates for portraits, character design, and romantic scenes.",
+      videos: "Master motion for Sora, Runway Gen-3, or Pika.",
+      music: "Guaranteed hits: The perfect prompts for Suno AI and Udio.",
+      learning: "Your start in the AI world. Tutorials and strategies.",
+      repair: "Video tutorials & guides to repair your devices yourself."
+    }
+  },
+  ar: {
+    appTitle: "استوديو التلقين",
+    searchPlaceholder: "...ابحث عن المواضيع",
+    copyBtn: "نسخ",
+    copiedBtn: "تم النسخ!",
+    generateBtn: "🚀 توليد الآن",
+    generatingBtn: "...جاري التوليد",
+    generatorTitle: "✨ المولد المباشر",
+    generatorDesc: ".اكتب تلقينًا وقم بتوليد الصور أو مقاطع الفيديو أو الموسيقى مباشرة في متصفحك",
+    whatToCreate: "ماذا تريد أن تصنع؟",
+    promptPlaceholder: "...صف فكرتك بالتفصيل",
+    btnImage: "🖼️ صورة",
+    btnVideo: "🎥 فيديو",
+    btnMusic: "🎵 موسيقى",
+    resultPlaceholder: ".ستظهر النتيجة هنا",
+    tabs: {
+      generator: "✨ المولد المباشر",
+      images: "🖼️ صور الذكاء الاصطناعي",
+      videos: "🎥 فيديو الذكاء الاصطناعي",
+      music: "🎵 موسيقى الذكاء الاصطناعي",
+      learning: "🎓 الذكاء الاصطناعي للمبتدئين",
+      repair: "🛠️ إصلاح التكنولوجيا",
+      feedback: "💬 ملاحظات",
+      auth: "🔐 تسجيل الدخول / الملف الشخصي"
+    },
+    sections: {
+      images: ".أفضل القوالب للصور الشخصية وتصميم الشخصيات والمشاهد الرومانسية",
+      videos: ".Pika أو Runway Gen-3 أو Sora إتقان الحركة لـ",
+      music: ".Udio و Suno AI نجاح مضمون: التلقينات المثالية لـ",
+      learning: ".بدايتك في عالم الذكاء الاصطناعي. دروس واستراتيجيات",
+      repair: ".دروس فيديو وأدلة لإصلاح أجهزتك بنفسك"
+    }
+  }
+};
