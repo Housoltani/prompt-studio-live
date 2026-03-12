@@ -8,20 +8,34 @@ import {
   videoPeopleTemplates,
   videoCoupleTemplates,
   extendedMusicTemplates,
-  repairTutorials
+  repairTutorials,
+  learningTutorials
 } from './data.js'
 
 function App() {
-  const [activeTab, setActiveTab] = useState('images')
+  const [activeTab, setActiveTab] = useState('generator')
   
+  // Search States
   const [musicSearch, setMusicSearch] = useState('')
   const [repairSearch, setRepairSearch] = useState('')
+  const [learningSearch, setLearningSearch] = useState('')
+  
+  // Generator States
   const [genPrompt, setGenPrompt] = useState('')
   const [genType, setGenType] = useState('image')
   const [isGenerating, setIsGenerating] = useState(false)
   const [genResult, setGenResult] = useState(null)
 
-  // State für "Geliked" Buttons über alle Kategorien hinweg
+  // Auth States
+  const [isLoginMode, setIsLoginMode] = useState(true)
+
+  // Feedback States
+  const [feedbackSubject, setFeedbackSubject] = useState('Idee')
+  const [feedbackMessage, setFeedbackMessage] = useState('')
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false)
+  const [feedbackSuccess, setFeedbackSuccess] = useState(false)
+
+  // Global Likes State
   const [likedItems, setLikedItems] = useState({})
 
   const copyToClipboard = (text) => {
@@ -48,9 +62,19 @@ function App() {
     }, 3000);
   };
 
-  // --- REUSABLE COMPONENT FÜR BILDER & VIDEOS ---
-  // Da Bilder und Videos das gleiche Layout haben, bauen wir einen "PromptCard" Helfer,
-  // um den Code übersichtlich und klein zu halten.
+  const handleFeedbackSubmit = (e) => {
+    e.preventDefault();
+    if (!feedbackMessage.trim()) return;
+    setIsSubmittingFeedback(true);
+    setTimeout(() => {
+      setIsSubmittingFeedback(false);
+      setFeedbackSuccess(true);
+      setFeedbackMessage('');
+      setTimeout(() => setFeedbackSuccess(false), 3000);
+    }, 1500);
+  };
+
+  // Reusable Prompt Card (Images & Videos)
   const PromptCard = ({ item, type, hoverColorClass }) => {
     const isLiked = likedItems[`${type}-${item.id}`];
     return (
@@ -62,20 +86,14 @@ function App() {
           <div className="bg-slate-900 p-3 rounded text-xs font-mono text-slate-400 mb-4 flex-grow line-clamp-3 group-hover:line-clamp-none transition-all border border-slate-700">
             {item.prompt}
           </div>
-          
-          {/* Interaktions-Leiste: Like, View & Copy */}
           <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-700/50">
             <div className="flex items-center gap-4 text-slate-400">
-              <button 
-                onClick={() => toggleLike(type, item.id)}
-                className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${isLiked ? 'text-red-500' : 'hover:text-red-400'}`}
-              >
+              <button onClick={() => toggleLike(type, item.id)} className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${isLiked ? 'text-red-500' : 'hover:text-red-400'}`}>
                 <svg className="w-5 h-5" fill={isLiked ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                 <span>{isLiked ? (item.likes + 1).toLocaleString() : item.likes.toLocaleString()}</span>
               </button>
-              
               <div className="flex items-center gap-1.5 text-sm font-medium">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 <span>{item.views}</span>
               </div>
             </div>
@@ -149,22 +167,16 @@ function App() {
           <div className="max-w-7xl animate-fade-in">
             <h2 className="text-3xl font-bold mb-2">🖼️ KI Bild-Prompts</h2>
             <p className="text-slate-400 mb-12">Die besten Vorlagen für Porträts, Charakter-Design und romantische Szenen.</p>
-            
             <div className="mb-16">
               <h3 className="text-2xl font-bold mb-6 flex items-center gap-2"><span>👤</span> Menschen & Porträts</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {imagePeopleTemplates.map(template => (
-                  <PromptCard key={template.id} item={template} type="imgPeople" hoverColorClass="blue" />
-                ))}
+                {imagePeopleTemplates.map(template => <PromptCard key={template.id} item={template} type="imgPeople" hoverColorClass="blue" />)}
               </div>
             </div>
-
             <div className="mb-12">
               <h3 className="text-2xl font-bold mb-6 flex items-center gap-2"><span>❤️</span> Paare & Romantik</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {imageCoupleTemplates.map(template => (
-                  <PromptCard key={template.id} item={template} type="imgCouple" hoverColorClass="red" />
-                ))}
+                {imageCoupleTemplates.map(template => <PromptCard key={template.id} item={template} type="imgCouple" hoverColorClass="red" />)}
               </div>
             </div>
           </div>
@@ -175,31 +187,22 @@ function App() {
           <div className="max-w-7xl animate-fade-in">
             <h2 className="text-3xl font-bold mb-2">🎥 KI Video-Prompts</h2>
             <p className="text-slate-400 mb-12">Meistere die Bewegung für Sora, Runway Gen-3 oder Pika.</p>
-            
             <div className="mb-16">
               <h3 className="text-2xl font-bold mb-6 flex items-center gap-2"><span>🌍</span> Landschaften, Action & Makro</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {videoMiscTemplates.map(template => (
-                  <PromptCard key={template.id} item={template} type="vidMisc" hoverColorClass="orange" />
-                ))}
+                {videoMiscTemplates.map(template => <PromptCard key={template.id} item={template} type="vidMisc" hoverColorClass="orange" />)}
               </div>
             </div>
-
             <div className="mb-16">
               <h3 className="text-2xl font-bold mb-6 flex items-center gap-2"><span>👤</span> Menschen in Bewegung</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {videoPeopleTemplates.map(template => (
-                  <PromptCard key={template.id} item={template} type="vidPeople" hoverColorClass="blue" />
-                ))}
+                {videoPeopleTemplates.map(template => <PromptCard key={template.id} item={template} type="vidPeople" hoverColorClass="blue" />)}
               </div>
             </div>
-
             <div className="mb-12">
               <h3 className="text-2xl font-bold mb-6 flex items-center gap-2"><span>❤️</span> Paare & Romantik</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {videoCoupleTemplates.map(template => (
-                  <PromptCard key={template.id} item={template} type="vidCouple" hoverColorClass="red" />
-                ))}
+                {videoCoupleTemplates.map(template => <PromptCard key={template.id} item={template} type="vidCouple" hoverColorClass="red" />)}
               </div>
             </div>
           </div>
@@ -210,19 +213,11 @@ function App() {
           <div className="max-w-6xl animate-fade-in">
             <h2 className="text-3xl font-bold mb-2">🎵 KI Musik & Audio</h2>
             <p className="text-slate-400 mb-8">Hit-Garantie: Die perfekten Prompts für Suno AI und Udio.</p>
-            
             <div className="mb-10">
               <div className="relative max-w-2xl">
-                <input 
-                  type="text" 
-                  value={musicSearch}
-                  onChange={(e) => setMusicSearch(e.target.value)}
-                  placeholder="Suche nach Genre oder Stimmung..." 
-                  className="w-full bg-slate-800 border border-slate-600 text-slate-100 text-lg rounded-xl focus:ring-purple-500 block pl-4 p-4 shadow-lg"
-                />
+                <input type="text" value={musicSearch} onChange={(e) => setMusicSearch(e.target.value)} placeholder="Suche nach Genre oder Stimmung..." className="w-full bg-slate-800 border border-slate-600 text-slate-100 text-lg rounded-xl focus:ring-purple-500 block pl-4 p-4 shadow-lg" />
               </div>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
               {extendedMusicTemplates.filter(t => t.title.toLowerCase().includes(musicSearch.toLowerCase()) || t.genre.toLowerCase().includes(musicSearch.toLowerCase())).map((track) => {
                 const isLiked = likedItems[`music-${track.id}`];
@@ -230,14 +225,11 @@ function App() {
                 <div key={track.id} className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden group hover:border-purple-500 transition-colors flex flex-col">
                   <div className={`h-36 w-full bg-gradient-to-br ${track.color} relative flex items-center justify-center`}>
                     <div className="absolute bottom-3 right-3 bg-black/80 text-white text-xs font-bold px-2 py-1 rounded font-mono">{track.time}</div>
-                    <div className="absolute top-3 left-3 bg-white/20 backdrop-blur-md text-white text-xs font-bold px-2 py-1 rounded-full border border-white/30">{track.platform}</div>
+                    <div className="absolute top-3 left-3 bg-white/20 backdrop-blur-md text-white text-xs font-bold px-2 py-1 rounded-full">{track.platform}</div>
                   </div>
-
                   <div className="p-5 flex flex-col flex-grow">
-                    <h3 className="font-bold text-xl text-slate-100 mb-2 leading-tight">{track.title}</h3>
+                    <h3 className="font-bold text-xl text-slate-100 mb-2">{track.title}</h3>
                     <div className="bg-slate-900 p-3 rounded text-xs font-mono text-purple-300 mb-4 flex-grow line-clamp-3">{track.prompt}</div>
-                    
-                    {/* Interaktions-Leiste */}
                     <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-700/50 text-slate-400">
                       <div className="flex items-center gap-4">
                         <button onClick={() => toggleLike('music', track.id)} className={`flex items-center gap-1.5 text-sm font-medium ${isLiked ? 'text-red-500' : 'hover:text-red-400'}`}>
@@ -258,22 +250,61 @@ function App() {
           </div>
         )}
 
+        {/* --- TAB: KI FÜR ANFÄNGER --- */}
+        {activeTab === 'learning' && (
+          <div className="max-w-6xl animate-fade-in">
+            <h2 className="text-3xl font-bold mb-2">🎓 KI für Anfänger</h2>
+            <p className="text-slate-400 mb-8">Dein Start in die KI-Welt. Tutorials und Strategien.</p>
+            <div className="mb-10">
+              <input type="text" value={learningSearch} onChange={(e) => setLearningSearch(e.target.value)} placeholder="Suche nach Themen (z.B. ChatGPT, Midjourney, Business)..." className="w-full bg-slate-800 border border-slate-600 text-slate-100 text-lg rounded-xl focus:ring-emerald-500 block p-4 shadow-lg" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+              {learningTutorials.filter(t => t.title.toLowerCase().includes(learningSearch.toLowerCase()) || t.category.toLowerCase().includes(learningSearch.toLowerCase())).map((tutorial) => {
+                const isLiked = likedItems[`learning-${tutorial.id}`];
+                return (
+                <div key={tutorial.id} className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden group hover:border-emerald-500 transition-colors flex flex-col cursor-pointer">
+                  <div className={`h-48 w-full bg-gradient-to-br ${tutorial.color} relative flex items-center justify-center`}>
+                    <div className="absolute bottom-3 right-3 bg-black/80 text-white text-xs font-bold px-2 py-1 rounded">{tutorial.time}</div>
+                    <div className="absolute top-3 left-3 bg-white/20 backdrop-blur-md text-white text-xs font-bold px-2 py-1 rounded-full">{tutorial.category}</div>
+                  </div>
+                  <div className="p-5 flex flex-col flex-grow">
+                    <h3 className="font-bold text-xl text-slate-100 mb-2">{tutorial.title}</h3>
+                    <p className="text-slate-400 text-sm mb-4 line-clamp-2">{tutorial.description}</p>
+                    <div className="flex items-center gap-2 mb-6">
+                      <span className={`text-xs font-bold px-2 py-1 rounded ${
+                        tutorial.level === 'Anfänger' ? 'bg-green-500/20 text-green-400' :
+                        tutorial.level === 'Mittel' ? 'bg-yellow-500/20 text-yellow-400' :
+                        'bg-red-500/20 text-red-400'
+                      }`}>{tutorial.level}</span>
+                    </div>
+                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-700/50 text-slate-400">
+                      <div className="flex items-center gap-5">
+                        <button onClick={(e) => { e.stopPropagation(); toggleLike('learning', tutorial.id); }} className={`flex items-center gap-1.5 text-sm font-medium ${isLiked ? 'text-red-500' : 'hover:text-red-400'}`}>
+                          <svg className="w-5 h-5" fill={isLiked ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                          <span>{isLiked ? (tutorial.likes + 1).toLocaleString() : tutorial.likes.toLocaleString()}</span>
+                        </button>
+                        <div className="flex items-center gap-1.5 text-sm font-medium">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                          <span>{tutorial.views}</span>
+                        </div>
+                      </div>
+                      <button className="text-emerald-500 font-medium text-sm">Anschauen ➔</button>
+                    </div>
+                  </div>
+                </div>
+              )})}
+            </div>
+          </div>
+        )}
+
         {/* --- TAB: TECH REPAIR --- */}
         {activeTab === 'repair' && (
           <div className="max-w-6xl animate-fade-in">
             <h2 className="text-3xl font-bold mb-2">🛠️ Tech Repair</h2>
-            <p className="text-slate-400 mb-8">Video-Tutorials & Anleitungen.</p>
-            
+            <p className="text-slate-400 mb-8">Video-Tutorials & Anleitungen, um deine Geräte selbst zu reparieren.</p>
             <div className="mb-10">
-              <input 
-                type="text" 
-                value={repairSearch}
-                onChange={(e) => setRepairSearch(e.target.value)}
-                placeholder="Welches Gerät möchtest du reparieren?" 
-                className="w-full bg-slate-800 border border-slate-600 text-slate-100 text-lg rounded-xl focus:ring-blue-500 block p-4 shadow-lg"
-              />
+              <input type="text" value={repairSearch} onChange={(e) => setRepairSearch(e.target.value)} placeholder="Welches Gerät möchtest du reparieren?" className="w-full bg-slate-800 border border-slate-600 text-slate-100 text-lg rounded-xl focus:ring-blue-500 block p-4 shadow-lg" />
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
               {repairTutorials.filter(t => t.title.toLowerCase().includes(repairSearch.toLowerCase()) || t.device.toLowerCase().includes(repairSearch.toLowerCase())).map((tutorial) => {
                 const isLiked = likedItems[`repair-${tutorial.id}`];
@@ -283,11 +314,9 @@ function App() {
                     <div className="absolute bottom-3 right-3 bg-black/80 text-white text-xs font-bold px-2 py-1 rounded">{tutorial.time}</div>
                     <div className="absolute top-3 left-3 bg-white/20 backdrop-blur-md text-white text-xs font-bold px-2 py-1 rounded-full">{tutorial.category}</div>
                   </div>
-                  
                   <div className="p-5 flex flex-col flex-grow">
                     <h3 className="font-bold text-xl text-slate-100 mb-2">{tutorial.title}</h3>
                     <p className="text-slate-400 text-sm mb-4">Gerät: <span className="font-medium text-slate-300">{tutorial.device}</span></p>
-
                     <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-700/50 text-slate-400">
                       <div className="flex items-center gap-4">
                         <button onClick={() => toggleLike('repair', tutorial.id)} className={`flex items-center gap-1.5 text-sm font-medium ${isLiked ? 'text-red-500' : 'hover:text-red-400'}`}>
@@ -308,9 +337,71 @@ function App() {
           </div>
         )}
 
-        {['learning', 'feedback', 'auth'].includes(activeTab) && (
-          <div className="max-w-4xl animate-fade-in flex flex-col items-center justify-center h-96 bg-slate-800 rounded-xl border border-slate-700 border-dashed">
-            <h2 className="text-2xl font-bold mb-2 text-slate-300">🚧 Work in Progress</h2>
+        {/* --- TAB: AUTH / LOGIN --- */}
+        {activeTab === 'auth' && (
+          <div className="max-w-md mx-auto mt-10 animate-fade-in">
+            <div className="bg-slate-800 p-8 rounded-2xl border border-slate-700 shadow-2xl relative overflow-hidden">
+              <div className="text-center mb-8 relative z-10">
+                <h2 className="text-3xl font-bold mb-2 text-white">{isLoginMode ? 'Willkommen zurück' : 'Account erstellen'}</h2>
+                <p className="text-slate-400">Speichere deine Prompts und Likes.</p>
+              </div>
+              <div className="space-y-4 mb-8 relative z-10">
+                <button className="w-full bg-white text-black font-semibold py-3.5 px-4 rounded-xl flex items-center justify-center gap-3">Weiter mit Google</button>
+                <button className="w-full bg-black border border-slate-700 text-white font-semibold py-3.5 px-4 rounded-xl flex items-center justify-center gap-3">Weiter mit Apple</button>
+                <button className="w-full bg-[#1DA1F2] text-white font-semibold py-3.5 px-4 rounded-xl flex items-center justify-center gap-3">Weiter mit X (Twitter)</button>
+              </div>
+              <div className="flex items-center gap-4 mb-8 relative z-10">
+                <div className="h-px bg-slate-700 flex-1"></div>
+                <span className="text-slate-500 text-sm font-medium">oder mit E-Mail</span>
+                <div className="h-px bg-slate-700 flex-1"></div>
+              </div>
+              <form className="space-y-4 relative z-10" onSubmit={(e) => e.preventDefault()}>
+                {!isLoginMode && (
+                  <input type="text" placeholder="Dein Name" className="w-full bg-slate-900/50 border border-slate-600 rounded-xl p-3.5 text-slate-200" />
+                )}
+                <input type="email" placeholder="E-Mail Adresse" className="w-full bg-slate-900/50 border border-slate-600 rounded-xl p-3.5 text-slate-200" />
+                <input type="password" placeholder="Passwort" className="w-full bg-slate-900/50 border border-slate-600 rounded-xl p-3.5 text-slate-200" />
+                <button className="w-full bg-blue-600 text-white font-bold py-4 px-4 rounded-xl mt-4">
+                  {isLoginMode ? 'Sicher einloggen' : 'Account erstellen'}
+                </button>
+              </form>
+              <div className="mt-8 text-center text-slate-400 text-sm relative z-10">
+                <button onClick={() => setIsLoginMode(!isLoginMode)} className="text-blue-400 hover:text-blue-300 font-bold transition-colors">
+                  {isLoginMode ? 'Jetzt registrieren' : 'Hier einloggen'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* --- TAB: FEEDBACK --- */}
+        {activeTab === 'feedback' && (
+          <div className="max-w-2xl mx-auto mt-6 animate-fade-in">
+            <h2 className="text-3xl font-bold mb-2">💬 Dein Feedback</h2>
+            <p className="text-slate-400 mb-8">Hast du eine Idee für eine neue Kategorie? Einen Fehler gefunden? Lass es uns wissen!</p>
+            <div className="bg-slate-800 p-8 rounded-2xl border border-slate-700 shadow-xl relative overflow-hidden">
+              <form onSubmit={handleFeedbackSubmit} className="space-y-6 relative z-10">
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2 ml-1">Um was geht es?</label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {['Idee', 'Fehler', 'Kategorie', 'Sonstiges'].map((topic) => (
+                      <button key={topic} type="button" onClick={() => setFeedbackSubject(topic)} className={`py-2 px-3 rounded-xl text-sm font-medium border ${feedbackSubject === topic ? 'bg-emerald-600 border-emerald-500 text-white' : 'bg-slate-900/50 border-slate-600 text-slate-400 hover:text-slate-200'}`}>
+                        {topic}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <input type="email" placeholder="Deine E-Mail (optional)" className="w-full bg-slate-900/50 border border-slate-600 rounded-xl p-4 text-slate-200" />
+                </div>
+                <div>
+                  <textarea required value={feedbackMessage} onChange={(e) => setFeedbackMessage(e.target.value)} placeholder="Deine Nachricht..." className="w-full bg-slate-900/50 border border-slate-600 rounded-xl p-4 text-slate-200 h-32 resize-none" />
+                </div>
+                <button type="submit" disabled={isSubmittingFeedback || !feedbackMessage.trim()} className="w-full font-bold py-4 px-4 rounded-xl bg-emerald-600 text-white">
+                  {isSubmittingFeedback ? 'Wird gesendet...' : feedbackSuccess ? 'Danke für dein Feedback!' : 'Nachricht senden'}
+                </button>
+              </form>
+            </div>
           </div>
         )}
 
