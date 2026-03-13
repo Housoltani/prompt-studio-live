@@ -25,8 +25,8 @@ export const marketplacePrompts = [
 
 // ... (Rest of data.js remains the same)
 export const communityPrompts = [
-  { id: 101, user: '@PixelNinja', avatar: '🥷', title: 'Neon Samurai', prompt: '/imagine prompt: A cybernetic samurai standing on a neon-lit Tokyo rooftop in the rain, holding a glowing red katana, 8k, unreal engine --ar 16:9', likes: 1420, views: '15k', timeAgo: '2h' },
-  { id: 102, user: '@ArtLover99', avatar: '🎨', title: 'Watercolor Fox', prompt: '/imagine prompt: A cute fluffy red fox sleeping under a giant glowing mushroom, watercolor illustration style, soft pastel colors, dreamy --ar 1:1', likes: 856, views: '10k', timeAgo: '5h' },
+  { id: 101, user: '@PixelNinja', avatar: '🥷', title: 'Neon [KRIEGER]', prompt: '/imagine prompt: A cybernetic [KRIEGER] standing on a neon-lit [STADT] rooftop in the rain, holding a glowing [WAFFE], 8k, unreal engine --ar 16:9', likes: 1420, views: '15k', timeAgo: '2h' },
+  { id: 102, user: '@ArtLover99', avatar: '🎨', title: 'Watercolor [TIER]', prompt: '/imagine prompt: A cute fluffy [TIER] sleeping under a giant glowing [OBJEKT], watercolor illustration style, soft pastel colors, dreamy --ar 1:1', likes: 856, views: '10k', timeAgo: '5h' },
   { id: 103, user: '@TechGuru', avatar: '💻', title: 'AI Server Room', prompt: '/imagine prompt: Inside a massive futuristic quantum computer server room, glowing blue fiber optic cables, cinematic lighting, photorealistic --ar 16:9', likes: 2100, views: '28k', timeAgo: '1d' },
   { id: 104, user: '@MovieBuff', avatar: '🎬', title: 'Dune Desert', prompt: '/imagine prompt: Epic cinematic wide shot of a giant sandworm emerging from deep orange desert dunes, tiny human figure in foreground, Denis Villeneuve style --ar 21:9', likes: 3450, views: '42k', timeAgo: '2d' },
 ];

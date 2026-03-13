@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Toaster, toast } from 'react-hot-toast'
 import './App.css'
 import { supabase } from './supabaseClient'
 import {
@@ -7,6 +8,15 @@ import {
   marketplacePrompts
 } from './data.js'
 import { translations } from './i18n.js'
+import InteractivePrompt from './components/InteractivePrompt'
+import PromptMixer from './components/PromptMixer'
+import LiveGenerator from './components/LiveGenerator'
+import PromptExtractor from './components/PromptExtractor'
+import VideoGenerator from './components/VideoGenerator'
+import ModelCompare from './components/ModelCompare'
+import MusicGenerator from './components/MusicGenerator'
+import CommunityFeed from './components/CommunityFeed'
+import FlowBuilder from './components/FlowBuilder'
 
 function App() {
   const [lang, setLang] = useState('de')
@@ -19,6 +29,7 @@ function App() {
   const [user, setUser] = useState(null)
   const [likedItems, setLikedItems] = useState({})
   const [copiedItems, setCopiedItems] = useState({})
+  const [searchQuery, setSearchQuery] = useState('')
   
   // NEW: Share Menu State
   const [shareMenuOpen, setShareMenuOpen] = useState(null)
@@ -35,6 +46,18 @@ function App() {
 
   const copyToClipboard = (text, idStr) => {
     navigator.clipboard.writeText(text);
+    toast.success('Prompt kopiert!', {
+      style: {
+        borderRadius: '10px',
+        background: '#1e293b',
+        color: '#f8fafc',
+        border: '1px solid #334155',
+      },
+      iconTheme: {
+        primary: '#34d399',
+        secondary: '#1e293b',
+      },
+    });
     setCopiedItems(prev => ({ ...prev, [idStr]: true }));
     setTimeout(() => setCopiedItems(prev => ({ ...prev, [idStr]: false })), 2000);
   };
@@ -83,11 +106,12 @@ function App() {
   };
 
   return (
-    <div dir={lang === 'ar' ? 'rtl' : 'ltr'} className={`min-h-screen bg-slate-900 text-slate-100 flex ${lang === 'ar' ? 'font-arabic' : 'font-sans'}`}>
+    <div dir={lang === 'ar' ? 'rtl' : 'ltr'} className={`min-h-screen bg-slate-900 text-slate-100 flex selection:bg-blue-500/30 selection:text-white ${lang === 'ar' ? 'font-arabic' : 'font-sans'}`}>
+      <Toaster position="bottom-right" reverseOrder={false} />
       
       {/* Sidebar Navigation */}
-      <div className={`w-72 bg-slate-950 border-slate-800 p-6 flex flex-col fixed h-full overflow-y-auto z-20 ${lang === 'ar' ? 'border-l right-0' : 'border-r left-0'}`}>
-        <h1 className="text-2xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
+      <div className={`w-72 glass-panel border-r border-slate-800/50 p-6 flex flex-col fixed h-full overflow-y-auto z-20 shadow-[4px_0_24px_-10px_rgba(0,0,0,0.5)] ${lang === 'ar' ? 'border-l right-0' : 'border-r left-0'}`}>
+        <h1 className="text-3xl font-extrabold mb-8 text-gradient from-blue-400 via-indigo-400 to-emerald-400 tracking-tight">
           {t.appTitle}
         </h1>
         <nav className="flex-1 space-y-1.5">
@@ -103,6 +127,26 @@ function App() {
 
       <div className={`flex-1 p-8 ${lang === 'ar' ? 'mr-72' : 'ml-72'}`}>
 
+        {/* --- GLOBAL SEARCH BAR (HEADER) --- */}
+        <div className="max-w-7xl mx-auto flex items-center justify-between mb-8 sticky top-0 glass-panel z-10 py-4 px-6 rounded-2xl border border-slate-700/50 mt-4 shadow-lg">
+          <div className="relative w-[400px]">
+            <svg className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <input 
+              type="text" 
+              placeholder="Suche nach Prompts, Kategorien..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-2.5 pl-12 pr-4 text-sm text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all shadow-inner"
+            />
+          </div>
+          <div className="flex items-center gap-4">
+             {/* Hier können später Profilbild / Notifications rein */}
+             {user && <span className="text-sm text-slate-400">{user.email}</span>}
+          </div>
+        </div>
+
         {/* --- 1. MEIN STUDIO (MIT SHARE BUTTONS) --- */}
         {activeTab === 'studio' && (
           <div className="max-w-7xl animate-fade-in mx-auto mt-4">
@@ -116,12 +160,15 @@ function App() {
                 ))}
               </div>
               
-              <div className="flex-1 bg-slate-800/30 border border-slate-700 rounded-3xl p-8 min-h-[500px]">
+              <div className="flex-1 glass-panel rounded-[2rem] p-8 min-h-[500px]">
                 <h3 className="text-xl font-bold text-white mb-8 border-b border-slate-700 pb-4">{activeFolder}</h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {communityPrompts.slice(0,2).map(item => (
-                    <div key={item.id} className="bg-slate-800 rounded-xl border border-slate-700 p-4 relative group">
+                  {communityPrompts
+                    .filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()) || item.prompt.toLowerCase().includes(searchQuery.toLowerCase()))
+                    .slice(0,2)
+                    .map(item => (
+                    <div key={item.id} className="glass-card rounded-2xl p-5 relative group animate-slide-up hover:-translate-y-1">
                       <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
                         
                         {/* SHARE BUTTON CONTAINER */}
@@ -141,7 +188,7 @@ function App() {
                       </div>
                       <span className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1 block">Prompt</span>
                       <h4 className="font-bold text-white mb-2">{item.title}</h4>
-                      <p className="text-xs font-mono text-slate-400 line-clamp-3 mb-4">{item.prompt}</p>
+                      <InteractivePrompt template={item.prompt} title={item.title} />
                     </div>
                   ))}
                 </div>
@@ -155,8 +202,10 @@ function App() {
           <div className="max-w-7xl animate-fade-in mx-auto mt-4">
             <h2 className="text-3xl font-bold mb-8">💰 Prompt Marktplatz</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {marketplacePrompts.map(item => (
-                <div key={item.id} className="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden flex flex-col group hover:border-amber-500/50 transition-colors relative">
+              {marketplacePrompts
+                .filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()) || item.category.toLowerCase().includes(searchQuery.toLowerCase()))
+                .map(item => (
+                <div key={item.id} className="glass-card rounded-3xl overflow-hidden flex flex-col group hover:border-amber-500/50 hover:shadow-[0_0_30px_-10px_rgba(245,158,11,0.3)] hover:-translate-y-1 transition-all relative">
                   
                   {/* SHARE BUTTON TOP RIGHT */}
                   <div className="absolute top-4 right-4 z-10">
@@ -180,8 +229,32 @@ function App() {
           </div>
         )}
 
+        {/* --- PROMPT MIXER --- */}
+        {activeTab === 'mixer' && <PromptMixer />}
+
+        {/* --- LIVE GENERATOR --- */}
+        {activeTab === 'generator' && <LiveGenerator />}
+
+        {/* --- PROMPT EXTRACTOR --- */}
+        {activeTab === 'extractor' && <PromptExtractor />}
+
+        {/* --- VIDEO GENERATOR --- */}
+        {activeTab === 'videos' && <VideoGenerator />}
+
+        {/* --- MODEL COMPARE --- */}
+        {activeTab === 'compare' && <ModelCompare />}
+
+        {/* --- MUSIC GENERATOR --- */}
+        {activeTab === 'music' && <MusicGenerator />}
+
+        {/* --- COMMUNITY FEED --- */}
+        {activeTab === 'community' && <CommunityFeed />}
+
+        {/* --- FLOW BUILDER --- */}
+        {activeTab === 'flows' && <FlowBuilder />}
+
         {/* --- PLACEHOLDER FOR OTHERS --- */}
-        {!['studio', 'marketplace'].includes(activeTab) && (
+        {!['studio', 'marketplace', 'mixer', 'generator', 'extractor', 'videos', 'compare', 'music', 'community', 'flows'].includes(activeTab) && (
           <div className="max-w-4xl animate-fade-in flex flex-col items-center justify-center h-96 bg-slate-800 rounded-xl border border-slate-700 border-dashed mt-4">
              <h2 className="text-2xl font-bold mb-2 text-slate-300">Share-Buttons hinzugefügt!</h2>
              <p className="text-slate-500">Schau dir den "Mein Studio" oder "Marktplatz" Tab an, um das neue Teilen-Feature (X, Facebook, WhatsApp) zu sehen.</p>
