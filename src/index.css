@@ -56,3 +56,64 @@
   background: rgba(59, 130, 246, 0.3); /* blue-500/30 */
   color: #f8fafc;
 }
+
+
+/* Cybertron Theme Variables & Overrides */
+.theme-cybertron {
+  --tw-bg-opacity: 1;
+  background-color: #050a15 !important;
+  color: #cbe0f5 !important;
+  background-image: 
+    linear-gradient(rgba(0, 200, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 200, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.theme-cybertron .glass-panel,
+.theme-cybertron .glass-card {
+  background-color: rgba(5, 10, 25, 0.8) !important;
+  border-color: rgba(0, 150, 255, 0.4) !important;
+  box-shadow: 0 0 20px -5px rgba(0, 150, 255, 0.3) !important;
+}
+
+.theme-cybertron h2, 
+.theme-cybertron h3 {
+  color: #00e6ff !important;
+  text-shadow: 0 0 10px rgba(0, 230, 255, 0.5);
+}
+
+.theme-cybertron .text-gradient {
+  background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to right, #00f0ff, #0055ff) !important;
+}
+
+.theme-cybertron button {
+  border-radius: 4px !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.theme-cybertron button.bg-blue-600 {
+  background: linear-gradient(135deg, #00e6ff, #0055ff) !important;
+  box-shadow: 0 0 15px rgba(0, 230, 255, 0.4) !important;
+  border: 1px solid #00ffff !important;
+  color: #fff !important;
+}
+
+/* Holographic Particles Animation */
+@keyframes hologram {
+  0% { transform: translateY(0) scale(1); opacity: 0.8; }
+  50% { transform: translateY(-20px) scale(1.2); opacity: 0.4; }
+  100% { transform: translateY(0) scale(1); opacity: 0.8; }
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #00ffff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #00ffff, 0 0 20px #0055ff;
+  animation: hologram 2s infinite ease-in-out;
+}

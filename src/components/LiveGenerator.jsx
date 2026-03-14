@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
+import { soundEngine } from '../utils/SoundEngine';
 
 const PERSONAS = [
   { id: 'default', name: 'Standard Assistent', prompt: 'Du bist ein hilfreicher KI-Assistent.' },
@@ -17,8 +18,50 @@ export default function LiveGenerator() {
   const [maxTokens, setMaxTokens] = useState(2000);
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(''); // Multimodal
+  const [isListening, setIsListening] = useState(false);
   
   const chatEndRef = useRef(null);
+
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      toast.error('Spracherkennung wird von diesem Browser nicht unterstützt.');
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'de-DE'; // oder je nach aktueller Sprache
+    recognition.continuous = false;
+    recognition.interimResults = true;
+
+    recognition.onstart = () => {
+      soundEngine.playClick();
+      setIsListening(true);
+      toast('Voice-Command aktiv. Sprich...', { icon: '🎙️', style: { background: '#1e293b', color: '#3b82f6', border: '1px solid #3b82f6' }});
+    };
+
+    recognition.onresult = (event) => {
+      const transcript = Array.from(event.results)
+        .map(result => result[0])
+        .map(result => result.transcript)
+        .join('');
+      setInput(transcript);
+    };
+
+    recognition.onerror = (event) => {
+      console.error(event.error);
+      setIsListening(false);
+      toast.error('Fehler bei der Spracherkennung.');
+    };
+
+    recognition.onend = () => {
+      soundEngine.playSuccess();
+      setIsListening(false);
+    };
+
+    recognition.start();
+  };
+
 
   // Auto-scroll to bottom of chat
   useEffect(() => {
@@ -41,6 +84,7 @@ export default function LiveGenerator() {
     setInput('');
     setImageUrl('');
     setLoading(true);
+    soundEngine.playGenerate();
 
     // Video & Audio Simulation
     if (model.startsWith('video/') || model.startsWith('audio/')) {
@@ -74,6 +118,7 @@ export default function LiveGenerator() {
         }]);
         setLoading(false);
         toast.success('Bild erfolgreich generiert!', { icon: '🎨' });
+        soundEngine.playSuccess();
       }, 1500);
       return;
     }
@@ -144,6 +189,7 @@ export default function LiveGenerator() {
           content: data.choices[0].message.content,
           modelName: data.model || model
         }]);
+        soundEngine.playSuccess();
       } else {
         const errMsg = data.error?.message || 'Unbekannter Fehler';
         setMessages(prev => [...prev, { role: 'assistant', content: `⚠️ API Fehler: ${errMsg}`, error: true }]);
@@ -240,11 +286,14 @@ export default function LiveGenerator() {
               ))
             )}
             {loading && (
-              <div className="flex justify-start">
-                <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4 flex gap-2 items-center text-slate-400">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+              <div className="flex justify-start animate-fade-in">
+                <div className="relative w-32 h-16 bg-transparent flex items-center justify-center">
+                  <div className="particle" style={{ top: '20%', left: '20%', animationDelay: '0s' }}></div>
+                  <div className="particle" style={{ top: '50%', left: '40%', animationDelay: '0.3s' }}></div>
+                  <div className="particle" style={{ top: '70%', left: '70%', animationDelay: '0.6s' }}></div>
+                  <div className="particle" style={{ top: '30%', left: '80%', animationDelay: '0.9s' }}></div>
+                  <div className="particle" style={{ top: '60%', left: '20%', animationDelay: '1.2s' }}></div>
+                  <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest absolute bottom-0 shadow-[0_0_10px_#00e6ff] bg-slate-900/80 px-2 py-1 rounded border border-cyan-500/50">Processing...</span>
                 </div>
               </div>
             )}
@@ -260,6 +309,14 @@ export default function LiveGenerator() {
               </div>
             )}
             <div className="flex items-end gap-2 bg-slate-800 rounded-2xl p-2 border border-slate-700 focus-within:border-blue-500/50 transition-colors">
+              <button 
+                onClick={isListening ? null : startListening}
+                onMouseEnter={() => soundEngine.playHover()}
+                className={`p-3 rounded-xl transition-all ${isListening ? 'bg-red-500/20 text-red-400 animate-pulse' : 'text-slate-400 hover:text-blue-400 hover:bg-slate-700/50'}`}
+                title="Voice Command (Mikrofon)"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+              </button>
               <button 
                 onClick={() => {
                   const url = prompt("Gib die URL eines Bildes ein (z.B. https://example.com/image.jpg):");

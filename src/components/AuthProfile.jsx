@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { toast } from 'react-hot-toast';
+import { soundEngine } from '../utils/SoundEngine';
 
 export default function AuthProfile() {
   const [session, setSession] = useState(null);
@@ -8,6 +9,7 @@ export default function AuthProfile() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isCybertron, setIsCybertron] = useState(document.body.classList.contains('theme-cybertron'));
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -41,6 +43,24 @@ export default function AuthProfile() {
     }
   };
 
+
+  const toggleCybertron = () => {
+    soundEngine.playClick();
+    if (isCybertron) {
+      document.body.classList.remove('theme-cybertron');
+      setIsCybertron(false);
+      toast('Protokoll: Erde. Reaktiviert.', { icon: '🌍', style: { background: '#1e293b', color: '#fff' }});
+    } else {
+      soundEngine.playTransform();
+      document.body.classList.add('theme-cybertron');
+      setIsCybertron(true);
+      toast.success('Cybertron-Protokoll aktiviert. System-Override...', { 
+        icon: '🤖', 
+        style: { background: '#050a15', color: '#00e6ff', border: '1px solid #00e6ff', textShadow: '0 0 5px #00e6ff' }
+      });
+    }
+  };
+
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) toast.error(error.message);
@@ -61,14 +81,31 @@ export default function AuthProfile() {
               <p className="text-slate-400">Pro Mitgliedschaft (Aktiv)</p>
             </div>
             <button 
-              onClick={handleSignOut}
+              onClick={() => { soundEngine.playClick(); handleSignOut(); }}
               className="ml-auto bg-slate-800 hover:bg-red-500/20 text-red-400 border border-slate-700 hover:border-red-500/50 px-6 py-2.5 rounded-xl font-bold transition-all"
             >
               Abmelden
             </button>
           </div>
           
+          
+          {/* Cybertron Toggle */}
+          <div className="mb-8 p-6 rounded-2xl border border-slate-700/50 bg-slate-900/50 flex justify-between items-center group hover:border-blue-500/50 transition-all">
+            <div>
+              <h4 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">Das Cybertron-Protokoll</h4>
+              <p className="text-sm text-slate-400">Verstecktes Easter-Egg für den ultimativen Prime-Look. (Sci-Fi Theme)</p>
+            </div>
+            <button 
+              onClick={toggleCybertron}
+              onMouseEnter={() => soundEngine.playHover()}
+              className={`relative w-16 h-8 rounded-full transition-colors ${isCybertron ? 'bg-cyan-500 shadow-[0_0_15px_#00e6ff]' : 'bg-slate-700'}`}
+            >
+              <div className={`absolute top-1 left-1 w-6 h-6 rounded-full bg-white transition-transform ${isCybertron ? 'translate-x-8' : 'translate-x-0'}`}></div>
+            </button>
+          </div>
+
           <h4 className="text-xl font-bold text-white mb-4">Meine Einkäufe (Marktplatz)</h4>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-slate-900/50 border border-slate-700 rounded-xl p-4">
               <span className="text-xs font-bold text-amber-400 uppercase tracking-wider block mb-1">Gekauft</span>
