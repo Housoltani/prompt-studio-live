@@ -24,6 +24,7 @@ const AuthProfile = lazy(() => import('./components/AuthProfile'))
 const EarnCredits = lazy(() => import('./components/EarnCredits'))
 const Pricing = lazy(() => import('./components/Pricing'))
 const Studio = lazy(() => import('./components/Studio'))
+const Marketplace = lazy(() => import('./components/Marketplace'))
 
 function AppContent() {
   const [lang, setLang] = useState('de')
@@ -289,44 +290,12 @@ function AppContent() {
   }><Studio /></Suspense>} />
 
         {/* --- MARKTPLATZ (MIT SHARE BUTTON) --- */}
-        <Route path="marketplace" element={<>
-          <div className="max-w-7xl animate-fade-in mx-auto mt-4">
-            <h2 className="text-3xl font-bold mb-8">💰 Prompt Marktplatz</h2>
-            {isLoadingPrompts && <div className="text-slate-400 animate-pulse mb-4">Lade echte Daten aus Supabase...</div>}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {marketplacePrompts
-                .filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()) || item.category.toLowerCase().includes(searchQuery.toLowerCase()))
-                .map(item => (
-                <div key={item.id} className="glass-card rounded-3xl overflow-hidden flex flex-col group hover:border-amber-500/50 hover:shadow-[0_0_30px_-10px_rgba(245,158,11,0.3)] hover:-translate-y-1 transition-all relative">
-                  
-                  {/* SHARE BUTTON TOP RIGHT */}
-                  <div className="absolute top-4 right-4 z-10">
-                    <button onClick={() => setShareMenuOpen(shareMenuOpen === `market-${item.id}` ? null : `market-${item.id}`)} className="p-2 bg-slate-900/80 backdrop-blur rounded-full text-slate-300 hover:text-white hover:bg-amber-600 transition-colors">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
-                    </button>
-                    <ShareMenu id={`market-${item.id}`} title={item.title} />
-                  </div>
-
-                  <div className="p-5 flex flex-col flex-grow pt-10">
-                    <div className="flex justify-between items-start mb-4">
-                      <span className="text-xs font-bold bg-slate-900 text-slate-300 px-2 py-1 rounded">{item.category}</span>
-                      <span className="text-lg font-black text-amber-400">{item.price}</span>
-                    </div>
-                    <h3 className="font-bold text-white text-lg mb-2">{item.title}</h3>
-                    <p className="text-sm text-slate-400 mb-4 line-clamp-3">{item.preview}</p>
-                    <button 
-                      onClick={(e) => { e.preventDefault(); handleBuyPrompt(item.title); }}
-                      className="w-full mt-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-900 font-bold py-3 rounded-xl transition-all shadow-lg shadow-amber-500/20"
-                    >
-                      Jetzt Kaufen
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          </>} />
+        <Route path="marketplace" element={
+  <Suspense fallback={
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
+    </div>
+  }><Marketplace /></Suspense>} />
 
         {/* --- PROMPT MIXER --- */}
         <Route path="mixer" element={
