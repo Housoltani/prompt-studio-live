@@ -17,6 +17,7 @@ const VideoGenerator = lazy(() => import('./components/VideoGenerator'))
 const ModelCompare = lazy(() => import('./components/ModelCompare'))
 const MusicGenerator = lazy(() => import('./components/MusicGenerator'))
 const CommunityFeed = lazy(() => import('./components/CommunityFeed'))
+const AgentsHub = lazy(() => import('./components/AgentsHub'))
 const FlowBuilder = lazy(() => import('./components/FlowBuilder'))
 const AuthProfile = lazy(() => import('./components/AuthProfile'))
 
@@ -263,7 +264,7 @@ function App() {
         </div>
 
         <Routes>
-          <Route path="/" element={<Navigate to="studio" replace />} />
+          <Route path="/" element={<Navigate to="agents" replace />} />
           {/* --- 1. MEIN STUDIO (MIT SHARE BUTTONS) --- */}
         <Route path="studio" element={<>
           <div className="max-w-7xl animate-fade-in mx-auto mt-4">
@@ -428,6 +429,15 @@ function App() {
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
     </div>
   }><AuthProfile /></Suspense>} />
+
+        
+        {/* --- AGENTEN HUB --- */}
+        <Route path="agents" element={
+  <Suspense fallback={
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+    </div>
+  }><AgentsHub /></Suspense>} />
 
         {/* --- PLACEHOLDER FOR OTHERS --- */}
         <Route path="*" element={<>
