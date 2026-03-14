@@ -68,6 +68,30 @@ export default function LiveGenerator() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Read Agent from localStorage on mount
+  useEffect(() => {
+    const savedAgentStr = localStorage.getItem('activeAgent');
+    if (savedAgentStr) {
+      try {
+        const parsed = JSON.parse(savedAgentStr);
+        // Inject into Persona list if it's not default
+        const customPersona = { id: parsed.id, name: parsed.icon + " " + parsed.name, prompt: parsed.prompt };
+        setPersona(customPersona);
+        if (parsed.model) setModel(parsed.model);
+        
+        // Show welcome message
+        setMessages([{
+          role: 'assistant',
+          content: `${parsed.icon} ${parsed.name} online und bereit für Kommandos. Wie kann ich helfen?`,
+          modelName: parsed.name
+        }]);
+
+        // Cleanup so it doesn't trigger every time we enter the generator via sidebar
+        localStorage.removeItem('activeAgent');
+      } catch (err) {}
+    }
+  }, []);
+
   const handleGenerate = async () => {
     if (!input.trim() && !imageUrl) {
       toast.error('Bitte gib einen Prompt oder ein Bild ein!');
@@ -219,7 +243,7 @@ export default function LiveGenerator() {
     <div className="max-w-6xl animate-fade-in mx-auto mt-4 h-[calc(100vh-120px)] flex flex-col">
       <div className="flex justify-between items-end mb-6">
         <div>
-          <h2 className="text-3xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">✨ Pro Live Generator</h2>
+          <h2 className="text-3xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">{!PERSONAS.find(p => p.id === persona.id) ? persona.name + ' Terminal' : '✨ Pro Live Generator'}</h2>
           <p className="text-slate-400">Nutze Multimodale KI, Personas, Parameter & echte Bild-Generierung in Echtzeit.</p>
         </div>
         {messages.length > 0 && (
@@ -416,6 +440,13 @@ export default function LiveGenerator() {
           <div>
             <label className="block text-xs font-bold text-slate-400 mb-2">Experten Persona</label>
             <div className="space-y-2">
+              {/* Custom Injected Agent */
+                !PERSONAS.find(p => p.id === persona.id) && (
+                  <button className="w-full text-left px-3 py-2 rounded-lg border text-sm transition-all bg-emerald-600/20 border-emerald-500 text-emerald-400 font-bold mb-2 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                    {persona.name} (Aktiv)
+                  </button>
+                )
+              }
               {PERSONAS.map(p => (
                 <button
                   key={p.id}
