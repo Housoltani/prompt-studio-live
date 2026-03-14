@@ -15,6 +15,27 @@ export default function FlowBuilder() {
   const [executingNodeId, setExecutingNodeId] = useState(null);
   const [isExecuting, setIsExecuting] = useState(false);
 
+  const [showTemplates, setShowTemplates] = useState(false);
+
+  const loadTemplate = (templateId) => {
+    if (templateId === 'tiktok') {
+      setNodes([
+        { id: '1', type: 'text', title: 'GPT-4o (Skript)', desc: 'Generiere ein Hook-Skript für ein 10s Video.', top: 100, left: 40, cost: 0, model: 'openai/gpt-4o' },
+        { id: '2', type: 'image', title: 'Midjourney (Asset)', desc: 'Cyberpunk Kaffeebohne in Neon.', top: 150, left: 350, cost: 5, model: 'image/midjourney-v6' },
+        { id: '3', type: 'video', title: 'Kling 3.0 (Render)', desc: 'Animiere {{ node.2.output }}', top: 250, left: 650, cost: 10, model: 'video/kling-3' }
+      ]);
+      toast.success('Viral TikTok Template geladen!');
+    } else if (templateId === 'seo') {
+      setNodes([
+        { id: '1', type: 'web', title: 'Web Search', desc: 'Suche "Latest AI Trends 2026"', top: 100, left: 40, cost: 1, model: 'tool/brave' },
+        { id: '2', type: 'text', title: 'Claude 3 (Writer)', desc: 'Schreibe SEO Artikel basierend auf {{ node.1.output }}', top: 200, left: 350, cost: 0, model: 'anthropic/claude-3-opus' },
+        { id: '3', type: 'image', title: 'Flux.1 (Thumbnail)', desc: 'Artikelbild für {{ node.2.output }}', top: 100, left: 650, cost: 5, model: 'image/flux' }
+      ]);
+      toast.success('SEO Blog Maschine Template geladen!');
+    }
+    setShowTemplates(false);
+  };
+
   const totalCost = nodes.reduce((sum, node) => sum + (node.cost || 0), 0);
 
   const handlePlay = () => {
@@ -117,7 +138,29 @@ export default function FlowBuilder() {
       <div className="flex justify-between items-end mb-6 shrink-0">
         <div>
           <h2 className="text-3xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600">⚡ Automatisierung (Flows)</h2>
-          <p className="text-slate-400 text-sm">Verknüpfe KI-Modelle visuell zu mächtigen Pipelines.</p>
+          <div className="flex items-center gap-4">
+            <p className="text-slate-400 text-sm">Verknüpfe KI-Modelle visuell zu mächtigen Pipelines.</p>
+            <div className="relative">
+              <button 
+                onClick={() => setShowTemplates(!showTemplates)}
+                className="bg-slate-800 hover:bg-slate-700 text-xs font-bold text-white px-3 py-1.5 rounded-lg border border-slate-600 shadow flex items-center gap-2"
+              >
+                <span>📂</span> Blueprints laden
+              </button>
+              {showTemplates && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-slate-800 border border-slate-600 rounded-xl shadow-2xl z-50 p-2 animate-fade-in">
+                  <button onClick={() => loadTemplate('tiktok')} className="w-full text-left p-2 hover:bg-slate-700 rounded-lg group">
+                    <div className="text-sm font-bold text-white group-hover:text-amber-400">🚀 Viral Short Pipeline</div>
+                    <div className="text-xs text-slate-400 mt-1">Text ➔ Image ➔ Video</div>
+                  </button>
+                  <button onClick={() => loadTemplate('seo')} className="w-full text-left p-2 hover:bg-slate-700 rounded-lg group mt-1">
+                    <div className="text-sm font-bold text-white group-hover:text-blue-400">📝 SEO Blog Maschine</div>
+                    <div className="text-xs text-slate-400 mt-1">Web ➔ Text ➔ Image</div>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
         <div className="flex items-center gap-4">
           <div className="bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 flex items-center gap-3 shadow-inner">
@@ -296,8 +339,16 @@ export default function FlowBuilder() {
                 </div>
                 
                 <h4 className="font-bold text-slate-100 text-base mb-2 truncate">{node.title}</h4>
-                <div className="text-xs text-slate-300 font-mono bg-slate-950/60 p-3 rounded-xl border border-slate-700/50 h-20 overflow-hidden text-ellipsis line-clamp-4">
-                  {node.desc}
+                <div className="text-xs text-slate-300 font-mono bg-slate-950/60 p-3 rounded-xl border border-slate-700/50 h-20 overflow-hidden text-ellipsis line-clamp-4 relative">
+                  {!hasRun ? node.desc : (
+                    <div className="absolute inset-0 bg-slate-900 flex items-center justify-center p-2 animate-fade-in border border-slate-700/50 rounded-xl">
+                      {node.type === 'image' && <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=100&q=80" alt="result" className="w-full h-full object-cover rounded-lg" />}
+                      {node.type === 'video' && <div className="text-xl">🎬 <span className="text-xs text-pink-400 font-bold block">Video Rendered</span></div>}
+                      {node.type === 'audio' && <div className="text-xl">🔊 <span className="text-xs text-amber-400 font-bold block">Audio Track</span></div>}
+                      {node.type === 'text' && <div className="text-[9px] text-blue-300 leading-tight">Output: {node.title} lieferte 450 Tokens...</div>}
+                      {node.type === 'web' && <div className="text-[9px] text-cyan-300 leading-tight">14 Quellen extrahiert...</div>}
+                    </div>
+                  )}
                 </div>
                 
                 {/* Right Connect Dot */}
