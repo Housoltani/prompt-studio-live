@@ -96,7 +96,8 @@ function App() {
 
     fetchPrompts()
 
-    return () => subscription.unsubscribe()
+  
+  return () => subscription.unsubscribe()
   }, [])
 
   const copyToClipboard = (text, idStr) => {
@@ -158,6 +159,26 @@ function App() {
         </button>
       </div>
     );
+  };
+
+
+  const handleBuyPrompt = (title) => {
+    if (!user) {
+      toast.error('Bitte logge dich ein, um Prompts zu kaufen.', {
+        icon: '🔐',
+        style: { background: '#1e293b', color: '#fff' }
+      });
+      // Optional: Navigation to /app/auth could be done here, but we'll stick to a toast
+      return;
+    }
+    const toastId = toast.loading('Verarbeite Zahlung für ' + title + '...');
+    setTimeout(() => {
+      toast.success(title + ' erfolgreich gekauft! Ab ins Studio.', {
+        id: toastId,
+        icon: '💰',
+        style: { background: '#10b981', color: '#fff' }
+      });
+    }, 1500);
   };
 
   return (
@@ -321,6 +342,12 @@ function App() {
                     </div>
                     <h3 className="font-bold text-white text-lg mb-2">{item.title}</h3>
                     <p className="text-sm text-slate-400 mb-4 line-clamp-3">{item.preview}</p>
+                    <button 
+                      onClick={(e) => { e.preventDefault(); handleBuyPrompt(item.title); }}
+                      className="w-full mt-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-900 font-bold py-3 rounded-xl transition-all shadow-lg shadow-amber-500/20"
+                    >
+                      Jetzt Kaufen
+                    </button>
                   </div>
                 </div>
               ))}

@@ -62,6 +62,62 @@ const AVAILABLE_BLOCKS = [
 export default function PromptMixer() {
   const [basePrompt, setBasePrompt] = useState('/imagine prompt: A futuristic city');
   const [selectedBlocks, setSelectedBlocks] = useState([]);
+  const [isOptimizing, setIsOptimizing] = useState(false);
+
+
+  const handleOptimize = async () => {
+    if (!basePrompt || basePrompt.trim() === '') {
+      toast.error('Bitte gib zuerst einen Basis-Prompt ein!');
+      return;
+    }
+    
+    const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
+    if (!apiKey) {
+      toast.error('API Key fehlt! Bitte in der .env Datei als VITE_OPENROUTER_API_KEY eintragen.');
+      return;
+    }
+
+    setIsOptimizing(true);
+    const toastId = toast.loading('KI optimiert deinen Prompt...');
+
+    try {
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+          'HTTP-Referer': 'http://localhost:5173',
+          'X-Title': 'Prompt Studio Live'
+        },
+        body: JSON.stringify({
+          model: 'meta-llama/llama-3-8b-instruct:free',
+          messages: [
+            { 
+              role: 'system', 
+              content: 'Du bist ein professioneller Prompt-Engineer für Bildgeneratoren (Midjourney, DALL-E). Nimm den kurzen Input des Users und verwandle ihn in einen extrem detaillierten, hochwertigen englischen Prompt. Nutze Keywords für Lighting, Camera, Style und Mood. Antworte NUR mit dem finalen Prompt, ohne Erklärungen.' 
+            },
+            { role: 'user', content: basePrompt }
+          ],
+          temperature: 0.7
+        })
+      });
+
+      const data = await response.json();
+      
+      if (response.ok && data.choices && data.choices.length > 0) {
+        setBasePrompt(data.choices[0].message.content.trim());
+        toast.success('Prompt erfolgreich hochgerüstet!', { id: toastId });
+      } else {
+        const errMsg = data.error?.message || 'Unbekannter API Fehler';
+        console.error('OpenRouter Error:', data);
+        toast.error('API Fehler: ' + errMsg, { id: toastId });
+      }
+    } catch (error) {
+      toast.error('Verbindungsfehler zur KI-API.', { id: toastId });
+    } finally {
+      setIsOptimizing(false);
+    }
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -128,12 +184,25 @@ export default function PromptMixer() {
           
           <div className="bg-slate-800 border border-slate-700 p-6 rounded-2xl">
             <h3 className="text-sm font-bold text-slate-400 mb-2 uppercase tracking-wider">Basis-Prompt</h3>
-            <input 
-              type="text" 
-              value={basePrompt}
-              onChange={(e) => setBasePrompt(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
-            />
+            <div className="relative">
+              <textarea 
+                value={basePrompt}
+                onChange={(e) => setBasePrompt(e.target.value)}
+                rows={3}
+                className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 pr-32 text-white focus:outline-none focus:border-emerald-500 transition-colors resize-none"
+              />
+              <button 
+                onClick={handleOptimize}
+                disabled={isOptimizing}
+                className="absolute right-2 bottom-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white text-xs font-bold px-3 py-2 rounded-md shadow-lg transition-all flex items-center gap-1 disabled:opacity-50"
+              >
+                {isOptimizing ? (
+                  <><svg className="animate-spin h-3 w-3 text-white" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Magie wirkt...</>
+                ) : (
+                  <>✨ KI Magic</>
+                )}
+              </button>
+            </div>
 
             <h3 className="text-sm font-bold text-slate-400 mt-6 mb-3 uppercase tracking-wider">Drag & Drop Modifikatoren</h3>
             <div className="bg-slate-900/80 border border-slate-700/50 rounded-lg p-4 min-h-[80px] flex flex-wrap gap-2 items-start">
