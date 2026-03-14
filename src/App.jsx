@@ -260,7 +260,7 @@ function AppContent() {
           <div className="flex items-center gap-4">
              
              <NavLink to="/app/credits" className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-full text-sm font-bold transition-colors">
-               <span>🪙</span> {credits}
+               <span className="animate-pulse">⚡</span> {credits} Sparks
              </NavLink>
              {user ? (
                 <div className="flex items-center gap-3 bg-slate-800/50 pl-3 pr-1 py-1 rounded-full border border-slate-700">

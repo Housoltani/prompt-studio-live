@@ -4,7 +4,7 @@ export const tabs = [
   { id: 'studio', name: '📂 Mein Studio', desc: 'Dein Workspace' },
   { id: 'flows', name: '⚡ Automatisierung', desc: 'Prompt Chains' },
   { id: 'marketplace', name: '💰 Marktplatz', desc: 'Prompts kaufen & verkaufen' },
-  { id: 'credits', name: '💎 Kredite sammeln', desc: 'Werbung für Coins' },
+  { id: 'credits', name: '⚡ Aufladestation', desc: 'Sparks für Premium KI' },
   { id: 'extractor', name: '🔄 Prompt Extractor', desc: 'Bild zu Text' },
   { id: 'mixer', name: '🎛️ Prompt Mixer', desc: 'Drag & Drop Baukasten' },
   { id: 'compare', name: '⚖️ Modell-Vergleich', desc: 'Midjourney vs DALL-E vs SD' },

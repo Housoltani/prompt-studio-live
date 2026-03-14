@@ -22,7 +22,7 @@ export default function LiveGenerator() {
   const [isListening, setIsListening] = useState(false);
   
   const chatEndRef = useRef(null);
-  const { spendCredits } = useCredits();
+  const { spendCredits, credits } = useCredits();
 
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -100,9 +100,17 @@ export default function LiveGenerator() {
       return;
     }
     
-    // Check credits before starting (1 prompt = 5 credits)
-    if (!spendCredits(5, 'KI Generierung')) {
-      return;
+    // Check credits for Premium Models (Images/Video/Audio)
+    const isPremium = model.startsWith('image/') || model.startsWith('video/') || model.startsWith('audio/');
+    let sparkCost = 0;
+    if (model.startsWith('image/')) sparkCost = 5;
+    if (model.startsWith('video/')) sparkCost = 10;
+    if (model.startsWith('audio/')) sparkCost = 3;
+
+    if (isPremium) {
+      if (!spendCredits(sparkCost, 'Premium KI Generierung')) {
+        return;
+      }
     }
 
     const userMessage = { 
@@ -368,10 +376,20 @@ export default function LiveGenerator() {
               />
               <button 
                 onClick={handleGenerate}
-                disabled={loading || (!input.trim() && !imageUrl)}
-                className="p-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl transition-colors disabled:opacity-50 shadow-lg shadow-blue-500/20"
+                disabled={loading || (!input.trim() && !imageUrl) || ((model.startsWith('image/') || model.startsWith('video/') || model.startsWith('audio/')) && credits < (model.startsWith('video/') ? 10 : model.startsWith('image/') ? 5 : 3))}
+                className={`p-3 rounded-xl transition-all shadow-lg flex items-center gap-2 ${
+                  loading || (!input.trim() && !imageUrl) 
+                  ? 'bg-slate-700 text-slate-500 opacity-50' 
+                  : ((model.startsWith('image/') || model.startsWith('video/') || model.startsWith('audio/')) 
+                      ? 'bg-amber-600 hover:bg-amber-500 text-white shadow-amber-500/20' 
+                      : 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-500/20')
+                }`}
               >
-                <svg className="w-5 h-5 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                {(model.startsWith('image/') || model.startsWith('video/') || model.startsWith('audio/')) ? (
+                   <span className="text-xs font-bold whitespace-nowrap">⚡ {model.startsWith('video/') ? 10 : model.startsWith('image/') ? 5 : 3} Sparks</span>
+                ) : (
+                   <svg className="w-5 h-5 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                )}
               </button>
             </div>
           </div>
