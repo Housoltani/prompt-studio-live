@@ -229,6 +229,13 @@ function App() {
             </NavLink>
           ))}
         </nav>
+        
+        {/* --- LANGUAGE SWITCHER --- */}
+        <div className="mt-8 border-t border-slate-700/50 pt-4 flex justify-between gap-2">
+          <button onClick={() => setLang('de')} className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors ${lang === 'de' ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>DE</button>
+          <button onClick={() => setLang('en')} className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors ${lang === 'en' ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>EN</button>
+          <button onClick={() => setLang('ar')} className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors ${lang === 'ar' ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>AR</button>
+        </div>
       </div>
 
       <div className={`flex-1 p-4 md:p-8 pt-20 md:pt-8 transition-all duration-300 ${lang === 'ar' ? 'md:mr-72' : 'md:ml-72'}`}>
