@@ -5,6 +5,20 @@ export default function Pricing() {
   const [isYearly, setIsYearly] = useState(true);
   const [selectedCredits, setSelectedCredits] = useState('16500');
 
+  const getPrice = () => {
+    if (selectedCredits === '16500') return isYearly ? '11' : '19';
+    if (selectedCredits === '30000') return isYearly ? '24' : '34';
+    if (selectedCredits === 'unlimited') return isYearly ? '49' : '69';
+    return '11';
+  };
+
+  const getPlanName = () => {
+    if (selectedCredits === '16500') return 'Pro Creator';
+    if (selectedCredits === '30000') return 'Studio Elite';
+    if (selectedCredits === 'unlimited') return 'Overdrive';
+    return 'Pro Creator';
+  };
+
   const handleUpgrade = () => {
     toast.success('Weiterleitung zum Zahlungsanbieter...', { icon: '💳' });
   };
@@ -28,10 +42,10 @@ export default function Pricing() {
 
       {/* Pricing Card */}
       <div className="glass-card rounded-[2.5rem] p-10 w-full max-w-md border border-slate-700/50 bg-slate-900/80 shadow-2xl relative">
-        <h2 className="text-2xl font-bold text-white mb-6">AI Starter</h2>
+        <h2 className="text-2xl font-bold text-white mb-6">{getPlanName()}</h2>
 
         <div className="flex items-baseline gap-2 mb-2">
-          <span className="text-6xl font-black text-white">{isYearly ? '11' : '19'}</span>
+          <span className="text-6xl font-black text-white">{getPrice()}</span>
           <div className="flex flex-col">
             <span className="text-xl font-bold text-slate-300">99</span>
             <span className="text-slate-500 text-sm">€ / Monat</span>
