@@ -1,29 +1,33 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense, lazy } from 'react'
+import { Routes, Route, NavLink, Navigate } from 'react-router-dom'
 import { Toaster, toast } from 'react-hot-toast'
 import './App.css'
 import { supabase } from './supabaseClient'
 import {
   tabs as dataTabs,
-  communityPrompts,
-  marketplacePrompts
+  communityPrompts as dummyCommunityPrompts,
+  marketplacePrompts as dummyMarketplacePrompts
 } from './data.js'
 import { translations } from './i18n.js'
 import InteractivePrompt from './components/InteractivePrompt'
-import PromptMixer from './components/PromptMixer'
-import LiveGenerator from './components/LiveGenerator'
-import PromptExtractor from './components/PromptExtractor'
-import VideoGenerator from './components/VideoGenerator'
-import ModelCompare from './components/ModelCompare'
-import MusicGenerator from './components/MusicGenerator'
-import CommunityFeed from './components/CommunityFeed'
-import FlowBuilder from './components/FlowBuilder'
+const PromptMixer = lazy(() => import('./components/PromptMixer'))
+const LiveGenerator = lazy(() => import('./components/LiveGenerator'))
+const PromptExtractor = lazy(() => import('./components/PromptExtractor'))
+const VideoGenerator = lazy(() => import('./components/VideoGenerator'))
+const ModelCompare = lazy(() => import('./components/ModelCompare'))
+const MusicGenerator = lazy(() => import('./components/MusicGenerator'))
+const CommunityFeed = lazy(() => import('./components/CommunityFeed'))
+const FlowBuilder = lazy(() => import('./components/FlowBuilder'))
+const AuthProfile = lazy(() => import('./components/AuthProfile'))
 
 function App() {
   const [lang, setLang] = useState('de')
   const t = translations[lang]
 
-  const [activeTab, setActiveTab] = useState('studio')
   const [activeFolder, setActiveFolder] = useState('Meine Favoriten')
+  const [communityPrompts, setCommunityPrompts] = useState(dummyCommunityPrompts)
+  const [marketplacePrompts, setMarketplacePrompts] = useState(dummyMarketplacePrompts)
+  const [isLoadingPrompts, setIsLoadingPrompts] = useState(true)
   const [flowStep, setFlowStep] = useState(1)
 
   const [user, setUser] = useState(null)
@@ -33,14 +37,65 @@ function App() {
   
   // NEW: Share Menu State
   const [shareMenuOpen, setShareMenuOpen] = useState(null)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   useEffect(() => {
+    // 1. Auth Listener
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
     })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
     })
+
+    // 2. Fetch Data from Supabase
+    const fetchPrompts = async () => {
+      try {
+        setIsLoadingPrompts(true)
+        const { data, error } = await supabase
+          .from('prompts')
+          .select('*, profiles(username)')
+          .order('created_at', { ascending: false })
+
+        if (error) {
+          console.error('Fehler beim Laden der Prompts aus Supabase:', error)
+          setIsLoadingPrompts(false)
+          return
+        }
+
+        if (data && data.length > 0) {
+          // Map to local structure
+          const dbCommunity = data.filter(p => Number(p.price) === 0).map(p => ({
+            id: p.id,
+            title: p.title,
+            prompt: p.content,
+            category: p.category || 'Allgemein',
+            likes: p.likes_count,
+            views: p.views_count
+          }))
+          const dbMarket = data.filter(p => Number(p.price) > 0).map(p => ({
+            id: p.id,
+            title: p.title,
+            preview: p.description || p.content,
+            category: p.category || 'Allgemein',
+            price: Number(p.price).toFixed(2) + '€',
+            creator: p.profiles?.username || '@Anonym',
+            sales: 0,
+            rating: 5.0
+          }))
+
+          if (dbCommunity.length > 0) setCommunityPrompts(dbCommunity)
+          if (dbMarket.length > 0) setMarketplacePrompts(dbMarket)
+        }
+      } catch (err) {
+        console.error('Unerwarteter Fehler beim Abrufen der Prompts:', err)
+      } finally {
+        setIsLoadingPrompts(false)
+      }
+    }
+
+    fetchPrompts()
+
     return () => subscription.unsubscribe()
   }, [])
 
@@ -108,28 +163,57 @@ function App() {
   return (
     <div dir={lang === 'ar' ? 'rtl' : 'ltr'} className={`min-h-screen bg-slate-900 text-slate-100 flex selection:bg-blue-500/30 selection:text-white ${lang === 'ar' ? 'font-arabic' : 'font-sans'}`}>
       <Toaster position="bottom-right" reverseOrder={false} />
+
+      {/* --- MOBILE OVERLAY --- */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-30 md:hidden transition-opacity"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* --- MOBILE HEADER --- */}
+      <div className="md:hidden fixed top-0 left-0 right-0 h-16 glass-panel border-b border-slate-800/50 z-20 flex items-center justify-between px-4 shadow-lg">
+        <h1 className="text-xl font-extrabold text-gradient from-blue-400 via-indigo-400 to-emerald-400 tracking-tight">
+          {t.appTitle || "Prompt Studio"}
+        </h1>
+        <button 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+          className="p-2 text-slate-300 hover:text-white bg-slate-800/80 rounded-lg border border-slate-700 transition-colors"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+      </div>
+
       
       {/* Sidebar Navigation */}
-      <div className={`w-72 glass-panel border-r border-slate-800/50 p-6 flex flex-col fixed h-full overflow-y-auto z-20 shadow-[4px_0_24px_-10px_rgba(0,0,0,0.5)] ${lang === 'ar' ? 'border-l right-0' : 'border-r left-0'}`}>
+      <div className={`w-72 glass-panel border-r border-slate-800/50 p-6 flex flex-col fixed h-full overflow-y-auto z-40 shadow-[4px_0_24px_-10px_rgba(0,0,0,0.5)] transition-transform duration-300 ease-in-out ${lang === 'ar' ? 'border-l right-0' : 'border-r left-0'} ${isMobileMenuOpen ? 'translate-x-0' : (lang === 'ar' ? 'translate-x-full md:translate-x-0' : '-translate-x-full md:translate-x-0')}`}>
         <h1 className="text-3xl font-extrabold mb-8 text-gradient from-blue-400 via-indigo-400 to-emerald-400 tracking-tight">
           {t.appTitle}
         </h1>
         <nav className="flex-1 space-y-1.5">
           {dataTabs.map(tab => (
-            <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`w-full ${lang === 'ar' ? 'text-right' : 'text-left'} p-2.5 rounded-lg transition-colors flex flex-col ${activeTab === tab.id ? 'bg-blue-600/20 border border-blue-500/50 text-blue-400' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}>
+            <NavLink
+              key={tab.id}
+              to={`/app/${tab.id}`}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={({ isActive }) =>
+                `w-full ${lang === 'ar' ? 'text-right' : 'text-left'} p-2.5 rounded-lg transition-colors flex flex-col ${isActive ? 'bg-blue-600/20 border border-blue-500/50 text-blue-400' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`
+              }
+            >
               <span className="font-semibold text-sm flex items-center justify-between w-full">
                 {t.tabs[tab.id] || tab.name}
               </span>
-            </button>
+            </NavLink>
           ))}
         </nav>
       </div>
 
-      <div className={`flex-1 p-8 ${lang === 'ar' ? 'mr-72' : 'ml-72'}`}>
+      <div className={`flex-1 p-4 md:p-8 pt-20 md:pt-8 transition-all duration-300 ${lang === 'ar' ? 'md:mr-72' : 'md:ml-72'}`}>
 
         {/* --- GLOBAL SEARCH BAR (HEADER) --- */}
-        <div className="max-w-7xl mx-auto flex items-center justify-between mb-8 sticky top-0 glass-panel z-10 py-4 px-6 rounded-2xl border border-slate-700/50 mt-4 shadow-lg">
-          <div className="relative w-[400px]">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between mb-8 sticky top-16 md:top-0 glass-panel z-10 py-4 px-4 md:px-6 rounded-2xl border border-slate-700/50 md:mt-4 shadow-lg gap-4">
+          <div className="relative w-full md:w-[400px]">
             <svg className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
@@ -142,15 +226,28 @@ function App() {
             />
           </div>
           <div className="flex items-center gap-4">
-             {/* Hier können später Profilbild / Notifications rein */}
-             {user && <span className="text-sm text-slate-400">{user.email}</span>}
+             {user ? (
+                <div className="flex items-center gap-3 bg-slate-800/50 pl-3 pr-1 py-1 rounded-full border border-slate-700">
+                  <span className="text-sm font-bold text-slate-300 ml-2">{user.email.split('@')[0]}</span>
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-emerald-400 flex items-center justify-center text-xs font-bold shadow-md">
+                    {user.email[0].toUpperCase()}
+                  </div>
+                </div>
+             ) : (
+                <NavLink to="/app/auth" className="text-sm font-bold bg-blue-600/20 text-blue-400 border border-blue-500/50 px-4 py-2 rounded-xl hover:bg-blue-600/40 transition-colors">
+                  Einloggen
+                </NavLink>
+             )}
           </div>
         </div>
 
-        {/* --- 1. MEIN STUDIO (MIT SHARE BUTTONS) --- */}
-        {activeTab === 'studio' && (
+        <Routes>
+          <Route path="/" element={<Navigate to="studio" replace />} />
+          {/* --- 1. MEIN STUDIO (MIT SHARE BUTTONS) --- */}
+        <Route path="studio" element={<>
           <div className="max-w-7xl animate-fade-in mx-auto mt-4">
             <h2 className="text-3xl font-bold mb-8">📂 Mein Studio</h2>
+            {isLoadingPrompts && <div className="text-slate-400 animate-pulse mb-4">Lade echte Daten aus Supabase...</div>}
             <div className="flex gap-8">
               <div className="w-64 space-y-2">
                 {['Meine Favoriten', 'Projekt X'].map(folder => (
@@ -195,12 +292,14 @@ function App() {
               </div>
             </div>
           </div>
-        )}
+
+          </>} />
 
         {/* --- MARKTPLATZ (MIT SHARE BUTTON) --- */}
-        {activeTab === 'marketplace' && (
+        <Route path="marketplace" element={<>
           <div className="max-w-7xl animate-fade-in mx-auto mt-4">
             <h2 className="text-3xl font-bold mb-8">💰 Prompt Marktplatz</h2>
+            {isLoadingPrompts && <div className="text-slate-400 animate-pulse mb-4">Lade echte Daten aus Supabase...</div>}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {marketplacePrompts
                 .filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()) || item.category.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -227,39 +326,90 @@ function App() {
               ))}
             </div>
           </div>
-        )}
+
+          </>} />
 
         {/* --- PROMPT MIXER --- */}
-        {activeTab === 'mixer' && <PromptMixer />}
+        <Route path="mixer" element={
+  <Suspense fallback={
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+    </div>
+  }><PromptMixer /></Suspense>} />
 
         {/* --- LIVE GENERATOR --- */}
-        {activeTab === 'generator' && <LiveGenerator />}
+        <Route path="generator" element={
+  <Suspense fallback={
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+    </div>
+  }><LiveGenerator /></Suspense>} />
 
         {/* --- PROMPT EXTRACTOR --- */}
-        {activeTab === 'extractor' && <PromptExtractor />}
+        <Route path="extractor" element={
+  <Suspense fallback={
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+    </div>
+  }><PromptExtractor /></Suspense>} />
 
         {/* --- VIDEO GENERATOR --- */}
-        {activeTab === 'videos' && <VideoGenerator />}
+        <Route path="videos" element={
+  <Suspense fallback={
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+    </div>
+  }><VideoGenerator /></Suspense>} />
 
         {/* --- MODEL COMPARE --- */}
-        {activeTab === 'compare' && <ModelCompare />}
+        <Route path="compare" element={
+  <Suspense fallback={
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+    </div>
+  }><ModelCompare /></Suspense>} />
 
         {/* --- MUSIC GENERATOR --- */}
-        {activeTab === 'music' && <MusicGenerator />}
+        <Route path="music" element={
+  <Suspense fallback={
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+    </div>
+  }><MusicGenerator /></Suspense>} />
 
         {/* --- COMMUNITY FEED --- */}
-        {activeTab === 'community' && <CommunityFeed />}
+        <Route path="community" element={
+  <Suspense fallback={
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+    </div>
+  }><CommunityFeed /></Suspense>} />
 
         {/* --- FLOW BUILDER --- */}
-        {activeTab === 'flows' && <FlowBuilder />}
+        <Route path="flows" element={
+  <Suspense fallback={
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+    </div>
+  }><FlowBuilder /></Suspense>} />
+
+        
+        {/* --- AUTH / PROFILE --- */}
+        <Route path="auth" element={
+  <Suspense fallback={
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+    </div>
+  }><AuthProfile /></Suspense>} />
 
         {/* --- PLACEHOLDER FOR OTHERS --- */}
-        {!['studio', 'marketplace', 'mixer', 'generator', 'extractor', 'videos', 'compare', 'music', 'community', 'flows'].includes(activeTab) && (
+        <Route path="*" element={<>
           <div className="max-w-4xl animate-fade-in flex flex-col items-center justify-center h-96 bg-slate-800 rounded-xl border border-slate-700 border-dashed mt-4">
              <h2 className="text-2xl font-bold mb-2 text-slate-300">Share-Buttons hinzugefügt!</h2>
              <p className="text-slate-500">Schau dir den "Mein Studio" oder "Marktplatz" Tab an, um das neue Teilen-Feature (X, Facebook, WhatsApp) zu sehen.</p>
           </div>
-        )}
+          </>} />
+        </Routes>
 
       </div>
     </div>
