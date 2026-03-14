@@ -141,7 +141,7 @@ export default function EarnCredits() {
             <p className="text-slate-400 text-sm mb-6">Keine Wartezeiten. Unendliche visuelle Sparks. Werde ein Premium-Pilot.</p>
             <div className="text-amber-400 font-black text-2xl mb-6">Unendlich ⚡</div>
             <button 
-              onClick={() => toast('Upgrade-System ist noch offline. Bald verfügbar!', { icon: '🚧' })}
+              onClick={() => window.location.href = '/app/pricing'}
               className="w-full bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold py-3 rounded-xl transition-colors shadow-lg shadow-amber-500/30"
             >
               Pro Upgrade

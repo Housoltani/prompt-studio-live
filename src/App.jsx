@@ -22,6 +22,7 @@ const AgentsHub = lazy(() => import('./components/AgentsHub'))
 const FlowBuilder = lazy(() => import('./components/FlowBuilder'))
 const AuthProfile = lazy(() => import('./components/AuthProfile'))
 const EarnCredits = lazy(() => import('./components/EarnCredits'))
+const Pricing = lazy(() => import('./components/Pricing'))
 
 function AppContent() {
   const [lang, setLang] = useState('de')
@@ -460,6 +461,13 @@ function AppContent() {
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
     </div>
   }><EarnCredits /></Suspense>} />
+
+        {/* --- PRICING --- */}
+        <Route path="pricing" element={<Suspense fallback={
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
+    </div>
+  }><Pricing /></Suspense>} />
 
         {/* --- PLACEHOLDER FOR OTHERS --- */}
         <Route path="*" element={<>
