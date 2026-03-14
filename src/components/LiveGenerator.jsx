@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
+import { useCredits } from '../context/CreditsContext';
 import { soundEngine } from '../utils/SoundEngine';
 
 const PERSONAS = [
@@ -21,6 +22,7 @@ export default function LiveGenerator() {
   const [isListening, setIsListening] = useState(false);
   
   const chatEndRef = useRef(null);
+  const { spendCredits } = useCredits();
 
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -95,6 +97,11 @@ export default function LiveGenerator() {
   const handleGenerate = async () => {
     if (!input.trim() && !imageUrl) {
       toast.error('Bitte gib einen Prompt oder ein Bild ein!');
+      return;
+    }
+    
+    // Check credits before starting (1 prompt = 5 credits)
+    if (!spendCredits(5, 'KI Generierung')) {
       return;
     }
 

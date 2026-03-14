@@ -16,6 +16,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { toast } from 'react-hot-toast';
+import { useCredits } from '../context/CreditsContext';
 
 // Hilfskomponente für die sortierbaren Elemente (Tags im Builder)
 function SortableItem({ id, title, onRemove }) {
@@ -63,11 +64,16 @@ export default function PromptMixer() {
   const [basePrompt, setBasePrompt] = useState('/imagine prompt: A futuristic city');
   const [selectedBlocks, setSelectedBlocks] = useState([]);
   const [isOptimizing, setIsOptimizing] = useState(false);
+  const { spendCredits } = useCredits();
 
 
   const handleOptimize = async () => {
     if (!basePrompt || basePrompt.trim() === '') {
       toast.error('Bitte gib zuerst einen Basis-Prompt ein!');
+      return;
+    }
+    
+    if (!spendCredits(2, 'KI Magic Optimize')) {
       return;
     }
     

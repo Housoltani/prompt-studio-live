@@ -9,6 +9,7 @@ import {
   marketplacePrompts as dummyMarketplacePrompts
 } from './data.js'
 import { translations } from './i18n.js'
+import { CreditsProvider, useCredits } from './context/CreditsContext'
 import InteractivePrompt from './components/InteractivePrompt'
 const PromptMixer = lazy(() => import('./components/PromptMixer'))
 const LiveGenerator = lazy(() => import('./components/LiveGenerator'))
@@ -20,10 +21,12 @@ const CommunityFeed = lazy(() => import('./components/CommunityFeed'))
 const AgentsHub = lazy(() => import('./components/AgentsHub'))
 const FlowBuilder = lazy(() => import('./components/FlowBuilder'))
 const AuthProfile = lazy(() => import('./components/AuthProfile'))
+const EarnCredits = lazy(() => import('./components/EarnCredits'))
 
-function App() {
+function AppContent() {
   const [lang, setLang] = useState('de')
   const t = translations[lang]
+  const { credits } = useCredits()
 
   const [activeFolder, setActiveFolder] = useState('Meine Favoriten')
   const [communityPrompts, setCommunityPrompts] = useState(dummyCommunityPrompts)
@@ -255,6 +258,10 @@ function App() {
             />
           </div>
           <div className="flex items-center gap-4">
+             
+             <NavLink to="/app/credits" className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-full text-sm font-bold transition-colors">
+               <span>🪙</span> {credits}
+             </NavLink>
              {user ? (
                 <div className="flex items-center gap-3 bg-slate-800/50 pl-3 pr-1 py-1 rounded-full border border-slate-700">
                   <span className="text-sm font-bold text-slate-300 ml-2">{user.email.split('@')[0]}</span>
@@ -446,6 +453,14 @@ function App() {
     </div>
   }><AgentsHub /></Suspense>} />
 
+        
+        {/* --- EARN CREDITS --- */}
+        <Route path="credits" element={<Suspense fallback={
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+    </div>
+  }><EarnCredits /></Suspense>} />
+
         {/* --- PLACEHOLDER FOR OTHERS --- */}
         <Route path="*" element={<>
           <div className="max-w-4xl animate-fade-in flex flex-col items-center justify-center h-96 bg-slate-800 rounded-xl border border-slate-700 border-dashed mt-4">
@@ -460,4 +475,4 @@ function App() {
   )
 }
 
-export default App
+export default function App() { return <CreditsProvider><AppContent /></CreditsProvider>; }
