@@ -78,6 +78,19 @@ export default function LiveGenerator() {
       return;
     }
 
+    // Simulation für zukünftige Custom-Text-Modelle (Nano Banana etc.)
+    if (model.startsWith('text/')) {
+      setTimeout(() => {
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: `Ich bin bereit! Dies ist eine simulierte Antwort des High-End Modells [${model.split('/')[1].toUpperCase()}]. Dein Befehl wurde analysiert.`,
+          modelName: model.split('/')[1].toUpperCase()
+        }]);
+        setLoading(false);
+      }, 1500);
+      return;
+    }
+
     // Reguläre Text-Generierung über OpenRouter
     const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
     if (!apiKey) {
@@ -288,53 +301,56 @@ export default function LiveGenerator() {
               onChange={(e) => setModel(e.target.value)}
               className="w-full bg-slate-800 border border-slate-700 text-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-blue-500 custom-scrollbar"
             >
-              <optgroup label="OpenAI (ChatGPT)">
-                <option value="openai/gpt-3.5-turbo">GPT-3.5 Turbo</option>
-                <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
+              <optgroup label="🍌 Nano Banana (Exklusiv)">
+                <option value="text/nano-banana-pro">Nano Banana Pro (🍌 Pro)</option>
+                <option value="text/nano-banana-2">Nano Banana 2</option>
+                <option value="text/nano-banana-1">Nano Banana 1 (🍌 Flash)</option>
+              </optgroup>
+              <optgroup label="OpenAI (Next-Gen)">
+                <option value="openai/gpt-5.4">GPT 5.4</option>
+                <option value="openai/gpt-5.2-pro">GPT 5.2 Pro</option>
+                <option value="openai/gpt-5-mini">GPT 5 mini</option>
+                <option value="openai/gpt-4.1">GPT 4.1</option>
+                <option value="openai/gpt-oss-120b">GPT OSS 120B</option>
                 <option value="openai/gpt-4o">GPT-4o (Omni)</option>
-                <option value="openai/gpt-4-turbo">GPT-4 Turbo</option>
               </optgroup>
-              <optgroup label="Anthropic (Claude)">
-                <option value="anthropic/claude-3-haiku">Claude 3 Haiku</option>
-                <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
-                <option value="anthropic/claude-3-opus">Claude 3 Opus</option>
+              <optgroup label="Google (Gemini Next)">
+                <option value="google/gemini-3.1-pro">Gemini 3.1 Pro Preview</option>
+                <option value="google/gemini-3-flash">Gemini 3 Flash Preview</option>
+                <option value="google/gemini-2.5-pro">Gemini 2.5 Pro</option>
               </optgroup>
-              <optgroup label="Google">
-                <option value="google/gemma-2-9b-it:free">Gemma 2 (9B) - Free</option>
-                <option value="google/gemini-flash-1.5">Gemini 1.5 Flash</option>
-                <option value="google/gemini-pro-1.5">Gemini 1.5 Pro</option>
+              <optgroup label="DeepSeek & Grok">
+                <option value="deepseek/deepseek-r1">DeepSeek R1</option>
+                <option value="text/deepseek-v3.2-speciale">DeepSeek V3.2 Speciale</option>
+                <option value="text/deepseek-v3.2">DeepSeek V3.2</option>
+                <option value="xai/grok-4">Grok 4</option>
+                <option value="text/grok-4.1-fast">Grok 4.1 Fast</option>
               </optgroup>
-              <optgroup label="Meta (Llama)">
-                <option value="meta-llama/llama-3-8b-instruct:free">Llama 3 (8B) - Free</option>
-                <option value="meta-llama/llama-3-70b-instruct">Llama 3 (70B)</option>
+              <optgroup label="Asia AI Giants">
+                <option value="text/minimax-m2.5">MiniMax M2.5</option>
+                <option value="text/kimi-k2.5">Kimi K2.5</option>
+                <option value="text/foundation-model">Foundation Model</option>
               </optgroup>
-              <optgroup label="Mistral & Open Source">
-                <option value="mistralai/mistral-7b-instruct:free">Mistral 7B - Free</option>
-                <option value="mistralai/mixtral-8x22b-instruct">Mixtral 8x22B</option>
-                <option value="cohere/command-r-plus">Cohere Command R+</option>
-                <option value="databricks/dbrx-instruct">Databricks DBRX</option>
-                <option value="qwen/qwen-2-72b-instruct">Qwen 2 (72B)</option>
-                <option value="microsoft/wizardlm-2-8x22b">WizardLM-2</option>
-                <option value="nousresearch/nous-hermes-2-mixtral-8x7b-dpo">Nous Hermes 2</option>
-              </optgroup>
-              <optgroup label="🎨 Bild Generatoren">
+              <optgroup label="🎨 Next-Gen Image">
+                <option value="image/gpt-image-1.5">GPT Image 1.5</option>
+                <option value="image/seedream-v5.0-lite">Seedream V5.0 Lite</option>
+                <option value="image/seedream-v4.5">Seedream v4.5</option>
                 <option value="image/flux">Flux.1 (High Quality)</option>
-                <option value="image/sdxl">Stable Diffusion XL</option>
-                <option value="image/dall-e-3">DALL-E 3</option>
                 <option value="image/midjourney-v6">Midjourney v6 (API)</option>
-                <option value="image/leonardo-phoenix">Leonardo Phoenix</option>
               </optgroup>
-              <optgroup label="🎬 Video Generatoren">
-                <option value="video/runway-gen3">Runway Gen-3 Alpha</option>
-                <option value="video/sora">OpenAI Sora</option>
-                <option value="video/kling">Kling AI</option>
-                <option value="video/luma-dream-machine">Luma Dream Machine</option>
-              </optgroup>
-              <optgroup label="🎵 Audio & Voice">
-                <option value="audio/suno-v3">Suno v3 (Musik)</option>
-                <option value="audio/udio">Udio (Musik)</option>
-                <option value="audio/elevenlabs">ElevenLabs (Voice)</option>
-                <option value="audio/playht">PlayHT (Voice)</option>
+              <optgroup label="🎬 Video Generatoren (Text/Image to Video)">
+                <option value="video/sora-2-t2v">Sora 2 | Text-to-video</option>
+                <option value="video/sora-2-i2v">Sora 2 | Image-to-video</option>
+                <option value="video/kling-3-std-t2v">Kling 3.0 Standard | Text-to-video</option>
+                <option value="video/kling-3-std-i2v">Kling 3.0 Standard | Image-to-video</option>
+                <option value="video/kling-2.6-pro-t2v">Kling V2.6 Pro | Text-to-video</option>
+                <option value="video/kling-2.6-pro-i2v">Kling V2.6 Pro | Image-to-video</option>
+                <option value="video/wan-2.6-t2v">Wan V2.6 | text-to-video</option>
+                <option value="video/wan-2.6-i2v">Wan V2.6 | image-to-video</option>
+                <option value="video/veo-3.1-t2v">Veo 3.1 | Text-to-video</option>
+                <option value="video/veo-3.1-i2v">Veo 3.1 | Image-to-video</option>
+                <option value="video/veo-3.1-fast-t2v">Veo 3.1 Fast | Text-to-video</option>
+                <option value="video/veo-3.1-fast-i2v">Veo 3.1 Fast | Image-to-video</option>
               </optgroup>
             </select>
           </div>
