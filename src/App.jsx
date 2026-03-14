@@ -23,6 +23,7 @@ const FlowBuilder = lazy(() => import('./components/FlowBuilder'))
 const AuthProfile = lazy(() => import('./components/AuthProfile'))
 const EarnCredits = lazy(() => import('./components/EarnCredits'))
 const Pricing = lazy(() => import('./components/Pricing'))
+const Studio = lazy(() => import('./components/Studio'))
 
 function AppContent() {
   const [lang, setLang] = useState('de')
@@ -281,56 +282,11 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Navigate to="agents" replace />} />
           {/* --- 1. MEIN STUDIO (MIT SHARE BUTTONS) --- */}
-        <Route path="studio" element={<>
-          <div className="max-w-7xl animate-fade-in mx-auto mt-4">
-            <h2 className="text-3xl font-bold mb-8">📂 Mein Studio</h2>
-            {isLoadingPrompts && <div className="text-slate-400 animate-pulse mb-4">Lade echte Daten aus Supabase...</div>}
-            <div className="flex gap-8">
-              <div className="w-64 space-y-2">
-                {['Meine Favoriten', 'Projekt X'].map(folder => (
-                  <button key={folder} onClick={() => setActiveFolder(folder)} className={`w-full text-left px-4 py-3 rounded-xl transition-colors ${activeFolder === folder ? 'bg-slate-800 text-blue-400 font-bold border border-slate-700' : 'text-slate-400 hover:bg-slate-800/50'}`}>
-                    {folder}
-                  </button>
-                ))}
-              </div>
-              
-              <div className="flex-1 glass-panel rounded-[2rem] p-8 min-h-[500px]">
-                <h3 className="text-xl font-bold text-white mb-8 border-b border-slate-700 pb-4">{activeFolder}</h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {communityPrompts
-                    .filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()) || item.prompt.toLowerCase().includes(searchQuery.toLowerCase()))
-                    .slice(0,2)
-                    .map(item => (
-                    <div key={item.id} className="glass-card rounded-2xl p-5 relative group animate-slide-up hover:-translate-y-1">
-                      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-                        
-                        {/* SHARE BUTTON CONTAINER */}
-                        <div className="relative">
-                          <button 
-                            onClick={() => setShareMenuOpen(shareMenuOpen === `studio-${item.id}` ? null : `studio-${item.id}`)}
-                            className="p-1.5 bg-slate-700 rounded text-slate-300 hover:text-white hover:bg-blue-600 transition-colors"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
-                          </button>
-                          <ShareMenu id={`studio-${item.id}`} title={item.title} />
-                        </div>
-
-                        <button className="p-1.5 bg-slate-700 rounded text-red-400 hover:bg-red-500/20">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                        </button>
-                      </div>
-                      <span className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1 block">Prompt</span>
-                      <h4 className="font-bold text-white mb-2">{item.title}</h4>
-                      <InteractivePrompt template={item.prompt} title={item.title} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          </>} />
+        <Route path="studio" element={<Suspense fallback={
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+    </div>
+  }><Studio /></Suspense>} />
 
         {/* --- MARKTPLATZ (MIT SHARE BUTTON) --- */}
         <Route path="marketplace" element={<>
