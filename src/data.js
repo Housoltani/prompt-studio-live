@@ -11,7 +11,6 @@ export const tabs = [
   { id: 'music', name: '🎵 KI Musik', desc: 'Prompts für Suno, Udio' },
   { id: 'community', name: '🏆 Community', desc: 'User Uploads & Trending' },
   { id: 'learning', name: '🎓 KI für Anfänger', desc: 'Tools & Tutorials zum Starten' },
-  { id: 'repair', name: '🛠️ Tech Repair', desc: 'Handy & Laptop reparieren' },
   { id: 'feedback', name: '💬 Feedback', desc: 'Lass uns wissen, was du denkst' },
   { id: 'auth', name: '🔐 Login / Profil', desc: 'Google, Apple, Twitter' },
 ];
