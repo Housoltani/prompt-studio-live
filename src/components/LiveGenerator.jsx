@@ -42,6 +42,23 @@ export default function LiveGenerator() {
     setImageUrl('');
     setLoading(true);
 
+    // Video & Audio Simulation
+    if (model.startsWith('video/') || model.startsWith('audio/')) {
+      setTimeout(() => {
+        const isVideo = model.startsWith('video/');
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: isVideo ? 'Hier ist dein generiertes Video:' : 'Hier ist dein generierter Audio-Track:',
+          generatedVideo: isVideo ? 'https://cdn.pixabay.com/video/2020/05/25/40131-424813350_large.mp4' : null,
+          generatedAudio: !isVideo ? 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' : null,
+          modelName: model.split('/')[1].toUpperCase().replace('-', ' ')
+        }]);
+        setLoading(false);
+        toast.success(isVideo ? 'Video erfolgreich generiert!' : 'Audio erfolgreich generiert!', { icon: isVideo ? '🎬' : '🎵' });
+      }, 2500);
+      return;
+    }
+
     // Echte Bild-Generierung (über Pollinations AI API für Demo)
     if (model.startsWith('image/')) {
       setTimeout(() => {
@@ -195,6 +212,16 @@ export default function LiveGenerator() {
                     {msg.generatedImage && (
                       <img src={msg.generatedImage} alt="AI Generated" className="mt-3 w-full max-w-md rounded-xl border border-slate-600 shadow-2xl" />
                     )}
+                    {msg.generatedVideo && (
+                      <div className="mt-3 w-full max-w-md rounded-xl overflow-hidden border border-slate-600 shadow-2xl">
+                        <video src={msg.generatedVideo} controls autoPlay loop className="w-full bg-black" />
+                      </div>
+                    )}
+                    {msg.generatedAudio && (
+                      <div className="mt-3 w-full max-w-md rounded-xl p-3 bg-slate-900 border border-slate-600 shadow-2xl">
+                        <audio src={msg.generatedAudio} controls className="w-full" />
+                      </div>
+                    )}
                   </div>
                 </div>
               ))
@@ -259,21 +286,55 @@ export default function LiveGenerator() {
             <select 
               value={model} 
               onChange={(e) => setModel(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 text-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-blue-500"
+              className="w-full bg-slate-800 border border-slate-700 text-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-blue-500 custom-scrollbar"
             >
-              <optgroup label="Schnell & Smart (Text)">
+              <optgroup label="OpenAI (ChatGPT)">
                 <option value="openai/gpt-3.5-turbo">GPT-3.5 Turbo</option>
-                <option value="meta-llama/llama-3-8b-instruct:free">Llama 3 (8B) - Free</option>
+                <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
+                <option value="openai/gpt-4o">GPT-4o (Omni)</option>
+                <option value="openai/gpt-4-turbo">GPT-4 Turbo</option>
               </optgroup>
-              <optgroup label="Super Intelligenz (Text & Vision)">
-                <option value="openai/gpt-4o">GPT-4o</option>
+              <optgroup label="Anthropic (Claude)">
+                <option value="anthropic/claude-3-haiku">Claude 3 Haiku</option>
                 <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
+                <option value="anthropic/claude-3-opus">Claude 3 Opus</option>
+              </optgroup>
+              <optgroup label="Google">
+                <option value="google/gemma-2-9b-it:free">Gemma 2 (9B) - Free</option>
+                <option value="google/gemini-flash-1.5">Gemini 1.5 Flash</option>
                 <option value="google/gemini-pro-1.5">Gemini 1.5 Pro</option>
               </optgroup>
-              <optgroup label="🎨 Echte Bilder Generieren">
+              <optgroup label="Meta (Llama)">
+                <option value="meta-llama/llama-3-8b-instruct:free">Llama 3 (8B) - Free</option>
+                <option value="meta-llama/llama-3-70b-instruct">Llama 3 (70B)</option>
+              </optgroup>
+              <optgroup label="Mistral & Open Source">
+                <option value="mistralai/mistral-7b-instruct:free">Mistral 7B - Free</option>
+                <option value="mistralai/mixtral-8x22b-instruct">Mixtral 8x22B</option>
+                <option value="cohere/command-r-plus">Cohere Command R+</option>
+                <option value="databricks/dbrx-instruct">Databricks DBRX</option>
+                <option value="qwen/qwen-2-72b-instruct">Qwen 2 (72B)</option>
+                <option value="microsoft/wizardlm-2-8x22b">WizardLM-2</option>
+                <option value="nousresearch/nous-hermes-2-mixtral-8x7b-dpo">Nous Hermes 2</option>
+              </optgroup>
+              <optgroup label="🎨 Bild Generatoren">
                 <option value="image/flux">Flux.1 (High Quality)</option>
                 <option value="image/sdxl">Stable Diffusion XL</option>
                 <option value="image/dall-e-3">DALL-E 3</option>
+                <option value="image/midjourney-v6">Midjourney v6 (API)</option>
+                <option value="image/leonardo-phoenix">Leonardo Phoenix</option>
+              </optgroup>
+              <optgroup label="🎬 Video Generatoren">
+                <option value="video/runway-gen3">Runway Gen-3 Alpha</option>
+                <option value="video/sora">OpenAI Sora</option>
+                <option value="video/kling">Kling AI</option>
+                <option value="video/luma-dream-machine">Luma Dream Machine</option>
+              </optgroup>
+              <optgroup label="🎵 Audio & Voice">
+                <option value="audio/suno-v3">Suno v3 (Musik)</option>
+                <option value="audio/udio">Udio (Musik)</option>
+                <option value="audio/elevenlabs">ElevenLabs (Voice)</option>
+                <option value="audio/playht">PlayHT (Voice)</option>
               </optgroup>
             </select>
           </div>
