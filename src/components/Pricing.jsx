@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 export default function Pricing() {
   const [isYearly, setIsYearly] = useState(true);
   const [selectedCredits, setSelectedCredits] = useState('16500');
+  const [showCheckout, setShowCheckout] = useState(false);
 
   const getPrice = () => {
     if (selectedCredits === '16500') return isYearly ? '11' : '19';
@@ -20,7 +21,15 @@ export default function Pricing() {
   };
 
   const handleUpgrade = () => {
-    toast.success('Weiterleitung zum Zahlungsanbieter...', { icon: '💳' });
+    setShowCheckout(true);
+  };
+
+  const processPayment = (method) => {
+    toast.success(`Zahlung via ${method} wird autorisiert...`, { icon: '🔄', duration: 2000 });
+    setTimeout(() => {
+      toast.success(`Willkommen im ${getPlanName()} Tier!`, { icon: '🚀', duration: 3000 });
+      setShowCheckout(false);
+    }, 2000);
   };
 
   return (
@@ -116,6 +125,64 @@ export default function Pricing() {
         </div>
 
       </div>
+
+      {/* Checkout Modal */}
+      {showCheckout && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm animate-fade-in">
+          <div className="glass-card rounded-3xl p-8 max-w-sm w-full border border-slate-700 shadow-2xl relative">
+            
+            {/* Close Button */}
+            <button 
+              onClick={() => setShowCheckout(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-black text-white">Checkout</h3>
+              <p className="text-sm text-slate-400 mt-1">Upgrade auf {getPlanName()}</p>
+              <div className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-600 mt-2">
+                {getPrice()},99 € <span className="text-sm text-slate-500 font-bold">/ {isYearly ? 'Jahr' : 'Monat'}</span>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Zahlungsmethode wählen</p>
+              
+              <button onClick={() => processPayment('Apple Pay')} className="w-full flex items-center justify-center gap-3 bg-white text-black font-bold py-3 px-4 rounded-xl hover:bg-slate-200 transition-colors shadow-sm">
+                <span className="text-xl"></span> Apple Pay
+              </button>
+
+              <button onClick={() => processPayment('Google Pay')} className="w-full flex items-center justify-center gap-3 bg-slate-800 border border-slate-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-slate-700 transition-colors shadow-sm">
+                <span className="text-xl">🤖</span> Google Pay
+              </button>
+
+              <button onClick={() => processPayment('PayPal')} className="w-full flex items-center justify-center gap-3 bg-[#00457C] hover:bg-[#003666] text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-sm">
+                <span className="text-xl font-serif italic text-[#0079C1]">P</span> PayPal
+              </button>
+
+              <button onClick={() => processPayment('Kreditkarte')} className="w-full flex items-center justify-center gap-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-sm">
+                <span className="text-xl">💳</span> Visa / Mastercard
+              </button>
+
+              <button onClick={() => processPayment('Klarna')} className="w-full flex items-center justify-center gap-3 bg-[#FFA8C5] hover:bg-[#ff8fb3] text-black font-bold py-3 px-4 rounded-xl transition-colors shadow-sm">
+                <span className="text-xl font-serif">K.</span> Klarna (Pay Later)
+              </button>
+
+              <button onClick={() => processPayment('Crypto')} className="w-full flex items-center justify-center gap-3 bg-slate-900 border border-emerald-500/30 hover:border-emerald-500/80 text-emerald-400 font-bold py-3 px-4 rounded-xl transition-colors shadow-sm">
+                <span className="text-xl">💎</span> Web3 / Crypto (USDC)
+              </button>
+            </div>
+            
+            <p className="text-center text-xs text-slate-500 mt-6 flex items-center justify-center gap-1">
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+              Sichere 256-Bit SSL Verschlüsselung
+            </p>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
