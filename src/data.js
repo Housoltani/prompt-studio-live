@@ -1,4 +1,5 @@
 export const tabs = [
+  { id: 'command-center', name: '🎯 Smart Social Suite', desc: 'Deine Instagram KI-Crew' },
   { id: 'agents', name: '🤖 Agenten Hub', desc: 'Spezialisierte KI-Assistenten' },
   { id: 'generator', name: '✨ Live Generator', desc: 'Bilder, Videos & Musik direkt hier' },
   { id: 'studio', name: '📂 Mein Studio', desc: 'Dein Workspace' },

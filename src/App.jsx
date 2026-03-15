@@ -19,6 +19,7 @@ const ModelCompare = lazy(() => import('./components/ModelCompare'))
 const MusicGenerator = lazy(() => import('./components/MusicGenerator'))
 const CommunityFeed = lazy(() => import('./components/CommunityFeed'))
 const AgentsHub = lazy(() => import('./components/AgentsHub'))
+const CommandCenter = lazy(() => import('./components/CommandCenter'))
 const FlowBuilder = lazy(() => import('./components/FlowBuilder'))
 const AuthProfile = lazy(() => import('./components/AuthProfile'))
 const EarnCredits = lazy(() => import('./components/EarnCredits'))
@@ -31,15 +32,7 @@ function AppContent() {
   const t = translations[lang]
   const { credits } = useCredits()
 
-  const [activeFolder, setActiveFolder] = useState('Meine Favoriten')
-  const [communityPrompts, setCommunityPrompts] = useState(dummyCommunityPrompts)
-  const [marketplacePrompts, setMarketplacePrompts] = useState(dummyMarketplacePrompts)
-  const [isLoadingPrompts, setIsLoadingPrompts] = useState(true)
-  const [flowStep, setFlowStep] = useState(1)
-
   const [user, setUser] = useState(null)
-  const [likedItems, setLikedItems] = useState({})
-  const [copiedItems, setCopiedItems] = useState({})
   const [searchQuery, setSearchQuery] = useState('')
   
   // NEW: Share Menu State
@@ -372,6 +365,13 @@ function AppContent() {
 
         
         {/* --- AGENTEN HUB --- */}
+                <Route path="command-center" element={
+          <Suspense fallback={
+            <div className="flex items-center justify-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+            </div>
+          }><CommandCenter /></Suspense>
+        } />
         <Route path="agents" element={
   <Suspense fallback={
     <div className="flex items-center justify-center h-64">

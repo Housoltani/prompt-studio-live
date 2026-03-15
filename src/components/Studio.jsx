@@ -28,7 +28,7 @@ export default function Studio() {
       {/* Header */}
       <div className="flex justify-between items-end mb-8">
         <div>
-          <h2 className="text-4xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500 tracking-tight">📂 Kommandozentrale</h2>
+          <h2 className="text-4xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500 tracking-tight">📂 Smart Social Suite</h2>
           <p className="text-slate-400 text-lg">Willkommen zurück in deinem Studio. Deine Ressourcen und Projekte auf einen Blick.</p>
         </div>
       </div>
