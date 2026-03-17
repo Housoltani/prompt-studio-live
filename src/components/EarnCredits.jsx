@@ -62,7 +62,7 @@ export default function EarnCredits() {
           <span className="text-4xl drop-shadow-[0_0_10px_rgba(245,158,11,0.8)]">⚡</span>
           <div>
             <div className="text-xs text-amber-500 font-bold uppercase tracking-widest">Sparks Batterie</div>
-            <div className="text-4xl font-black text-white">{credits} <span className="text-xl text-slate-500 font-normal">/ 100</span></div>
+            <div className="text-4xl font-black text-white">{credits} <span className="text-xl text-slate-500 font-normal">/ 160</span></div>
           </div>
         </div>
       </div>
