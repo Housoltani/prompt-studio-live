@@ -1,446 +1,159 @@
 import React, { useState } from 'react';
-import { toast } from 'react-hot-toast';
-import { useCredits } from '../context/CreditsContext';
 
 export default function FlowBuilder() {
-  const { credits, spendCredits } = useCredits();
-  
   const [nodes, setNodes] = useState([
-    { id: '1', type: 'text', title: 'GPT-4o (Skript)', desc: 'Generiere ein Hook-Skript für ein 10s Video.', top: 100, left: 40, cost: 0, model: 'openai/gpt-4o' },
-    { id: '2', type: 'video', title: 'Kling 3.0 (Render)', desc: 'Nutze {{ node.1.output }} als Prompt.', top: 250, left: 450, cost: 10, model: 'video/kling-3' }
+    { id: 1, type: 'trigger', name: 'Start', color: 'slate' },
+    { id: 2, type: 'action', name: 'Prompt Generator (GPT-4)', color: 'blue', desc: 'Erstellt einen detaillierten Bild-Prompt aus dem Thema.' },
+    { id: 3, type: 'action', name: 'Bild-Generator (Midjourney)', color: 'fuchsia', desc: 'Generiert ein 16:9 Bild basierend auf dem Prompt.' },
+    { id: 4, type: 'action', name: 'Video-Animator (Kling)', color: 'emerald', desc: 'Animiert das Bild zu einem 5-Sekunden Video.' }
   ]);
-  
-  const [draggedNode, setDraggedNode] = useState(null);
-  const [selectedNodeId, setSelectedNodeId] = useState(null);
-  const [executingNodeId, setExecutingNodeId] = useState(null);
-  const [isExecuting, setIsExecuting] = useState(false);
-
-  const [showTemplates, setShowTemplates] = useState(false);
-
-  const loadTemplate = (templateId) => {
-    if (templateId === 'tiktok') {
-      setNodes([
-        { id: '1', type: 'text', title: 'GPT-4o (Skript)', desc: 'Generiere ein Hook-Skript für ein 10s Video.', top: 100, left: 40, cost: 0, model: 'openai/gpt-4o' },
-        { id: '2', type: 'image', title: 'Midjourney (Asset)', desc: 'Cyberpunk Kaffeebohne in Neon.', top: 150, left: 350, cost: 5, model: 'image/midjourney-v6' },
-        { id: '3', type: 'video', title: 'Kling 3.0 (Render)', desc: 'Animiere {{ node.2.output }}', top: 250, left: 650, cost: 10, model: 'video/kling-3' }
-      ]);
-      toast.success('Viral TikTok Template geladen!');
-    } else if (templateId === 'seo') {
-      setNodes([
-        { id: '1', type: 'web', title: 'Web Search', desc: 'Suche "Latest AI Trends 2026"', top: 100, left: 40, cost: 1, model: 'tool/brave' },
-        { id: '2', type: 'text', title: 'Claude 3 (Writer)', desc: 'Schreibe SEO Artikel basierend auf {{ node.1.output }}', top: 200, left: 350, cost: 0, model: 'anthropic/claude-3-opus' },
-        { id: '3', type: 'image', title: 'Flux.1 (Thumbnail)', desc: 'Artikelbild für {{ node.2.output }}', top: 100, left: 650, cost: 5, model: 'image/flux' }
-      ]);
-      toast.success('SEO Blog Maschine Template geladen!');
-    }
-    setShowTemplates(false);
-  };
-
-  const totalCost = nodes.reduce((sum, node) => sum + (node.cost || 0), 0);
-
-  const handlePlay = () => {
-    if (nodes.length === 0) {
-      toast.error('Der Flow ist leer!');
-      return;
-    }
-
-    if (!spendCredits(totalCost, 'Flow Ausführung')) {
-      return; // Not enough sparks
-    }
-
-    setIsExecuting(true);
-    setSelectedNodeId(null);
-    toast.success('Flow "Viral TikTok" gestartet...', { icon: '⚡' });
-
-    let delay = 0;
-    nodes.forEach((node, index) => {
-      setTimeout(() => {
-        setExecutingNodeId(node.id);
-      }, delay);
-      delay += 2500; // 2.5 seconds per node simulation
-    });
-
-    setTimeout(() => {
-      setExecutingNodeId(null);
-      setIsExecuting(false);
-      toast.success('Workflow erfolgreich abgeschlossen! Asset in Galerie gespeichert.', { 
-        icon: '🎬',
-        style: { background: '#10b981', color: '#fff' }
-      });
-    }, delay);
-  };
-
-  const handleAddNode = (type) => {
-    const newId = Date.now().toString();
-    const defaults = {
-      text: { title: 'Text AI', emoji: '✍️', cost: 0, model: 'openai/gpt-5-mini' },
-      image: { title: 'Bild Generator', emoji: '🖼️', cost: 5, model: 'image/flux' },
-      video: { title: 'Video Generator', emoji: '🎬', cost: 10, model: 'video/sora-2' },
-      audio: { title: 'Voice Over', emoji: '🔊', cost: 3, model: 'audio/elevenlabs' },
-      web: { title: 'Web Search', emoji: '🌐', cost: 1, model: 'tool/brave' },
-      condition: { title: 'Condition', emoji: '🔀', cost: 0, model: 'logic/if-else' }
-    };
-    
-    const nodeDef = defaults[type];
-    
-    setNodes([...nodes, { 
-      id: newId, 
-      type, 
-      title: nodeDef.title, 
-      desc: 'Neuer Knoten Input...', 
-      top: 150 + (nodes.length * 30), 
-      left: 100 + (nodes.length * 50),
-      cost: nodeDef.cost,
-      model: nodeDef.model
-    }]);
-    
-    toast.success(`${nodeDef.emoji} Knoten hinzugefügt`);
-    setSelectedNodeId(newId);
-  };
-
-  const handleDragStart = (e, id) => {
-    if (isExecuting) return;
-    setDraggedNode(id);
-    e.dataTransfer.setData('text/plain', '');
-    e.dataTransfer.effectAllowed = 'move';
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    if (!draggedNode || isExecuting) return;
-    
-    const canvasRect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - canvasRect.left - 128; // Center offset
-    const y = e.clientY - canvasRect.top - 64;
-    
-    setNodes(nodes.map(n => n.id === draggedNode ? { ...n, left: x, top: y } : n));
-    setDraggedNode(null);
-  };
-
-  const removeNode = (id) => {
-    setNodes(nodes.filter(n => n.id !== id));
-    if (selectedNodeId === id) setSelectedNodeId(null);
-  };
-
-  const updateSelectedNode = (field, value) => {
-    setNodes(nodes.map(n => n.id === selectedNodeId ? { ...n, [field]: value } : n));
-  };
-
-  const selectedNode = nodes.find(n => n.id === selectedNodeId);
 
   return (
-    <div className="max-w-screen-2xl animate-fade-in mx-auto mt-4 px-4 pb-12 h-[calc(100vh-100px)] flex flex-col">
-      <div className="flex justify-between items-end mb-6 shrink-0">
-        <div>
-          <h2 className="text-3xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600">⚡ Automatisierung (Flows)</h2>
-          <div className="flex items-center gap-4">
-            <p className="text-slate-400 text-sm">Verknüpfe KI-Modelle visuell zu mächtigen Pipelines.</p>
-            <div className="relative">
-              <button 
-                onClick={() => setShowTemplates(!showTemplates)}
-                className="bg-slate-800 hover:bg-slate-700 text-xs font-bold text-white px-3 py-1.5 rounded-lg border border-slate-600 shadow flex items-center gap-2"
-              >
-                <span>📂</span> Blueprints laden
-              </button>
-              {showTemplates && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-slate-800 border border-slate-600 rounded-xl shadow-2xl z-50 p-2 animate-fade-in">
-                  <button onClick={() => loadTemplate('tiktok')} className="w-full text-left p-2 hover:bg-slate-700 rounded-lg group">
-                    <div className="text-sm font-bold text-white group-hover:text-amber-400">🚀 Viral Short Pipeline</div>
-                    <div className="text-xs text-slate-400 mt-1">Text ➔ Image ➔ Video</div>
-                  </button>
-                  <button onClick={() => loadTemplate('seo')} className="w-full text-left p-2 hover:bg-slate-700 rounded-lg group mt-1">
-                    <div className="text-sm font-bold text-white group-hover:text-blue-400">📝 SEO Blog Maschine</div>
-                    <div className="text-xs text-slate-400 mt-1">Web ➔ Text ➔ Image</div>
-                  </button>
-                </div>
-              )}
-            </div>
+    <div className="max-w-7xl mx-auto space-y-6 animate-fade-in pb-20">
+      
+      {/* Header */}
+      <div className="glass-panel p-8 rounded-3xl relative overflow-hidden border border-slate-700/50">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div>
+            <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">
+              Flow <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">Builder</span>
+            </h1>
+            <p className="text-slate-400 text-lg max-w-2xl">
+              Verbinde KI-Modelle zu automatisierten Workflows. Baue komplexe Pipelines, die per Knopfdruck Ideen in ganze Videoproduktionen verwandeln.
+            </p>
           </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 flex items-center gap-3 shadow-inner">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Flow Kosten</span>
-            <span className="text-lg font-black text-amber-400">⚡ {totalCost}</span>
+          
+          <div className="flex bg-slate-900/50 p-1.5 rounded-xl border border-slate-700/50">
+            <button className="px-5 py-2.5 rounded-lg font-bold text-sm bg-emerald-600 text-white shadow-lg flex items-center gap-2 hover:bg-emerald-500 transition-colors">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              Flow ausführen
+            </button>
+            <button className="px-5 py-2.5 rounded-lg font-bold text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-2">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
+              Speichern
+            </button>
           </div>
-          <button 
-            onClick={handlePlay} 
-            disabled={isExecuting}
-            className={`font-bold py-3 px-8 rounded-xl transition-all flex items-center gap-2 shadow-lg ${
-              isExecuting 
-              ? 'bg-slate-700 text-slate-400 cursor-not-allowed' 
-              : 'bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white shadow-amber-500/20 hover:scale-105'
-            }`}
-          >
-            {isExecuting ? (
-              <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-            ) : (
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"></path></svg>
-            )}
-            {isExecuting ? 'Wird ausgeführt...' : 'Flow Starten'}
-          </button>
         </div>
       </div>
 
-      <div className="flex flex-1 gap-6 min-h-0">
+      {/* Builder Workspace */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[70vh]">
         
-        {/* Left Sidebar: Tools */}
-        <div className="w-64 glass-card rounded-3xl p-5 flex flex-col gap-3 shadow-xl border border-slate-700/80 overflow-y-auto custom-scrollbar">
-          <h3 className="font-bold text-slate-400 mb-2 uppercase tracking-wider text-xs border-b border-slate-700/50 pb-2">KI Bausteine</h3>
+        {/* Sidebar: Available Nodes */}
+        <div className="glass-panel p-6 rounded-3xl border border-slate-700/50 overflow-y-auto hidden lg:block bg-slate-800/40">
+          <h3 className="text-sm font-black text-slate-500 uppercase tracking-widest mb-6 border-b border-slate-700/50 pb-4">Verfügbare Knoten</h3>
           
-          <button onClick={() => handleAddNode('text')} disabled={isExecuting} className="bg-slate-800/80 hover:bg-slate-700 border border-slate-600 rounded-xl p-3 flex items-center gap-3 transition-all hover:-translate-y-1 group text-left disabled:opacity-50">
-            <div className="bg-blue-500/20 p-2 rounded-lg text-lg">✍️</div>
+          <div className="space-y-6">
             <div>
-              <div className="text-sm font-bold text-slate-200">Text & Logik</div>
-              <div className="text-[10px] text-slate-500">0 Sparks</div>
-            </div>
-          </button>
-
-          <button onClick={() => handleAddNode('image')} disabled={isExecuting} className="bg-slate-800/80 hover:bg-slate-700 border border-slate-600 rounded-xl p-3 flex items-center gap-3 transition-all hover:-translate-y-1 group text-left disabled:opacity-50">
-            <div className="bg-emerald-500/20 p-2 rounded-lg text-lg">🖼️</div>
-            <div>
-              <div className="text-sm font-bold text-slate-200">Bild Generator</div>
-              <div className="text-[10px] text-emerald-500 font-bold">5 Sparks</div>
-            </div>
-          </button>
-
-          <button onClick={() => handleAddNode('video')} disabled={isExecuting} className="bg-slate-800/80 hover:bg-slate-700 border border-slate-600 rounded-xl p-3 flex items-center gap-3 transition-all hover:-translate-y-1 group text-left disabled:opacity-50">
-            <div className="bg-pink-500/20 p-2 rounded-lg text-lg">🎬</div>
-            <div>
-              <div className="text-sm font-bold text-slate-200">Video Generator</div>
-              <div className="text-[10px] text-pink-500 font-bold">10 Sparks</div>
-            </div>
-          </button>
-
-          <button onClick={() => handleAddNode('audio')} disabled={isExecuting} className="bg-slate-800/80 hover:bg-slate-700 border border-slate-600 rounded-xl p-3 flex items-center gap-3 transition-all hover:-translate-y-1 group text-left disabled:opacity-50">
-            <div className="bg-amber-500/20 p-2 rounded-lg text-lg">🔊</div>
-            <div>
-              <div className="text-sm font-bold text-slate-200">Voice / Audio</div>
-              <div className="text-[10px] text-amber-500 font-bold">3 Sparks</div>
-            </div>
-          </button>
-
-          <h3 className="font-bold text-slate-400 mt-4 mb-2 uppercase tracking-wider text-xs border-b border-slate-700/50 pb-2">Erweitert</h3>
-
-          <button onClick={() => handleAddNode('web')} disabled={isExecuting} className="bg-slate-800/80 hover:bg-slate-700 border border-slate-600 rounded-xl p-3 flex items-center gap-3 transition-all hover:-translate-y-1 group text-left disabled:opacity-50">
-            <div className="bg-cyan-500/20 p-2 rounded-lg text-lg">🌐</div>
-            <div>
-              <div className="text-sm font-bold text-slate-200">Web Search</div>
-              <div className="text-[10px] text-cyan-500 font-bold">1 Spark</div>
-            </div>
-          </button>
-
-          <button onClick={() => handleAddNode('condition')} disabled={isExecuting} className="bg-slate-800/80 hover:bg-slate-700 border border-slate-600 rounded-xl p-3 flex items-center gap-3 transition-all hover:-translate-y-1 group text-left disabled:opacity-50">
-            <div className="bg-purple-500/20 p-2 rounded-lg text-lg">🔀</div>
-            <div>
-              <div className="text-sm font-bold text-slate-200">If / Else</div>
-              <div className="text-[10px] text-slate-500">Logik Knoten</div>
-            </div>
-          </button>
-        </div>
-
-        {/* Center: Canvas Area */}
-        <div 
-          className="flex-1 glass-panel border border-slate-700/50 rounded-3xl relative overflow-hidden shadow-[inset_0_0_50px_rgba(0,0,0,0.5)] bg-slate-900"
-          style={{ backgroundImage: 'radial-gradient(rgba(148, 163, 184, 0.15) 1px, transparent 1px)', backgroundSize: '24px 24px' }}
-          onDragOver={handleDragOver}
-          onDrop={handleDrop}
-          onClick={() => !isExecuting && setSelectedNodeId(null)}
-        >
-          {/* SVG Connection Lines */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
-            {nodes.map((node, i) => {
-              if (i === 0) return null;
-              const prev = nodes[i-1];
-              const startX = prev.left + 256; // node width is w-64 (256px)
-              const startY = prev.top + 64;   // center y
-              const endX = node.left;
-              const endY = node.top + 64;
-              
-              const isFlowing = isExecuting && executingNodeId === node.id;
-              
-              return (
-                <g key={`line-${i}`}>
-                  <path 
-                    d={`M ${startX} ${startY} C ${startX + 100} ${startY}, ${endX - 100} ${endY}, ${endX} ${endY}`} 
-                    fill="none" 
-                    stroke={isFlowing ? "#f59e0b" : "rgba(100, 116, 139, 0.3)"} 
-                    strokeWidth={isFlowing ? "4" : "2"}
-                    strokeDasharray={isFlowing ? "8,8" : "none"}
-                    className={isFlowing ? "animate-pulse" : ""} 
-                  />
-                  {isFlowing && (
-                    <circle cx={endX} cy={endY} r="6" fill="#f59e0b" className="animate-ping" />
-                  )}
-                </g>
-              )
-            })}
-          </svg>
-
-          {/* Render Nodes */}
-          {nodes.map((node, i) => {
-            const isSelected = selectedNodeId === node.id;
-            const isRunning = executingNodeId === node.id;
-            const hasRun = isExecuting && nodes.findIndex(n => n.id === executingNodeId) > i;
-            
-            const colors = {
-              text: 'border-blue-500/50 from-blue-900/40 to-slate-900',
-              image: 'border-emerald-500/50 from-emerald-900/40 to-slate-900',
-              video: 'border-pink-500/50 from-pink-900/40 to-slate-900',
-              audio: 'border-amber-500/50 from-amber-900/40 to-slate-900',
-              web: 'border-cyan-500/50 from-cyan-900/40 to-slate-900',
-              condition: 'border-purple-500/50 from-purple-900/40 to-slate-900'
-            };
-            
-            const dotColor = {
-              text: 'bg-blue-500', image: 'bg-emerald-500', video: 'bg-pink-500',
-              audio: 'bg-amber-500', web: 'bg-cyan-500', condition: 'bg-purple-500'
-            };
-
-            return (
-              <div 
-                key={node.id}
-                draggable={!isExecuting}
-                onDragStart={(e) => handleDragStart(e, node.id)}
-                onClick={(e) => { e.stopPropagation(); if(!isExecuting) setSelectedNodeId(node.id); }}
-                className={`absolute w-64 glass-card border bg-gradient-to-br ${colors[node.type]} rounded-2xl p-5 z-10 
-                  ${!isExecuting ? 'cursor-grab active:cursor-grabbing hover:-translate-y-1' : ''} 
-                  transition-all duration-300
-                  ${isSelected ? 'ring-2 ring-white shadow-[0_0_30px_rgba(255,255,255,0.2)] scale-105' : 'shadow-xl'}
-                  ${isRunning ? 'ring-4 ring-amber-500 shadow-[0_0_40px_rgba(245,158,11,0.6)] animate-pulse scale-105' : ''}
-                  ${hasRun ? 'opacity-50 grayscale' : ''}
-                `}
-                style={{ top: node.top, left: node.left }}
-              >
-                {/* Delete Button */}
-                {!isExecuting && (
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); removeNode(node.id); }}
-                    className="absolute -top-3 -right-3 bg-red-500 hover:bg-red-400 text-white w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold shadow-lg opacity-0 group-hover:opacity-100 hover:opacity-100 transition-opacity z-20"
-                    style={{ opacity: isSelected ? 1 : undefined }}
-                  >
-                    ×
-                  </button>
-                )}
-
-                {/* Left Connect Dot */}
-                {i > 0 && <div className={`w-3 h-3 ${dotColor[node.type]} rounded-full absolute top-1/2 -left-1.5 transform -translate-y-1/2 shadow-[0_0_10px]`}></div>}
-                
-                <div className="flex justify-between items-center mb-3">
-                  <div className="flex items-center gap-2">
-                    {isRunning && <svg className="animate-spin w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>}
-                    <span className={`text-xs font-bold uppercase tracking-widest ${isRunning ? 'text-amber-400' : 'text-slate-300'}`}>Step {i+1}</span>
-                  </div>
-                  {node.cost > 0 && <span className="text-[10px] bg-slate-900/80 text-amber-400 px-2 py-0.5 rounded-full border border-amber-500/30">⚡ {node.cost}</span>}
-                </div>
-                
-                <h4 className="font-bold text-slate-100 text-base mb-2 truncate">{node.title}</h4>
-                <div className="text-xs text-slate-300 font-mono bg-slate-950/60 p-3 rounded-xl border border-slate-700/50 h-20 overflow-hidden text-ellipsis line-clamp-4 relative">
-                  {!hasRun ? node.desc : (
-                    <div className="absolute inset-0 bg-slate-900 flex items-center justify-center p-2 animate-fade-in border border-slate-700/50 rounded-xl">
-                      {node.type === 'image' && <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=100&q=80" alt="result" className="w-full h-full object-cover rounded-lg" />}
-                      {node.type === 'video' && <div className="text-xl">🎬 <span className="text-xs text-pink-400 font-bold block">Video Rendered</span></div>}
-                      {node.type === 'audio' && <div className="text-xl">🔊 <span className="text-xs text-amber-400 font-bold block">Audio Track</span></div>}
-                      {node.type === 'text' && <div className="text-[9px] text-blue-300 leading-tight">Output: {node.title} lieferte 450 Tokens...</div>}
-                      {node.type === 'web' && <div className="text-[9px] text-cyan-300 leading-tight">14 Quellen extrahiert...</div>}
-                    </div>
-                  )}
-                </div>
-                
-                {/* Right Connect Dot */}
-                {i < nodes.length - 1 && <div className={`w-3 h-3 ${dotColor[node.type]} rounded-full absolute top-1/2 -right-1.5 transform -translate-y-1/2 shadow-[0_0_10px]`}></div>}
+              <h4 className="text-xs text-slate-400 font-bold mb-3 uppercase">Trigger</h4>
+              <div className="p-3 bg-slate-900 border border-slate-700 rounded-xl cursor-grab hover:border-slate-500 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded bg-slate-800 flex items-center justify-center text-white">▶️</div>
+                <span className="text-sm text-slate-300 font-bold">Manueller Start</span>
               </div>
-            );
-          })}
+            </div>
+
+            <div>
+              <h4 className="text-xs text-blue-400 font-bold mb-3 uppercase">Text KI</h4>
+              <div className="space-y-2">
+                <div className="p-3 bg-slate-900 border border-blue-900/50 rounded-xl cursor-grab hover:border-blue-500/50 transition-colors flex items-center gap-3">
+                  <div className="w-8 h-8 rounded bg-blue-900/50 flex items-center justify-center text-blue-400 font-black">G</div>
+                  <span className="text-sm text-slate-300 font-bold">GPT-4 Turbo</span>
+                </div>
+                <div className="p-3 bg-slate-900 border border-indigo-900/50 rounded-xl cursor-grab hover:border-indigo-500/50 transition-colors flex items-center gap-3">
+                  <div className="w-8 h-8 rounded bg-indigo-900/50 flex items-center justify-center text-indigo-400 font-black">C</div>
+                  <span className="text-sm text-slate-300 font-bold">Claude 3.5 Sonnet</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-xs text-fuchsia-400 font-bold mb-3 uppercase">Bild KI</h4>
+              <div className="space-y-2">
+                <div className="p-3 bg-slate-900 border border-fuchsia-900/50 rounded-xl cursor-grab hover:border-fuchsia-500/50 transition-colors flex items-center gap-3">
+                  <div className="w-8 h-8 rounded bg-fuchsia-900/50 flex items-center justify-center text-fuchsia-400 font-black">M</div>
+                  <span className="text-sm text-slate-300 font-bold">Midjourney v6</span>
+                </div>
+                <div className="p-3 bg-slate-900 border border-purple-900/50 rounded-xl cursor-grab hover:border-purple-500/50 transition-colors flex items-center gap-3">
+                  <div className="w-8 h-8 rounded bg-purple-900/50 flex items-center justify-center text-purple-400 font-black">D</div>
+                  <span className="text-sm text-slate-300 font-bold">DALL-E 3</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-xs text-emerald-400 font-bold mb-3 uppercase">Video KI</h4>
+              <div className="space-y-2">
+                <div className="p-3 bg-slate-900 border border-emerald-900/50 rounded-xl cursor-grab hover:border-emerald-500/50 transition-colors flex items-center gap-3">
+                  <div className="w-8 h-8 rounded bg-emerald-900/50 flex items-center justify-center text-emerald-400 font-black">K</div>
+                  <span className="text-sm text-slate-300 font-bold">Kling Video</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Right Sidebar: Settings Panel (Conditionally rendered) */}
-        {selectedNode && !isExecuting && (
-          <div className="w-80 glass-card rounded-3xl p-6 flex flex-col gap-5 shadow-xl border border-slate-700/80 animate-slide-left overflow-y-auto custom-scrollbar bg-slate-900/90">
-            <div className="flex justify-between items-center border-b border-slate-700/50 pb-3">
-              <h3 className="font-bold text-white text-lg">Knoten Settings</h3>
-              <button onClick={() => setSelectedNodeId(null)} className="text-slate-500 hover:text-white">✕</button>
-            </div>
+        {/* Main Canvas Area */}
+        <div className="lg:col-span-3 bg-[#0f172a] rounded-3xl border border-slate-700/50 relative overflow-hidden flex flex-col items-center py-12" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(51, 65, 85, 0.4) 1px, transparent 0)', backgroundSize: '24px 24px' }}>
+          
+          <div className="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-lg p-2 flex gap-2 z-10">
+            <button className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded transition-colors"><svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg></button>
+            <button className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded transition-colors"><svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" /></svg></button>
+          </div>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Titel</label>
-              <input 
-                type="text" 
-                value={selectedNode.title}
-                onChange={(e) => updateSelectedNode('title', e.target.value)}
-                className="w-full bg-slate-800 border border-slate-600 text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-              />
-            </div>
+          <div className="w-full max-w-md space-y-4 relative z-0 pb-20">
+            {nodes.map((node, index) => (
+              <React.Fragment key={node.id}>
+                {/* Visual Node */}
+                <div className={`relative group p-6 rounded-2xl border bg-slate-900/90 backdrop-blur-md shadow-xl transition-all hover:scale-[1.02] cursor-pointer ${
+                  node.color === 'slate' ? 'border-slate-600 shadow-[0_0_15px_rgba(71,85,105,0.2)]' :
+                  node.color === 'blue' ? 'border-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.2)]' :
+                  node.color === 'fuchsia' ? 'border-fuchsia-500/50 shadow-[0_0_20px_rgba(217,70,239,0.2)]' :
+                  'border-emerald-500/50 shadow-[0_0_20px_rgba(16,185,129,0.2)]'
+                }`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-lg ${
+                        node.color === 'slate' ? 'bg-slate-800 text-slate-300' :
+                        node.color === 'blue' ? 'bg-blue-900/50 text-blue-400' :
+                        node.color === 'fuchsia' ? 'bg-fuchsia-900/50 text-fuchsia-400' :
+                        'bg-emerald-900/50 text-emerald-400'
+                      }`}>
+                        {index === 0 ? '▶️' : index}
+                      </div>
+                      <h3 className="text-lg font-bold text-white">{node.name}</h3>
+                    </div>
+                    <button className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-400 transition-all">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                    </button>
+                  </div>
+                  {node.desc && <p className="text-slate-400 text-sm ml-13 pl-[52px]">{node.desc}</p>}
+                </div>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Modell (Engine)</label>
-              <select 
-                value={selectedNode.model}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  let newCost = selectedNode.cost;
-                  // Dynamic cost based on selection
-                  if(val.includes('sora') || val.includes('kling')) newCost = 10;
-                  else if(val.includes('flux') || val.includes('midjourney')) newCost = 5;
-                  else if(val.includes('elevenlabs')) newCost = 3;
-                  else if(val.includes('gpt') || val.includes('claude')) newCost = 0;
-                  
-                  updateSelectedNode('model', val);
-                  updateSelectedNode('cost', newCost);
-                }}
-                className="w-full bg-slate-800 border border-slate-600 text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-blue-500 appearance-none"
-              >
-                {selectedNode.type === 'text' && (
-                  <>
-                    <option value="openai/gpt-4o">GPT-4o (Smart)</option>
-                    <option value="openai/gpt-5-mini">GPT 5 mini (Fast)</option>
-                    <option value="anthropic/claude-3-opus">Claude 3 Opus</option>
-                  </>
+                {/* Arrow & Plus button down to next node */}
+                {index < nodes.length - 1 && (
+                  <div className="flex flex-col items-center justify-center py-2 relative">
+                    <div className="w-0.5 h-10 bg-slate-700"></div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-800 border border-slate-600 rounded-full w-8 h-8 flex items-center justify-center text-slate-400 hover:bg-slate-700 hover:text-white cursor-pointer z-10 transition-colors shadow-lg">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                    </div>
+                    <div className="w-3 h-3 rotate-45 border-r-2 border-b-2 border-slate-700 -mt-1.5 bg-[#0f172a]"></div>
+                  </div>
                 )}
-                {selectedNode.type === 'image' && (
-                  <>
-                    <option value="image/flux">Flux.1 Pro</option>
-                    <option value="image/midjourney-v6">Midjourney v6</option>
-                    <option value="image/seedream">Seedream v5</option>
-                  </>
-                )}
-                {selectedNode.type === 'video' && (
-                  <>
-                    <option value="video/sora-2">Sora 2 (OpenAI)</option>
-                    <option value="video/kling-3">Kling 3.0 Standard</option>
-                    <option value="video/veo-3">Veo 3.1 Fast</option>
-                  </>
-                )}
-                {selectedNode.type === 'audio' && (
-                  <>
-                    <option value="audio/elevenlabs">ElevenLabs v2</option>
-                    <option value="audio/openai-tts">OpenAI TTS</option>
-                  </>
-                )}
-                {selectedNode.type === 'web' && <option value="tool/brave">Brave Search API</option>}
-                {selectedNode.type === 'condition' && <option value="logic/if-else">Standard IF/ELSE</option>}
-              </select>
-              <p className="text-[10px] text-amber-500 mt-1">Kosten: {selectedNode.cost} Sparks pro Ausführung</p>
-            </div>
+              </React.Fragment>
+            ))}
 
-            <div>
-              <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Prompt / Input</label>
-              <textarea 
-                value={selectedNode.desc}
-                onChange={(e) => updateSelectedNode('desc', e.target.value)}
-                rows={5}
-                className="w-full bg-slate-800 border border-slate-600 text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-blue-500 resize-none font-mono"
-                placeholder="Gib deinen Prompt oder {{ variables }} ein..."
-              />
-              <p className="text-[10px] text-slate-500 mt-2">Nutze <code className="bg-slate-800 px-1 rounded text-blue-300">{`{{ node.1.output }}`}</code> um Daten vom vorherigen Knoten zu übernehmen.</p>
+            {/* Final Add Node Button */}
+            <div className="flex flex-col items-center justify-center py-2 relative mt-4">
+              <div className="w-0.5 h-10 bg-slate-700/50 border-dashed border-l-2"></div>
+              <button className="mt-2 border-2 border-dashed border-slate-600 hover:border-emerald-500 bg-slate-900/50 hover:bg-emerald-900/20 text-slate-400 hover:text-emerald-400 font-bold py-4 px-8 rounded-2xl w-full transition-all flex items-center justify-center gap-2 group">
+                <svg className="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                Neuen Knoten hinzufügen
+              </button>
             </div>
 
           </div>
-        )}
+        </div>
 
       </div>
     </div>
