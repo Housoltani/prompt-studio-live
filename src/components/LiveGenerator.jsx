@@ -199,7 +199,7 @@ export default function LiveGenerator() {
   };
 
   return (
-    <div className="max-w-6xl animate-fade-in mx-auto mt-4 h-[calc(100vh-120px)] flex flex-col">
+    <div className="max-w-6xl animate-fade-in mx-auto mt-4 h-full min-h-[calc(100vh-120px)] flex flex-col">
       
       {/* GLOBAL MODE SWITCHER */}
       <div className="flex justify-center mb-6">
@@ -246,7 +246,7 @@ export default function LiveGenerator() {
 
       <div className="flex gap-6 flex-1 min-h-0">
         {/* Linke Spalte: Chat Bereich */}
-        <div className="flex-1 glass-card border border-slate-700/50 rounded-3xl flex flex-col overflow-hidden bg-slate-900/80 shadow-2xl relative">
+        <div className="flex-1 min-h-[600px] glass-card border border-slate-700/50 rounded-3xl flex flex-col overflow-hidden bg-slate-900/80 shadow-2xl relative">
           
           {/* Cost Indicator Badge */}
           <div className="absolute top-4 left-4 z-10 bg-slate-800/90 backdrop-blur px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-2 shadow-lg">
