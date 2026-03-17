@@ -1,31 +1,29 @@
 export const tabs = [
   // --- KREATION & GENERATOREN ---
-  { id: 'generator', name: '✨ Universal Studio', desc: 'Text, Bild, Video & Musik Generieren' },
-  { id: 'mixer', name: '🎛️ Prompt Mixer', desc: 'Drag & Drop Baukasten' },
-  { id: 'extractor', name: '🔄 Prompt Extractor', desc: 'Bild zu Text' },
-  { id: 'compare', name: '⚖️ Modell-Vergleich', desc: 'Midjourney vs DALL-E vs SD' },
+  { id: 'generator', name: '✨ Live Generator', category: 'KREATION & GENERATOREN', desc: 'Text, Bild, Video & Musik Generieren' },
+  { id: 'mixer', name: '🎛️ Prompt Mixer', category: 'KREATION & GENERATOREN', desc: 'Drag & Drop Baukasten' },
+  { id: 'extractor', name: '🔄 Prompt Extractor', category: 'KREATION & GENERATOREN', desc: 'Bild zu Text' },
+  { id: 'compare', name: '⚖️ Modell-Vergleich', category: 'KREATION & GENERATOREN', desc: 'Midjourney vs DALL-E vs SD' },
 
-  // --- BIBLIOTHEKEN & PROMPTS ---
-  { id: 'images', name: '🖼️ Bild-Prompts', desc: 'Prompts für Midjourney, DALL-E' },
-  { id: 'videos', name: '🎥 Video-Prompts', desc: 'Prompts für Sora, Runway' },
-  { id: 'music', name: '🎵 Hit-Labor', desc: 'Prompts für Suno, Udio' },
+  // --- BIBLIOTHEKEN & INSPIRATION ---
+  { id: 'images', name: '🖼️ Bild-Prompts', category: 'BIBLIOTHEKEN & INSPIRATION', desc: 'Prompts für Midjourney, DALL-E' },
+  { id: 'videos', name: '🎥 Video-Prompts', category: 'BIBLIOTHEKEN & INSPIRATION', desc: 'Prompts für Sora, Runway' },
+  { id: 'music', name: '🎵 Hit-Labor', category: 'BIBLIOTHEKEN & INSPIRATION', desc: 'Prompts für Suno, Udio' },
+  { id: 'community', name: '🏆 Community Feed', category: 'BIBLIOTHEKEN & INSPIRATION', desc: 'User Uploads & Trending' },
+  { id: 'marketplace', name: '💰 Prompt Marktplatz', category: 'BIBLIOTHEKEN & INSPIRATION', desc: 'Prompts kaufen & verkaufen' },
   
-  // --- AGENTEN & AUTOMATISIERUNG ---
-  { id: 'command-center', name: '🎯 Smart Social Suite', desc: 'Deine Instagram KI-Crew' },
-  { id: 'agents', name: '🤖 Agenten Hub', desc: 'Spezialisierte KI-Assistenten' },
-  { id: 'flows', name: '⚡ Automatisierung', desc: 'Prompt Chains' },
-  { id: 'ebook-studio', name: '📚 Publishing Hub', desc: 'Erstelle digitale Produkte' },
-
-  // --- COMMUNITY & WORKSPACE ---
-  { id: 'studio', name: '📂 Mein Workspace', desc: 'Deine gespeicherten Werke' },
-  { id: 'marketplace', name: '💰 Marktplatz', desc: 'Prompts kaufen & verkaufen' },
-  { id: 'community', name: '🏆 Community', desc: 'User Uploads & Trending' },
+  // --- WORKSPACE & AUTOMATISIERUNG ---
+  { id: 'studio', name: '📂 Mein Workspace', category: 'WORKSPACE & AUTOMATISIERUNG', desc: 'Deine gespeicherten Werke' },
+  { id: 'agents', name: '🤖 Agenten Hub', category: 'WORKSPACE & AUTOMATISIERUNG', desc: 'Spezialisierte KI-Assistenten' },
+  { id: 'flows', name: '⚡ Flow Builder', category: 'WORKSPACE & AUTOMATISIERUNG', desc: 'Prompt Chains & Automatisierung' },
+  { id: 'command-center', name: '🎯 Social Media Suite', category: 'WORKSPACE & AUTOMATISIERUNG', desc: 'Deine Instagram KI-Crew' },
+  { id: 'ebook-studio', name: '📚 E-Book Studio', category: 'WORKSPACE & AUTOMATISIERUNG', desc: 'Erstelle digitale Produkte' },
   
-  // --- SYSTEM ---
-  { id: 'learning', name: '🎓 KI Academy', desc: 'Tools & Tutorials zum Starten' },
-  { id: 'credits', name: '⚡ Aufladestation', desc: 'Sparks für Premium KI' },
-  { id: 'feedback', name: '💬 Feedback', desc: 'Lass uns wissen, was du denkst' },
-  { id: 'auth', name: '🔐 Profil & Settings', desc: 'Account verwalten' }
+  // --- SYSTEM & LERNEN ---
+  { id: 'learning', name: '🎓 KI Academy', category: 'SYSTEM & LERNEN', desc: 'Tools & Tutorials zum Starten' },
+  { id: 'credits', name: '⚡ Sparks & Credits', category: 'SYSTEM & LERNEN', desc: 'Sparks für Premium KI aufladen' },
+  { id: 'feedback', name: '💬 Feedback', category: 'SYSTEM & LERNEN', desc: 'Lass uns wissen, was du denkst' },
+  { id: 'auth', name: '🔐 Profil & Settings', category: 'SYSTEM & LERNEN', desc: 'Account verwalten' }
 ];
 
 export const marketplacePrompts = [

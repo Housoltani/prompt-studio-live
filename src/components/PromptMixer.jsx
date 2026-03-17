@@ -50,14 +50,58 @@ function SortableItem({ id, title, onRemove }) {
 }
 
 const AVAILABLE_BLOCKS = [
+  // Quality
   { id: 'b1', title: '8k Resolution', category: 'Quality' },
   { id: 'b2', title: 'Unreal Engine 5', category: 'Quality' },
+  { id: 'q3', title: 'Masterpiece', category: 'Quality' },
+  { id: 'q4', title: 'Best Quality', category: 'Quality' },
+  { id: 'q5', title: 'Highly Detailed', category: 'Quality' },
+  { id: 'q6', title: 'Intricate Details', category: 'Quality' },
+  { id: 'q7', title: 'Sharp Focus', category: 'Quality' },
+  { id: 'q8', title: 'HDR', category: 'Quality' },
+
+  // Lighting
   { id: 'b3', title: 'Cinematic Lighting', category: 'Lighting' },
   { id: 'b4', title: 'Neon Volumetric', category: 'Lighting' },
+  { id: 'l3', title: 'Golden Hour', category: 'Lighting' },
+  { id: 'l4', title: 'Rembrandt Lighting', category: 'Lighting' },
+  { id: 'l5', title: 'Bioluminescence', category: 'Lighting' },
+  { id: 'l6', title: 'Studio Lighting', category: 'Lighting' },
+  { id: 'l7', title: 'Soft Light', category: 'Lighting' },
+  { id: 'l8', title: 'Backlit', category: 'Lighting' },
+  { id: 'l9', title: 'Global Illumination', category: 'Lighting' },
+
+  // Style / Medium
   { id: 'b5', title: 'Cyberpunk', category: 'Style' },
   { id: 'b6', title: 'Watercolor', category: 'Style' },
+  { id: 's3', title: 'Digital Art', category: 'Style' },
+  { id: 's4', title: 'Oil Painting', category: 'Style' },
+  { id: 's5', title: 'Anime', category: 'Style' },
+  { id: 's6', title: 'Pixel Art', category: 'Style' },
+  { id: 's7', title: 'Synthwave', category: 'Style' },
+  { id: 's8', title: 'Steampunk', category: 'Style' },
+  { id: 's9', title: 'Ukiyo-e', category: 'Style' },
+  { id: 's10', title: 'Low Poly', category: 'Style' },
+  { id: 's11', title: 'Claymation', category: 'Style' },
+
+  // Camera
   { id: 'b7', title: '35mm Lens', category: 'Camera' },
   { id: 'b8', title: 'Drone View', category: 'Camera' },
+  { id: 'c3', title: 'Wide-angle', category: 'Camera' },
+  { id: 'c4', title: 'Macro Photography', category: 'Camera' },
+  { id: 'c5', title: 'Isometric', category: 'Camera' },
+  { id: 'c6', title: 'Fisheye Lens', category: 'Camera' },
+  { id: 'c7', title: 'Dutch Angle', category: 'Camera' },
+  { id: 'c8', title: 'Close-up Portrait', category: 'Camera' },
+  { id: 'c9', title: 'GoPro', category: 'Camera' },
+  
+  // Atmosphere / Mood
+  { id: 'm1', title: 'Dark & Eerie', category: 'Mood' },
+  { id: 'm2', title: 'Epic & Majestic', category: 'Mood' },
+  { id: 'm3', title: 'Melancholic', category: 'Mood' },
+  { id: 'm4', title: 'Dreamy & Ethereal', category: 'Mood' },
+  { id: 'm5', title: 'Nostalgic', category: 'Mood' },
+  { id: 'm6', title: 'Dystopian', category: 'Mood' }
 ];
 
 export default function PromptMixer() {
@@ -166,7 +210,7 @@ export default function PromptMixer() {
         <div className="lg:col-span-1 bg-slate-800/50 border border-slate-700 p-6 rounded-2xl">
           <h3 className="text-xl font-bold mb-4">Bausteine</h3>
           <div className="space-y-6">
-            {['Style', 'Lighting', 'Camera', 'Quality'].map(category => (
+            {['Style', 'Lighting', 'Camera', 'Quality', 'Mood'].map(category => (
               <div key={category}>
                 <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">{category}</h4>
                 <div className="flex flex-wrap gap-2">
