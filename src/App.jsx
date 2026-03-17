@@ -39,17 +39,51 @@ function AppContent() {
 
   const [user, setUser] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
+
+  // Command Palette State
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+  const [cmdSearchQuery, setCmdSearchQuery] = useState('');
+
+  // Global Keyboard Listener for Cmd+K / Ctrl+K
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsCommandPaletteOpen(true);
+      }
+      if (e.key === 'Escape' && isCommandPaletteOpen) {
+        setIsCommandPaletteOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isCommandPaletteOpen]);
+
   
   // NEW: Share Menu State
   const [shareMenuOpen, setShareMenuOpen] = useState(null)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [expandedCategories, setExpandedCategories] = useState({
-    'KREATION & TOOLS': true,
-    'BIBLIOTHEKEN': true,
-    'AGENTEN & WORKFLOWS': true,
-    'COMMUNITY & VERKAUF': false,
-    'SYSTEM & PROFIL': false
-  })
+  const [expandedCategories, setExpandedCategories] = useState(() => {
+    const saved = localStorage.getItem('promptStudioMenuState');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        // ignore parsing errors
+      }
+    }
+    return {
+      'KREATION & TOOLS': true,
+      'BIBLIOTHEKEN': true,
+      'AGENTEN & WORKFLOWS': true,
+      'COMMUNITY & VERKAUF': false,
+      'SYSTEM & PROFIL': false
+    };
+  });
+
+  useEffect(() => {
+    localStorage.setItem('promptStudioMenuState', JSON.stringify(expandedCategories));
+  }, [expandedCategories]);
 
   const toggleCategory = (cat) => {
     setExpandedCategories(prev => ({
