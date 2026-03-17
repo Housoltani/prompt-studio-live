@@ -33,17 +33,37 @@ export default function EarnCredits() {
   };
 
   const startAd = () => {
+    if (dailyVideoSparks >= maxDailyVideoSparks) {
+      toast.error('Tägliches Sponsor-Limit erreicht (' + maxDailyVideoSparks + ' Sparks).', { icon: '🛑' });
+      soundEngine.playError();
+      return;
+    }
+    
+    const reward = 20; // 20 Sparks per video
+    if (dailyVideoSparks + reward > maxDailyVideoSparks) {
+      toast.error('Nur noch ' + (maxDailyVideoSparks - dailyVideoSparks) + ' Sparks heute verfügbar.', { icon: '⚠️' });
+      return;
+    }
+
     soundEngine.playClick();
     setIsPlaying(true);
-    setTimeLeft(15); // 15 seconds ad
+    setTimeLeft(30); // 30 seconds ad
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
           setIsPlaying(false);
-          addCredits(15); // Reward 15 sparks
+          
+          addCredits(reward);
+          const newTotal = dailyVideoSparks + reward;
+          setDailyVideoSparks(newTotal);
+          localStorage.setItem('ps_video_sparks_earned', newTotal.toString());
+          
           soundEngine.playSuccess();
+          toast.success('+' + reward + ' Sparks! (' + newTotal + '/' + maxDailyVideoSparks + ' heute)', {
+            style: { background: '#1e3a8a', color: '#60a5fa', border: '1px solid #3b82f6' }
+          });
           return 0;
         }
         return prev - 1;
