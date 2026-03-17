@@ -1,22 +1,31 @@
 export const tabs = [
-  { id: 'command-center', name: '🎯 Smart Social Suite', desc: 'Deine Instagram KI-Crew' },
-  { id: 'ebook-studio', name: '📚 Publishing Hub', desc: 'Erstelle digitale Produkte' },
-  { id: 'agents', name: '🤖 Agenten Hub', desc: 'Spezialisierte KI-Assistenten' },
-  { id: 'generator', name: '✨ Live Generator', desc: 'Bilder, Videos & Musik direkt hier' },
-  { id: 'studio', name: '📂 Mein Studio', desc: 'Dein Workspace' },
-  { id: 'flows', name: '⚡ Automatisierung', desc: 'Prompt Chains' },
-  { id: 'marketplace', name: '💰 Marktplatz', desc: 'Prompts kaufen & verkaufen' },
-  { id: 'credits', name: '⚡ Aufladestation', desc: 'Sparks für Premium KI' },
-  { id: 'extractor', name: '🔄 Prompt Extractor', desc: 'Bild zu Text' },
+  // --- KREATION & GENERATOREN ---
+  { id: 'generator', name: '✨ Universal Studio', desc: 'Text, Bild, Video & Musik Generieren' },
   { id: 'mixer', name: '🎛️ Prompt Mixer', desc: 'Drag & Drop Baukasten' },
+  { id: 'extractor', name: '🔄 Prompt Extractor', desc: 'Bild zu Text' },
   { id: 'compare', name: '⚖️ Modell-Vergleich', desc: 'Midjourney vs DALL-E vs SD' },
+
+  // --- BIBLIOTHEKEN & PROMPTS ---
   { id: 'images', name: '🖼️ Bild-Prompts', desc: 'Prompts für Midjourney, DALL-E' },
   { id: 'videos', name: '🎥 Video-Prompts', desc: 'Prompts für Sora, Runway' },
   { id: 'music', name: '🎵 Hit-Labor', desc: 'Prompts für Suno, Udio' },
+  
+  // --- AGENTEN & AUTOMATISIERUNG ---
+  { id: 'command-center', name: '🎯 Smart Social Suite', desc: 'Deine Instagram KI-Crew' },
+  { id: 'agents', name: '🤖 Agenten Hub', desc: 'Spezialisierte KI-Assistenten' },
+  { id: 'flows', name: '⚡ Automatisierung', desc: 'Prompt Chains' },
+  { id: 'ebook-studio', name: '📚 Publishing Hub', desc: 'Erstelle digitale Produkte' },
+
+  // --- COMMUNITY & WORKSPACE ---
+  { id: 'studio', name: '📂 Mein Workspace', desc: 'Deine gespeicherten Werke' },
+  { id: 'marketplace', name: '💰 Marktplatz', desc: 'Prompts kaufen & verkaufen' },
   { id: 'community', name: '🏆 Community', desc: 'User Uploads & Trending' },
-  { id: 'learning', name: '🎓 KI für Anfänger', desc: 'Tools & Tutorials zum Starten' },
+  
+  // --- SYSTEM ---
+  { id: 'learning', name: '🎓 KI Academy', desc: 'Tools & Tutorials zum Starten' },
+  { id: 'credits', name: '⚡ Aufladestation', desc: 'Sparks für Premium KI' },
   { id: 'feedback', name: '💬 Feedback', desc: 'Lass uns wissen, was du denkst' },
-  { id: 'auth', name: '🔐 Login / Profil', desc: 'Google, Apple, Twitter' },
+  { id: 'auth', name: '🔐 Profil & Settings', desc: 'Account verwalten' }
 ];
 
 export const marketplacePrompts = [

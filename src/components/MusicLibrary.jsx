@@ -81,40 +81,8 @@ export default function MusicLibrary() {
             Kopiere perfekte Song-Strukturen, Metatags und Lyrics für Suno, Udio und andere KI-Musik-Generatoren.
           </p>
         </div>
-        
-        <div className="flex flex-wrap w-full md:w-auto gap-3">
-          <input
-            type="text"
-            placeholder="Suchen (z.B. Anime, Portrait...)"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="flex-grow bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-purple-500 min-w-[200px]"
-          />
-          
-          <button
-            onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors border flex items-center gap-2 ${
-              showFavoritesOnly 
-                ? 'bg-pink-500/20 border-pink-500 text-pink-500' 
-                : 'bg-slate-800 border-slate-700 text-gray-400 hover:text-white hover:border-slate-500'
-            }`}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-            </svg>
-            <span className="hidden sm:inline">Favoriten</span>
-          </button>
 
-          <button 
-            onClick={() => setShowModal(true)}
-            className="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap flex items-center gap-2 shadow-lg shadow-purple-900/20"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-            </svg>
-            <span className="hidden sm:inline">Neuer Prompt</span>
-          </button>
-        </div>
+        
       </div>
 
       {/* Category Filters */}
