@@ -12,7 +12,7 @@ export const tabs = [
   { id: 'compare', name: '⚖️ Modell-Vergleich', desc: 'Midjourney vs DALL-E vs SD' },
   { id: 'images', name: '🖼️ Bild-Prompts', desc: 'Prompts für Midjourney, DALL-E' },
   { id: 'videos', name: '🎥 Video-Prompts', desc: 'Prompts für Sora, Runway' },
-  { id: 'music', name: '🎵 KI Musik', desc: 'Prompts für Suno, Udio' },
+  { id: 'music', name: '🎵 Hit-Labor', desc: 'Prompts für Suno, Udio' },
   { id: 'community', name: '🏆 Community', desc: 'User Uploads & Trending' },
   { id: 'learning', name: '🎓 KI für Anfänger', desc: 'Tools & Tutorials zum Starten' },
   { id: 'feedback', name: '💬 Feedback', desc: 'Lass uns wissen, was du denkst' },

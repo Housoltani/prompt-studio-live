@@ -29,6 +29,7 @@ const Studio = lazy(() => import('./components/Studio'))
 const Marketplace = lazy(() => import('./components/Marketplace'))
 const ImageLibrary = lazy(() => import('./components/ImageLibrary'))
 const VideoLibrary = lazy(() => import('./components/VideoLibrary'))
+const MusicLibrary = lazy(() => import('./components/MusicLibrary'))
 
 function AppContent() {
   const [lang, setLang] = useState('de')
@@ -345,12 +346,14 @@ function AppContent() {
   }><ModelCompare /></Suspense>} />
 
         {/* --- MUSIC GENERATOR --- */}
+        {/* --- KI MUSIK BIBLIOTHEK --- */}
         <Route path="music" element={
-  <Suspense fallback={
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-    </div>
-  }><MusicGenerator /></Suspense>} />
+          <Suspense fallback={
+            <div className="flex items-center justify-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
+            </div>
+          }><MusicLibrary /></Suspense>
+        } />
 
         {/* --- COMMUNITY FEED --- */}
         <Route path="community" element={
