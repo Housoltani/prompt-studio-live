@@ -11,7 +11,7 @@ export const tabs = [
   { id: 'mixer', name: '🎛️ Prompt Mixer', desc: 'Drag & Drop Baukasten' },
   { id: 'compare', name: '⚖️ Modell-Vergleich', desc: 'Midjourney vs DALL-E vs SD' },
   { id: 'images', name: '🖼️ Bild-Prompts', desc: 'Prompts für Midjourney, DALL-E' },
-  { id: 'videos', name: '🎥 KI Videos', desc: 'Prompts für Sora, Runway' },
+  { id: 'videos', name: '🎥 Video-Prompts', desc: 'Prompts für Sora, Runway' },
   { id: 'music', name: '🎵 KI Musik', desc: 'Prompts für Suno, Udio' },
   { id: 'community', name: '🏆 Community', desc: 'User Uploads & Trending' },
   { id: 'learning', name: '🎓 KI für Anfänger', desc: 'Tools & Tutorials zum Starten' },

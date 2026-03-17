@@ -28,6 +28,7 @@ const Pricing = lazy(() => import('./components/Pricing'))
 const Studio = lazy(() => import('./components/Studio'))
 const Marketplace = lazy(() => import('./components/Marketplace'))
 const ImageLibrary = lazy(() => import('./components/ImageLibrary'))
+const VideoLibrary = lazy(() => import('./components/VideoLibrary'))
 
 function AppContent() {
   const [lang, setLang] = useState('de')
@@ -326,12 +327,14 @@ function AppContent() {
   }><PromptExtractor /></Suspense>} />
 
         {/* --- VIDEO GENERATOR --- */}
+        {/* --- KI VIDEO BIBLIOTHEK --- */}
         <Route path="videos" element={
-  <Suspense fallback={
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-    </div>
-  }><VideoGenerator /></Suspense>} />
+          <Suspense fallback={
+            <div className="flex items-center justify-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500"></div>
+            </div>
+          }><VideoLibrary /></Suspense>
+        } />
 
         {/* --- MODEL COMPARE --- */}
         <Route path="compare" element={
