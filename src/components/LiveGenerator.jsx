@@ -214,19 +214,19 @@ export default function LiveGenerator() {
             onClick={() => { setGenerationMode('image'); soundEngine.playPop(); }}
             className={`px-6 py-2.5 rounded-xl font-bold transition-all flex items-center gap-2 ${generationMode === 'image' ? 'bg-gradient-to-r from-pink-500 to-rose-600 text-white shadow-lg shadow-pink-500/20 scale-105' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
           >
-            🖼️ Bild (DALL-E)
+            🖼️ KI Bild
           </button>
           <button 
             onClick={() => { setGenerationMode('video'); soundEngine.playPop(); }}
             className={`px-6 py-2.5 rounded-xl font-bold transition-all flex items-center gap-2 ${generationMode === 'video' ? 'bg-gradient-to-r from-red-500 to-orange-600 text-white shadow-lg shadow-red-500/20 scale-105' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
           >
-            🎥 Video (Sora)
+            🎥 KI Video
           </button>
           <button 
             onClick={() => { setGenerationMode('music'); soundEngine.playPop(); }}
             className={`px-6 py-2.5 rounded-xl font-bold transition-all flex items-center gap-2 ${generationMode === 'music' ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/20 scale-105' : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}`}
           >
-            🎵 Musik (Suno)
+            🎵 KI Musik
           </button>
         </div>
       </div>
