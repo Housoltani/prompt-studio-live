@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react'
-import { Routes, Route, NavLink, Navigate } from 'react-router-dom'
+import { Routes, Route, NavLink, Navigate, useNavigate } from 'react-router-dom'
 import { Toaster, toast } from 'react-hot-toast'
 import './App.css'
 import { supabase } from './supabaseClient'
@@ -39,7 +39,20 @@ function AppContent() {
   const { credits } = useCredits()
 
   const [user, setUser] = useState(null)
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('')
+  
+  // MOCK SEARCH DATA for Cmd+K
+  const commandPaletteLinks = [
+    { title: 'Generieren: Universal Live Studio', url: '/app/live', icon: '✨', type: 'Tool' },
+    { title: 'Bibliothek: Bilder (Midjourney, DALL-E)', url: '/app/images', icon: '🖼️', type: 'Bib' },
+    { title: 'Bibliothek: Videos (Kling, Sora)', url: '/app/videos', icon: '🎥', type: 'Bib' },
+    { title: 'Bibliothek: Musik & Audio', url: '/app/music', icon: '🎵', type: 'Bib' },
+    { title: 'Lernen: Prompt Academy (Masterclass)', url: '/app/learning', icon: '🎓', type: 'Wissen' },
+    { title: 'Community: Globaler Feed', url: '/app/community', icon: '🌍', type: 'Netzwerk' },
+    { title: 'Workflow: Visual Flow Builder', url: '/app/flows', icon: '⚡', type: 'Tool' },
+    { title: 'Hilfe: Bug Report & Feedback', url: '/app/feedback', icon: '💬', type: 'System' }
+  ];
 
   // Command Palette State
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
@@ -526,6 +539,87 @@ function AppContent() {
         </Routes>
 
       </div>
+
+      {/* Zentrales Matrix-Suchsystem (Kommando-Palette) */}
+      {isCommandPaletteOpen && (
+        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh] px-4 backdrop-blur-md bg-slate-900/60 transition-opacity">
+          <div className="w-full max-w-2xl bg-slate-800/90 border border-slate-700/50 rounded-2xl shadow-2xl overflow-hidden glass-panel">
+            <div className="flex items-center px-4 py-3 border-b border-slate-700/50">
+              <svg className="w-5 h-5 text-slate-400 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input 
+                type="text" 
+                autoFocus
+                placeholder="Suche in der Matrix... (Bilder, Videos, Musik, Tools)"
+                value={cmdSearchQuery}
+                onChange={(e) => setCmdSearchQuery(e.target.value)}
+                className="w-full bg-transparent border-none outline-none text-slate-200 placeholder-slate-500 font-medium"
+              />
+              <button 
+                onClick={() => setIsCommandPaletteOpen(false)}
+                className="text-xs bg-slate-700/50 px-2 py-1 rounded text-slate-400 hover:text-white"
+              >
+                ESC
+              </button>
+            </div>
+            
+            <div className="max-h-96 overflow-y-auto p-2">
+              {cmdSearchQuery ? (
+                <div className="space-y-1">
+                  <div className="px-3 py-2 text-xs font-black text-slate-500 uppercase tracking-widest">Gefundene Protokolle</div>
+                  {commandPaletteLinks
+                    .filter(link => link.title.toLowerCase().includes(cmdSearchQuery.toLowerCase()))
+                    .map((link, i) => (
+                      <div 
+                        key={i}
+                        onClick={() => {
+                          navigate(link.url);
+                          setIsCommandPaletteOpen(false);
+                          setCmdSearchQuery('');
+                        }}
+                        className="flex items-center justify-between p-3 bg-slate-800/50 hover:bg-blue-600/20 hover:border-blue-500/50 border border-transparent rounded-xl cursor-pointer transition-colors group"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-xl">{link.icon}</span>
+                          <span className="text-slate-300 font-bold group-hover:text-white transition-colors">{link.title}</span>
+                        </div>
+                        <span className="text-xs px-2 py-1 bg-slate-900 rounded-md text-slate-400 border border-slate-700">{link.type}</span>
+                      </div>
+                  ))}
+                  {commandPaletteLinks.filter(link => link.title.toLowerCase().includes(cmdSearchQuery.toLowerCase())).length === 0 && (
+                     <div className="text-slate-500 text-sm py-8 text-center flex flex-col items-center">
+                       <span className="text-3xl mb-2">📡</span>
+                       Matrix-Sektor leer. Keine Übereinstimmung für "{cmdSearchQuery}".
+                     </div>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-1">
+                   <div className="px-3 py-2 text-xs font-black text-slate-500 uppercase tracking-widest">Schnellzugriff</div>
+                   {commandPaletteLinks.slice(0, 4).map((link, i) => (
+                      <div 
+                        key={i}
+                        onClick={() => {
+                          navigate(link.url);
+                          setIsCommandPaletteOpen(false);
+                        }}
+                        className="flex items-center justify-between p-3 hover:bg-slate-800 border border-transparent hover:border-slate-700/50 rounded-xl cursor-pointer transition-colors group"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-xl">{link.icon}</span>
+                          <span className="text-slate-300 font-bold group-hover:text-white transition-colors">{link.title}</span>
+                        </div>
+                        <span className="text-xs px-2 py-1 bg-slate-900 rounded-md text-slate-400 border border-slate-700">{link.type}</span>
+                      </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }
