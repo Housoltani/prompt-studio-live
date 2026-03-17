@@ -31,6 +31,7 @@ const Marketplace = lazy(() => import('./components/Marketplace'))
 const ImageLibrary = lazy(() => import('./components/ImageLibrary'))
 const VideoLibrary = lazy(() => import('./components/VideoLibrary'))
 const MusicLibrary = lazy(() => import('./components/MusicLibrary'))
+const Feedback = lazy(() => import('./components/Feedback'))
 
 function AppContent() {
   const [lang, setLang] = useState('de')
