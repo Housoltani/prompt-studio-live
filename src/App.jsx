@@ -25,6 +25,7 @@ const EbookStudio = lazy(() => import('./components/EbookStudio'))
 const AuthProfile = lazy(() => import('./components/AuthProfile'))
 const EarnCredits = lazy(() => import('./components/EarnCredits'))
 const Pricing = lazy(() => import('./components/Pricing'))
+const AIAcademy = lazy(() => import('./components/AIAcademy'))
 const Studio = lazy(() => import('./components/Studio'))
 const Marketplace = lazy(() => import('./components/Marketplace'))
 const ImageLibrary = lazy(() => import('./components/ImageLibrary'))
@@ -42,6 +43,20 @@ function AppContent() {
   // NEW: Share Menu State
   const [shareMenuOpen, setShareMenuOpen] = useState(null)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [expandedCategories, setExpandedCategories] = useState({
+    'KREATION & TOOLS': true,
+    'BIBLIOTHEKEN': true,
+    'AGENTEN & WORKFLOWS': true,
+    'COMMUNITY & VERKAUF': false,
+    'SYSTEM & PROFIL': false
+  })
+
+  const toggleCategory = (cat) => {
+    setExpandedCategories(prev => ({
+      ...prev,
+      [cat]: !prev[cat]
+    }))
+  }
 
   useEffect(() => {
     // 1. Auth Listener
@@ -216,21 +231,55 @@ function AppContent() {
         <h1 className="text-3xl font-extrabold mb-8 text-gradient from-blue-400 via-indigo-400 to-emerald-400 tracking-tight">
           {t.appTitle}
         </h1>
-        <nav className="flex-1 space-y-1.5">
-          {dataTabs.map(tab => (
-            <NavLink
-              key={tab.id}
-              to={`/app/${tab.id}`}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className={({ isActive }) =>
-                `w-full ${lang === 'ar' ? 'text-right' : 'text-left'} p-2.5 rounded-lg transition-colors flex flex-col ${isActive ? 'bg-blue-600/20 border border-blue-500/50 text-blue-400' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`
-              }
-            >
-              <span className="font-semibold text-sm flex items-center justify-between w-full">
-                {t.tabs[tab.id] || tab.name}
-              </span>
-            </NavLink>
-          ))}
+        <nav className="flex-1 space-y-4">
+          {Object.entries(
+            dataTabs.reduce((acc, tab) => {
+              const cat = tab.category || 'MENÜ';
+              if (!acc[cat]) acc[cat] = [];
+              acc[cat].push(tab);
+              return acc;
+            }, {})
+          ).map(([category, tabs]) => {
+            const isExpanded = expandedCategories[category] !== false;
+            return (
+            <div key={category} className="mb-4">
+              <div 
+                onClick={() => toggleCategory(category)}
+                className="flex items-center justify-between cursor-pointer group px-2 py-1.5 mb-1 rounded-md hover:bg-slate-800/40 transition-colors"
+              >
+                <h3 className="text-[10px] font-black text-slate-400 group-hover:text-slate-300 uppercase tracking-[0.2em] transition-colors">
+                  {category}
+                </h3>
+                <svg 
+                  className={`w-3.5 h-3.5 text-slate-500 group-hover:text-slate-400 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+              <div 
+                className={`space-y-1 overflow-hidden transition-all duration-300 ease-in-out origin-top ${isExpanded ? 'max-h-[800px] opacity-100 scale-y-100' : 'max-h-0 opacity-0 scale-y-95'}`}
+              >
+                {tabs.map(tab => (
+                  <NavLink
+                    key={tab.id}
+                    to={`/app/${tab.id}`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={({ isActive }) =>
+                      `w-full ${lang === 'ar' ? 'text-right' : 'text-left'} p-2.5 rounded-lg transition-all flex flex-col ${isActive ? 'bg-blue-600/20 border border-blue-500/50 text-blue-400 font-bold shadow-inner' : 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 border border-transparent hover:border-slate-700/50'}`
+                    }
+                  >
+                    <span className="font-semibold text-sm flex items-center justify-between w-full">
+                      {t.tabs[tab.id] || tab.name}
+                    </span>
+                  </NavLink>
+                ))}
+              </div>
+            </div>
+          )}
+          )}
         </nav>
         
         {/* --- LANGUAGE SWITCHER --- */}
@@ -417,6 +466,13 @@ function AppContent() {
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
     </div>
   }><Pricing /></Suspense>} />
+
+        {/* --- KI ACADEMY (LEARNING) --- */}
+        <Route path="learning" element={<Suspense fallback={
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
+    </div>
+  }><AIAcademy /></Suspense>} />
 
         {/* --- PLACEHOLDER FOR OTHERS --- */}
         <Route path="*" element={<>
