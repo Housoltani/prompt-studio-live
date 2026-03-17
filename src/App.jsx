@@ -21,11 +21,13 @@ const CommunityFeed = lazy(() => import('./components/CommunityFeed'))
 const AgentsHub = lazy(() => import('./components/AgentsHub'))
 const CommandCenter = lazy(() => import('./components/CommandCenter'))
 const FlowBuilder = lazy(() => import('./components/FlowBuilder'))
+const EbookStudio = lazy(() => import('./components/EbookStudio'))
 const AuthProfile = lazy(() => import('./components/AuthProfile'))
 const EarnCredits = lazy(() => import('./components/EarnCredits'))
 const Pricing = lazy(() => import('./components/Pricing'))
 const Studio = lazy(() => import('./components/Studio'))
 const Marketplace = lazy(() => import('./components/Marketplace'))
+const ImageLibrary = lazy(() => import('./components/ImageLibrary'))
 
 function AppContent() {
   const [lang, setLang] = useState('de')
@@ -289,6 +291,15 @@ function AppContent() {
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
     </div>
   }><Marketplace /></Suspense>} />
+        {/* --- KI BILDER BIBLIOTHEK --- */}
+        <Route path="images" element={
+          <Suspense fallback={
+            <div className="flex items-center justify-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+            </div>
+          }><ImageLibrary /></Suspense>
+        } />
+
 
         {/* --- PROMPT MIXER --- */}
         <Route path="mixer" element={
@@ -371,6 +382,13 @@ function AppContent() {
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
             </div>
           }><CommandCenter /></Suspense>
+        } />
+        <Route path="ebook-studio" element={
+          <Suspense fallback={
+            <div className="flex items-center justify-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+            </div>
+          }><EbookStudio /></Suspense>
         } />
         <Route path="agents" element={
   <Suspense fallback={

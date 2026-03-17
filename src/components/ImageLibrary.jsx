@@ -1,0 +1,383 @@
+import React, { useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { massivePrompts } from '../data_image_prompts';
+import { peoplePromptsData } from '../data_people_prompts';
+
+export default function ImageLibrary() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  
+  // Favorites State
+  const [favorites, setFavorites] = useState([]);
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('Alle');
+  
+  const categories = ['Alle', 'People', 'Romance', '3D', 'Character', 'Design', 'Realistic', 'Cyberpunk', 'Nature', 'Anime', 'Fantasy', 'Architecture', 'Vehicles', 'Food'];
+  
+  // State for new prompt form
+  const [newPrompt, setNewPrompt] = useState({ title: '', prompt: '', image: '', tags: '' });
+  
+  const defaultPrompts = [
+    {
+      id: 1,
+      title: 'Neon Cyberpunk Samurai',
+      prompt: '/imagine prompt: A futuristic cyberpunk samurai standing in a neon-lit alleyway in Neo-Tokyo, pouring rain, glowing katana, cinematic lighting, 8k resolution, unreal engine 5 render, hyper-detailed --ar 16:9 --v 6.0',
+      image: 'https://picsum.photos/seed/5000/600/400',
+      tags: ['Cyberpunk', 'Character', 'Cinematic']
+    },
+    {
+      id: 2,
+      title: 'Cozy Autumn Cabin',
+      prompt: '/imagine prompt: A cozy wooden cabin in a dense autumn forest, glowing orange windows, smoke coming from the chimney, falling golden leaves, golden hour lighting, photorealistic, serene atmosphere --ar 3:2 --style raw',
+      image: 'https://picsum.photos/seed/5001/600/400',
+      tags: ['Nature', 'Architecture', 'Cozy']
+    },
+    {
+      id: 3,
+      title: 'Minimalist Startup Logo',
+      prompt: '/imagine prompt: A minimalist, modern vector logo for an AI tech startup, using a stylized brain forming a network, geometric shapes, vibrant gradient blue and purple colors on a solid dark background, dribbble style, flat design --no text --ar 1:1',
+      image: 'https://picsum.photos/seed/5002/600/400',
+      tags: ['Logo', 'Design', 'Minimalist']
+    },
+    {
+      id: 4,
+      title: 'Hyperrealistic Macro Eye',
+      prompt: '/imagine prompt: Extreme macro photography of a glowing green reptilian eye, showing microscopic geometric scales, covered in tiny morning dew drops reflecting the jungle, National Geographic style, incredibly sharp focus, 100mm macro lens --ar 16:9',
+      image: 'https://picsum.photos/seed/5003/600/400',
+      tags: ['Macro', 'Photography', 'Nature']
+    },
+    {
+      id: 5,
+      title: 'Epic Fantasy Castle',
+      prompt: '/imagine prompt: An epic high-fantasy white marble castle built on a floating island in the sky, cascading waterfalls falling into the clouds below, dragons flying in the background, dramatic lighting, Greg Rutkowski style, masterpiece --ar 16:9',
+      image: 'https://picsum.photos/seed/5004/600/400',
+      tags: ['Fantasy', 'Landscape', 'Epic']
+    },
+    {
+      id: 6,
+      title: 'Moody Street Photography',
+      prompt: '/imagine prompt: Candid street photography of a solitary figure walking down a foggy alley in London at night, illuminated by a single warm street lamp, Kodak Portra 400 film look, cinematic grading, anamorphic lens flare --ar 16:9 --v 6.0',
+      image: 'https://picsum.photos/seed/5005/600/400',
+      tags: ['Photography', 'Street', 'Moody']
+    },
+    {
+      id: 7,
+      title: 'Studio Ghibli Anime Landscape',
+      prompt: '/imagine prompt: A beautiful anime landscape in the style of Studio Ghibli, lush green rolling hills, a giant fluffy white cloud in a bright blue sky, a small quaint village in the distance, vibrant colors, nostalgic atmosphere --ar 16:9 --niji 6',
+      image: 'https://picsum.photos/seed/5006/600/400',
+      tags: ['Anime', 'Landscape', 'Ghibli']
+    },
+    {
+      id: 8,
+      title: 'Cinematic Portrait',
+      prompt: '/imagine prompt: A hyper-realistic cinematic portrait of an old sailor with a weathered face, wearing a yellow raincoat, heavy rain, dramatic rim lighting, 85mm lens, f/1.4, detailed skin texture, incredibly lifelike --ar 4:5 --style raw',
+      image: 'https://picsum.photos/seed/5007/600/400',
+      tags: ['Portrait', 'Realistic', 'Character']
+    },
+    {
+      id: 9,
+      title: 'Cute 3D Character',
+      prompt: '/imagine prompt: A cute 3D Pixar-style fluffy monster wearing a tiny backpack, walking through a magical glowing mushroom forest, octane render, soft lighting, vibrant colors, adorable, detailed fur --ar 1:1 --stylize 250',
+      image: 'https://picsum.photos/seed/5008/600/400',
+      tags: ['3D Render', 'Cute', 'Pixar']
+    },
+    {
+      id: 200,
+      title: 'Creative Brand Advertisement',
+      prompt: 'A minimalist and creative advertisement set on a pure white background. A real photographic [Real Object] is integrated into a simple hand-drawn black ink doodle using loose, playful lines. The [Doodle Concept] interacts directly and cleverly with the real object, making the object part of the illustrated scene. Include bold uppercase black “[Ad Copy]” text at the top. Place the official [Brand Logo] clearly centered at the bottom. Clean layout, high contrast between realistic object and flat doodle drawing, lots of negative space, smart visual metaphor, print-ready poster design',
+      image: 'https://picsum.photos/seed/5009/600/400',
+      tags: ['Advertisement', 'Minimalist', 'Creative']
+    },
+    {
+      id: 201,
+      title: 'Surreal Cloud Logo',
+      prompt: '[BRAND NAME]: The name of the brand. Goal: Generate a single, minimalist, and surreal image where a cloud is shaped like the brand\'s logo. 1. THE LOGO CLOUD - Subject: A massive, photorealistic cumulus cloud in the exact geometric shape of the [BRAND NAME] logo. - Texture: Puffy, soft, and voluminous with natural sunlight illuminating the edges. - Volume: 3D sculptural appearance with realistic shadows within the cloud folds to show depth. 2. ENVIRONMENT & BACKGROUND - Sky: A vast, clear, vibrant blue summer sky. - Secondary Elements: A few small, wispy, natural clouds scattered far in the background to enhance the sense of scale and realism. - Lighting: Bright, direct daylight coming from the side to create high-contrast highlights and shadows. 3. INTEGRATED BRANDING - Text: The word "[BRAND NAME]" written in a clean, bold white sans-serif font. - Icon: A small, flat white version of the brand\'s logo placed next to the text. - Positioning: The branding (text + logo) is centered at the bottom of the frame, acting as a subtle anchor to the giant cloud above. 4. STYLE - Surrealist photography, ultra-minimalist composition, high resolution, 8k, cinematic look, clean and airy vibe.',
+      image: 'https://picsum.photos/seed/5010/600/400',
+      tags: ['Surreal', 'Cloud', 'Brand']
+    },
+    {
+      id: 202,
+      title: 'Pixar-Style Group Selfie',
+      prompt: 'High-quality stylized 3D CGI Pixar-style render, vertical 3:4 composition, the most iconic characters from [SHOW/MOVIE] captured as a chaotic and joyful bathroom mirror selfie; the most recognizable character holds a large vintage camera up toward the mirror, the remaining characters squeezed tightly into the frame around them, each showing their most signature expression or pose; everyone wearing their most iconic costumes and outfits faithful to the source material; all crammed together creating classic crowded selfie energy; facial proportions gently stylized in Disney/Pixar animation style with expressive eyes while faithfully preserving each character\'s most recognizable traits, hairstyles and costumes from [SHOW/MOVIE]; the bathroom mirror has realistic toothpaste splatters and subtle smudges; the reflection shows bold black Pixar-style lettering reading "[SHOW/MOVIE]❤️"; the bathroom background is styled to match the world of [SHOW/MOVIE] with thematic props and easter eggs relevant to [SHOW/MOVIE] placed naturally around the scene; lighting combines soft ambient bathroom lighting with a bright camera flash reflecting in the mirror creating gentle specular highlights; warm Pixar-style color grading faithful to the visual tone of [SHOW/MOVIE], smooth highlight rolloff, refined Disney/Pixar cinematic character shading, ultra-detailed 4K render, no watermark',
+      image: 'https://picsum.photos/seed/5011/600/400',
+      tags: ['3D CGI', 'Pixar', 'Character']
+    },
+    {
+      id: 203,
+      title: 'High Fashion Campaign',
+      prompt: '[BRAND]. A high fashion campaign poster. A model with a strong expressive face as the centerpiece, wearing a signature outfit in the brand\'s exact official color palette. Dramatic surreal atmospheric background. Layered collage of torn-edge material swatches surrounding the model. Brand\'s iconic symbol woven into the scene. Logo overlaid in the center in clean serif font. Macro detail on fabric texture and stitching. Cinematic lighting, rich contrast, 8K',
+      image: 'https://picsum.photos/seed/5012/600/400',
+      tags: ['Fashion', 'Poster', 'Cinematic']
+    },
+    {
+      id: 204,
+      title: 'Minimalist Fashion Ad',
+      prompt: 'Create a high-end minimalist fashion advertisement poster. Background: light grey wrinkled paper poster texture with editorial magazine layout. At the top center place a small brand label "A&H" with minimal dots style logo above it. Behind the product place a huge bold word "PREMIUM" in black, very large sans-serif font, spanning almost the entire width of the poster. Center of the poster: A two-tone t-shirt hanging on a wooden hanger. Top half color beige/tan, bottom half deep black. Short sleeves slightly folded. Clean premium cotton texture. On the chest of the shirt place the small text "YOUR BRAND NAME" in simple minimal font. Left side design area: Stylish script word "Aetails" (signature style starting with A) replacing "Details". Under it small editorial paragraph blocks (magazine layout filler text). Right side: Editorial typography block with the phrase "FASHION THAT CELEBRATES YOUR UNIQUENESS" in bold modern sans-serif. Bottom right small editorial text block similar to fashion magazine layout. Important rules: clean luxury fashion ad aesthetic, studio lighting, ultra sharp, photorealistic, 4K fashion poster design',
+      image: 'https://picsum.photos/seed/5013/600/400',
+      tags: ['Fashion', 'Minimalist', 'Ad']
+    },
+    {
+      id: 205,
+      title: 'Cinematic Bathtub Portrait',
+      prompt: 'A young blonde Hollywood actress, similar to Sydney Sweeney, appears inside a bathtub filled with foam up to the brim. Her blonde hair is styled in a high, voluminous, slightly messy bun, with a few loose strands softly framing her face. She looks directly at the camera with a neutral, subtly seductive expression, her lips slightly parted. She wears light, natural makeup, a delicate silver chain necklace with a small circular pendant, and small, discreet stud earrings. Her upper body faces forward, visible above the foam. She holds a large open printed newspaper with both hands at chest height, as if reading it. The newspaper is partially covered with dense white soap foam, which also gathers around her in thick, fluffy bubbles filling the bathtub. Beneath the foam and the newspaper, she is wearing a green beach top that remains completely hidden. The scene takes place inside a tiled bathtub. In the background, there is a vibrant wall completely covered with small, bright yellow square mosaic tiles. In the left corner of the composition, a slightly out-of-focus white door frame is visible, with a silver metallic doorknob.',
+      image: 'https://picsum.photos/seed/5014/600/400',
+      tags: ['Portrait', 'Cinematic', 'Realistic']
+    }
+  ];
+  
+  const [userPrompts, setUserPrompts] = useState([]);
+  
+  // Combine all prompts dynamically so hot-reloading data files works instantly
+  const prompts = [...userPrompts, ...peoplePromptsData, ...massivePrompts, ...defaultPrompts];
+
+
+  const toggleFavorite = (id) => {
+    setFavorites(prev => {
+      if (prev.includes(id)) {
+        return prev.filter(f => f !== id);
+      } else {
+        toast.success('Zu Favoriten hinzugefügt!', { icon: '❤️' });
+        return [...prev, id];
+      }
+    });
+  };
+
+  const filteredPrompts = prompts.filter(p => {
+    const matchesSearch = p.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          p.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesFavorites = showFavoritesOnly ? favorites.includes(p.id) : true;
+    const matchesCategory = selectedCategory === 'Alle' ? true : p.tags.some(tag => tag.includes(selectedCategory));
+    return matchesSearch && matchesFavorites && matchesCategory;
+  });
+
+  const handleCopy = (promptText) => {
+    navigator.clipboard.writeText(promptText);
+    toast.success('Prompt kopiert!');
+  };
+
+  const handleAddPrompt = (e) => {
+    e.preventDefault();
+    if (!newPrompt.title || !newPrompt.prompt) {
+      toast.error('Bitte Titel und Prompt ausfüllen!');
+      return;
+    }
+
+    const newEntry = {
+      id: Date.now(),
+      title: newPrompt.title,
+      prompt: newPrompt.prompt,
+      image: newPrompt.image || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&h=400&fit=crop',
+      tags: newPrompt.tags.split(',').map(t => t.trim()).filter(t => t)
+    };
+
+    setUserPrompts([newEntry, ...userPrompts]);
+    setShowModal(false);
+    setNewPrompt({ title: '', prompt: '', image: '', tags: '' });
+    toast.success('Neuer Prompt erfolgreich hinzugefügt!');
+  };
+
+  return (
+    <div className="p-6 max-w-7xl mx-auto space-y-8 animate-fade-in relative">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500 flex items-center gap-3">
+            🖼️ Bild-Prompts Bibliothek
+          </h1>
+          <p className="text-gray-400 mt-2">
+            Lass dich inspirieren! Entdecke und teile die besten Prompts für Midjourney, DALL-E und Co.
+          </p>
+        </div>
+        
+        <div className="flex flex-wrap w-full md:w-auto gap-3">
+          <input
+            type="text"
+            placeholder="Suchen (z.B. Anime, Portrait...)"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-grow bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-purple-500 min-w-[200px]"
+          />
+          
+          <button
+            onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors border flex items-center gap-2 ${
+              showFavoritesOnly 
+                ? 'bg-pink-500/20 border-pink-500 text-pink-500' 
+                : 'bg-slate-800 border-slate-700 text-gray-400 hover:text-white hover:border-slate-500'
+            }`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+            </svg>
+            <span className="hidden sm:inline">Favoriten</span>
+          </button>
+
+          <button 
+            onClick={() => setShowModal(true)}
+            className="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap flex items-center gap-2 shadow-lg shadow-purple-900/20"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+            </svg>
+            <span className="hidden sm:inline">Neuer Prompt</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Category Filters */}
+      <div className="flex flex-wrap gap-2 pt-2">
+        {categories.map(cat => (
+          <button
+            key={cat}
+            onClick={() => setSelectedCategory(cat)}
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors border ${
+              selectedCategory === cat 
+                ? 'bg-purple-600 border-purple-600 text-white shadow-lg shadow-purple-900/20' 
+                : 'bg-slate-800 border-slate-700 text-gray-400 hover:text-white hover:border-slate-500'
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredPrompts.map((item) => (
+          <div key={item.id} className="bg-slate-800 rounded-xl overflow-hidden border border-slate-700 hover:border-purple-500 transition-all group flex flex-col relative">
+            <div className="relative h-48 overflow-hidden">
+              <img 
+                src={item.image} 
+                alt={item.title} 
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              
+              {/* Favorite Button Overlay */}
+              <div className="absolute top-2 left-2 z-10">
+                <button 
+                  onClick={() => toggleFavorite(item.id)}
+                  className="p-2 rounded-full bg-black/40 backdrop-blur-md hover:bg-black/60 transition-all focus:outline-none border border-white/10"
+                  title="Zu Favoriten hinzufügen"
+                >
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    className={`h-5 w-5 transition-colors ${favorites.includes(item.id) ? 'text-pink-500' : 'text-gray-300 hover:text-pink-400'}`} 
+                    fill={favorites.includes(item.id) ? "currentColor" : "none"} 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="absolute top-2 right-2 flex gap-1 flex-wrap justify-end">
+                {item.tags.map(tag => (
+                  <span key={tag} className="text-xs bg-black/60 backdrop-blur-md text-white px-2 py-1 rounded-md mb-1">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+            
+            <div className="p-5 flex flex-col flex-grow">
+              <h3 className="text-xl font-semibold text-white mb-2 pr-8">{item.title}</h3>
+              <div className="bg-slate-900 rounded-lg p-3 mb-4 flex-grow relative group/code">
+                <p className="text-sm text-gray-300 font-mono line-clamp-3 group-hover/code:line-clamp-none transition-all">
+                  {item.prompt}
+                </p>
+              </div>
+              
+              <button 
+                onClick={() => handleCopy(item.prompt)}
+                className="w-full py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                </svg>
+                Prompt Kopieren
+              </button>
+            </div>
+          </div>
+        ))}
+        {filteredPrompts.length === 0 && (
+          <div className="col-span-full text-center py-12 text-gray-500">
+            {showFavoritesOnly ? "Du hast noch keine Favoriten gespeichert. ❤️" : `Keine Prompts für "${searchTerm}" gefunden.`}
+          </div>
+        )}
+      </div>
+
+      {/* Modal for adding new prompt */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+          <div className="bg-slate-800 border border-slate-700 rounded-xl w-full max-w-lg overflow-hidden shadow-2xl">
+            <div className="flex justify-between items-center p-5 border-b border-slate-700">
+              <h2 className="text-xl font-bold text-white">Neuen Prompt beisteuern</h2>
+              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <form onSubmit={handleAddPrompt} className="p-5 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">Titel</label>
+                <input 
+                  type="text" 
+                  value={newPrompt.title}
+                  onChange={e => setNewPrompt({...newPrompt, title: e.target.value})}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white focus:border-purple-500 focus:outline-none"
+                  placeholder="z.B. Cyberpunk Katze"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">Der Prompt</label>
+                <textarea 
+                  value={newPrompt.prompt}
+                  onChange={e => setNewPrompt({...newPrompt, prompt: e.target.value})}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white focus:border-purple-500 focus:outline-none h-24 resize-none"
+                  placeholder="/imagine prompt: A cute cyberpunk cat..."
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">Bild-URL (Optional)</label>
+                <input 
+                  type="url" 
+                  value={newPrompt.image}
+                  onChange={e => setNewPrompt({...newPrompt, image: e.target.value})}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white focus:border-purple-500 focus:outline-none"
+                  placeholder="https://..."
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">Tags (Komma-getrennt)</label>
+                <input 
+                  type="text" 
+                  value={newPrompt.tags}
+                  onChange={e => setNewPrompt({...newPrompt, tags: e.target.value})}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white focus:border-purple-500 focus:outline-none"
+                  placeholder="Cyberpunk, Tier, 3D"
+                />
+              </div>
+              <div className="pt-4 flex gap-3">
+                <button 
+                  type="button" 
+                  onClick={() => setShowModal(false)}
+                  className="flex-1 bg-slate-700 hover:bg-slate-600 text-white py-2 rounded-lg font-medium transition-colors"
+                >
+                  Abbrechen
+                </button>
+                <button 
+                  type="submit" 
+                  className="flex-1 bg-purple-600 hover:bg-purple-500 text-white py-2 rounded-lg font-medium transition-colors"
+                >
+                  Hinzufügen
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

@@ -1,5 +1,6 @@
 export const tabs = [
   { id: 'command-center', name: '🎯 Smart Social Suite', desc: 'Deine Instagram KI-Crew' },
+  { id: 'ebook-studio', name: '📚 Publishing Hub', desc: 'Erstelle digitale Produkte' },
   { id: 'agents', name: '🤖 Agenten Hub', desc: 'Spezialisierte KI-Assistenten' },
   { id: 'generator', name: '✨ Live Generator', desc: 'Bilder, Videos & Musik direkt hier' },
   { id: 'studio', name: '📂 Mein Studio', desc: 'Dein Workspace' },
@@ -9,7 +10,7 @@ export const tabs = [
   { id: 'extractor', name: '🔄 Prompt Extractor', desc: 'Bild zu Text' },
   { id: 'mixer', name: '🎛️ Prompt Mixer', desc: 'Drag & Drop Baukasten' },
   { id: 'compare', name: '⚖️ Modell-Vergleich', desc: 'Midjourney vs DALL-E vs SD' },
-  { id: 'images', name: '🖼️ KI Bilder', desc: 'Prompts für Midjourney, DALL-E' },
+  { id: 'images', name: '🖼️ Bild-Prompts', desc: 'Prompts für Midjourney, DALL-E' },
   { id: 'videos', name: '🎥 KI Videos', desc: 'Prompts für Sora, Runway' },
   { id: 'music', name: '🎵 KI Musik', desc: 'Prompts für Suno, Udio' },
   { id: 'community', name: '🏆 Community', desc: 'User Uploads & Trending' },
