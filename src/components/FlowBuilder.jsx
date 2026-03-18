@@ -256,6 +256,49 @@ export default function FlowBuilder() {
               </div>
             </div>
 
+            <div className="space-y-2">
+              <div className="text-[10px] text-slate-400 font-bold uppercase ml-1 mt-4">Social Publishing (Auto-Post)</div>
+              
+              {/* YouTube Shorts Node */}
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-red-500 transition-all duration-300 flex items-center gap-3 group relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-8 h-8 bg-red-500/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
+                <div className="w-8 h-8 rounded-lg bg-red-500/20 text-red-500 flex items-center justify-center text-lg shadow-[0_0_10px_rgba(239,68,68,0.2)]">
+                  ▶️
+                </div>
+                <div className="flex-1">
+                  <div className="text-sm font-bold text-slate-300 group-hover:text-white transition-colors">YouTube Shorts</div>
+                  <div className="text-[9px] text-slate-500">Video Upload & Tags</div>
+                </div>
+                <div className="w-2 h-2 rounded-full bg-slate-700 group-hover:bg-red-500 transition-colors"></div>
+              </div>
+
+              {/* Instagram Reels Node */}
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-pink-500 transition-all duration-300 flex items-center gap-3 group relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-8 h-8 bg-gradient-to-tr from-yellow-500/10 via-pink-500/10 to-purple-500/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-yellow-500/20 via-pink-500/20 to-purple-500/20 text-pink-400 flex items-center justify-center text-lg">
+                  📸
+                </div>
+                <div className="flex-1">
+                  <div className="text-sm font-bold text-slate-300 group-hover:text-white transition-colors">Instagram Reel</div>
+                  <div className="text-[9px] text-slate-500">Graph API Posting</div>
+                </div>
+                <div className="w-2 h-2 rounded-full bg-slate-700 group-hover:bg-pink-500 transition-colors"></div>
+              </div>
+
+              {/* TikTok Node */}
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-cyan-500 transition-all duration-300 flex items-center gap-3 group relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-8 h-8 bg-cyan-500/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
+                <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-700 text-white flex items-center justify-center text-lg font-bold shadow-[0_0_10px_rgba(6,182,212,0.1)] group-hover:shadow-[0_0_15px_rgba(6,182,212,0.4)]">
+                  <span className="text-cyan-400 drop-shadow-[1px_1px_0_#f43f5e]">♪</span>
+                </div>
+                <div className="flex-1">
+                  <div className="text-sm font-bold text-slate-300 group-hover:text-white transition-colors">TikTok Upload</div>
+                  <div className="text-[9px] text-slate-500">Direct Post & Sound</div>
+                </div>
+                <div className="w-2 h-2 rounded-full bg-slate-700 group-hover:bg-cyan-500 transition-colors"></div>
+              </div>
+            </div>
+
           </div>
         </div>
 
