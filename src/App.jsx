@@ -11,6 +11,7 @@ import {
 import { translations } from './i18n.js'
 import { CreditsProvider, useCredits } from './context/CreditsContext'
 import InteractivePrompt from './components/InteractivePrompt'
+import GlobalChat from './components/GlobalChat'
 const PromptMixer = lazy(() => import('./components/PromptMixer'))
 const LiveGenerator = lazy(() => import('./components/LiveGenerator'))
 const PromptExtractor = lazy(() => import('./components/PromptExtractor'))
@@ -252,6 +253,7 @@ function AppContent() {
   return (
     <div dir={lang === 'ar' ? 'rtl' : 'ltr'} className={`min-h-screen bg-slate-900 text-slate-100 flex selection:bg-blue-500/30 selection:text-white ${lang === 'ar' ? 'font-arabic' : 'font-sans'}`}>
       <Toaster position="bottom-right" reverseOrder={false} />
+      <GlobalChat />
 
       {/* --- MOBILE OVERLAY --- */}
       {isMobileMenuOpen && (
