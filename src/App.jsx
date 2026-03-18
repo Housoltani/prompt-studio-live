@@ -34,6 +34,9 @@ const VideoLibrary = lazy(() => import('./components/VideoLibrary'))
 const MusicLibrary = lazy(() => import('./components/MusicLibrary'))
 const Feedback = lazy(() => import('./components/Feedback'))
 const Offers = lazy(() => import('./components/Offers'))
+const PromptArena = lazy(() => import('./components/PromptArena'))
+const AITrendsRadar = lazy(() => import('./components/AITrendsRadar'))
+const ApiNexus = lazy(() => import('./components/ApiNexus'))
 
 function AppContent() {
   const [lang, setLang] = useState('de')
@@ -539,6 +542,27 @@ function AppContent() {
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
     </div>
   }><AIAcademy /></Suspense>} />
+
+        {/* --- PROMPT ARENA --- */}
+        <Route path="arena" element={<Suspense fallback={
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500"></div>
+          </div>
+        }><PromptArena /></Suspense>} />
+
+        {/* --- KI TRENDS RADAR --- */}
+        <Route path="radar" element={<Suspense fallback={
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500"></div>
+          </div>
+        }><AITrendsRadar /></Suspense>} />
+
+        {/* --- API NEXUS --- */}
+        <Route path="api-nexus" element={<Suspense fallback={
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+          </div>
+        }><ApiNexus /></Suspense>} />
 
         {/* --- FEEDBACK --- */}
         <Route path="feedback" element={<Suspense fallback={
