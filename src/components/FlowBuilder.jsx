@@ -233,12 +233,14 @@ export default function FlowBuilder() {
 
             <div className="space-y-2">
               <div className="text-[10px] text-slate-400 font-bold uppercase ml-1 mt-4">Automatisierung & Export</div>
-              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-rose-500/50 transition-colors flex items-center gap-3 group relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-8 h-8 bg-rose-500/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
-                <div className="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center justify-center text-sm font-black shadow-[0_0_10px_rgba(244,63,94,0.3)]">
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-rose-500 transition-all duration-300 flex items-center gap-3 group relative overflow-hidden hover:shadow-[0_0_20px_rgba(244,63,94,0.3)]">
+                {/* Animated Scanner Line on Hover */}
+                <div className="absolute top-0 bottom-0 left-[-10px] w-1 bg-gradient-to-b from-transparent via-rose-400 to-transparent blur-sm opacity-0 group-hover:opacity-100 group-hover:animate-pulse shadow-[0_0_10px_rgba(244,63,94,1)]"></div>
+                <div className="absolute top-0 right-0 w-8 h-8 bg-rose-500/10 rounded-full blur-xl group-hover:scale-150 group-hover:bg-rose-500/20 transition-all duration-500"></div>
+                <div className="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 border border-rose-500/30 group-hover:border-rose-400 flex items-center justify-center text-sm font-black shadow-[0_0_10px_rgba(244,63,94,0.3)] transition-all">
                   n8n
                 </div>
-                <div className="text-sm font-bold text-white group-hover:text-rose-400 transition-colors">n8n Webhook</div>
+                <div className="text-sm font-bold text-white group-hover:text-rose-400 transition-colors z-10">n8n Webhook</div>
               </div>
               <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-orange-500/50 transition-colors flex items-center gap-3 group">
                 <div className="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center text-lg font-black font-mono">

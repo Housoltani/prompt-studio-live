@@ -5,6 +5,7 @@ import { soundEngine } from '../utils/SoundEngine';
 export default function ApiNexus() {
   const [apiKey, setApiKey] = useState('***********************************');
   const [isRevealed, setIsRevealed] = useState(false);
+  const [copiedSnippet, setCopiedSnippet] = useState(false);
 
   const mockFlows = [
     { id: 'f-891', name: 'SEO Blog Post Pipeline', endpoint: '/v1/flows/execute/f-891', calls: 142 },
@@ -31,6 +32,16 @@ export default function ApiNexus() {
     navigator.clipboard.writeText(apiKey);
     soundEngine.playSuccess();
     toast.success('API Key in die Zwischenablage kopiert!');
+  };
+
+  const copySnippet = () => {
+    const code = `curl -X POST https://api.../f-891 \\
+  -H "Authorization: Bearer sk_..." \\
+  -d '{"topic": "Cyberpunk"}'`;
+    navigator.clipboard.writeText(code);
+    setCopiedSnippet(true);
+    soundEngine.playSuccess();
+    setTimeout(() => setCopiedSnippet(false), 2000);
   };
 
   return (
@@ -159,11 +170,24 @@ export default function ApiNexus() {
               <div className="flex justify-between items-center mb-3">
                 <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">cURL Fallback</span>
               </div>
-              <pre className="text-[10px] text-emerald-300 font-mono whitespace-pre-wrap leading-relaxed overflow-x-auto bg-slate-950 p-3 rounded-xl border border-slate-800/50 shadow-inner">
+              <div className="relative group/code">
+                <pre className="text-[10px] text-emerald-300 font-mono whitespace-pre-wrap leading-relaxed overflow-x-auto bg-slate-950 p-3 rounded-xl border border-slate-800/50 shadow-inner group-hover/code:border-emerald-500/30 transition-colors">
 {`curl -X POST https://api.../f-891 \\
   -H "Authorization: Bearer sk_..." \\
   -d '{"topic": "Cyberpunk"}'`}
-              </pre>
+                </pre>
+                <button 
+                  onClick={copySnippet}
+                  className={`absolute top-2 right-2 p-1.5 rounded-lg border flex items-center justify-center transition-all ${
+                    copiedSnippet 
+                    ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' 
+                    : 'bg-slate-800/80 border-slate-700 text-slate-400 hover:text-white hover:bg-slate-700 hover:border-slate-500'
+                  } opacity-0 group-hover/code:opacity-100 backdrop-blur-sm`}
+                  title="Snippet kopieren"
+                >
+                  {copiedSnippet ? '✅' : '📋'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
