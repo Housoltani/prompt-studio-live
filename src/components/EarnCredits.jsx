@@ -180,7 +180,8 @@ export default function EarnCredits() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           {/* ACHIEVEMENTS / STREAKS UI */}
           <div className="col-span-1 md:col-span-3 mb-2 mt-4">
@@ -258,6 +259,62 @@ export default function EarnCredits() {
           </div>
 
         </div>
+
+        {/* --- SPARK-ALLIANZ (REFERRAL SYSTEM) --- */}
+        <div className="mt-8 mb-4">
+          <div className="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden bg-gradient-to-br from-indigo-900/40 via-purple-900/20 to-slate-900 border border-indigo-500/30 shadow-[0_0_40px_rgba(79,70,229,0.15)] group hover:border-indigo-400/50 transition-all">
+            
+            <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-indigo-500/20 blur-[100px] rounded-full pointer-events-none"></div>
+            
+            <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
+              
+              {/* Icon / Graphics */}
+              <div className="flex-shrink-0 relative">
+                <div className="w-32 h-32 rounded-[2rem] bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-6xl shadow-[0_0_30px_rgba(79,70,229,0.5)] transform -rotate-6 group-hover:rotate-0 transition-transform duration-500">
+                  🤝
+                </div>
+                <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-amber-400 rounded-full border-4 border-slate-900 flex items-center justify-center text-xl font-black text-slate-900 shadow-xl animate-bounce">
+                  ⚡
+                </div>
+              </div>
+
+              {/* Text & Action */}
+              <div className="flex-1 text-center md:text-left">
+                <div className="inline-block bg-indigo-500/20 text-indigo-300 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-3 border border-indigo-500/30">
+                  Spark-Allianz Protokoll
+                </div>
+                <h2 className="text-3xl font-black text-white mb-3 tracking-tight">Rekrutiere Verbündete.</h2>
+                <p className="text-slate-400 mb-6 text-sm leading-relaxed max-w-xl">
+                  Das Netzwerk muss wachsen. Lade einen neuen Commander über deinen persönlichen Allianz-Link ein. Sobald er andockt, erhaltet ihr <span className="text-amber-400 font-bold">BEIDE sofort 1.000 Sparks</span>. Wenn er das Overdrive-Upgrade aktiviert, fließen monatlich passive Sparks in deine Reaktoren!
+                </p>
+                
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex-1 relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">🔗</span>
+                    <input 
+                      type="text" 
+                      readOnly 
+                      value="https://prompt-studio.live/join/commander-99X" 
+                      className="w-full bg-slate-950/80 border border-slate-700 rounded-xl pl-12 pr-4 py-3.5 text-sm font-mono text-indigo-300 focus:outline-none focus:border-indigo-500 shadow-inner"
+                    />
+                  </div>
+                  <button 
+                    onClick={() => {
+                      navigator.clipboard.writeText('https://prompt-studio.live/join/commander-99X');
+                      toast.success('Allianz-Link in die Zwischenablage kopiert!', { icon: '🔗' });
+                      soundEngine.playSuccess();
+                    }}
+                    className="bg-indigo-600 hover:bg-indigo-500 text-white font-black py-3 px-8 rounded-xl transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] flex items-center justify-center gap-2 whitespace-nowrap"
+                  >
+                    Link Kopieren
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        </>
       )}
     </div>
   );

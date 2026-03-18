@@ -279,9 +279,24 @@ function AppContent() {
       
       {/* Sidebar Navigation */}
       <div className={`w-72 glass-panel border-r border-slate-800/50 p-6 flex flex-col fixed h-full overflow-y-auto z-40 shadow-[4px_0_24px_-10px_rgba(0,0,0,0.5)] transition-transform duration-300 ease-in-out ${lang === 'ar' ? 'border-l right-0' : 'border-r left-0'} ${isMobileMenuOpen ? 'translate-x-0' : (lang === 'ar' ? 'translate-x-full md:translate-x-0' : '-translate-x-full md:translate-x-0')}`}>
-        <h1 className="text-3xl font-extrabold mb-8 text-gradient from-blue-400 via-indigo-400 to-emerald-400 tracking-tight">
+        <h1 className="text-3xl font-extrabold mb-4 text-gradient from-blue-400 via-indigo-400 to-emerald-400 tracking-tight">
           {t.appTitle}
         </h1>
+
+        {/* 7-Day Overdrive Trial Badge */}
+        <div className="mb-8 p-3 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 rounded-xl relative overflow-hidden group cursor-pointer hover:border-amber-500/60 transition-colors">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-500 opacity-70"></div>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-amber-500/20 text-amber-500 flex items-center justify-center text-lg animate-pulse shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+              🚀
+            </div>
+            <div>
+              <h4 className="text-xs font-black text-amber-400 uppercase tracking-widest">Overdrive Aktiv</h4>
+              <p className="text-[10px] text-slate-400 font-bold">6 Tage verbleibend</p>
+            </div>
+          </div>
+        </div>
+
         <nav className="flex-1 space-y-4">
           {Object.entries(
             dataTabs.reduce((acc, tab) => {

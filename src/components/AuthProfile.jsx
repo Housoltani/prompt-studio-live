@@ -205,6 +205,32 @@ export default function AuthProfile() {
             </div>
           </div>
 
+          {/* SPARK ALLIANZ MINI BANNER */}
+          <div className="mb-12 bg-gradient-to-r from-indigo-900/40 to-purple-900/20 border border-indigo-500/30 rounded-2xl p-6 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-indigo-500/20 border border-indigo-500/50 flex items-center justify-center text-2xl text-indigo-300">
+                  🤝
+                </div>
+                <div>
+                  <h4 className="font-bold text-white text-lg">Spark-Allianz Rekrutierung</h4>
+                  <p className="text-xs text-indigo-300">Lade Creator ein. Verdiene 1.000 Sparks pro Rekrut. <span className="text-amber-400 font-bold ml-1">+ Passive Einnahmen!</span></p>
+                </div>
+              </div>
+              <button 
+                onClick={() => {
+                  navigator.clipboard.writeText('https://prompt-studio.live/join/commander-99X');
+                  toast.success('Allianz-Link in die Zwischenablage kopiert!', { icon: '🔗' });
+                  soundEngine.playSuccess();
+                }}
+                className="w-full sm:w-auto px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold rounded-xl transition-all shadow-[0_0_15px_rgba(79,70,229,0.4)] whitespace-nowrap flex items-center justify-center gap-2"
+              >
+                Link kopieren
+              </button>
+            </div>
+          </div>
+
           {isEditing && (
             <div className="mb-12 flex justify-end">
                <button onClick={handleSaveProfile} className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-xl font-bold shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:scale-105 transition-transform">
