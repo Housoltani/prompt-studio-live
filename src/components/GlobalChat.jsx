@@ -25,7 +25,7 @@ export default function GlobalChat() {
   const nexusEndRef = useRef(null);
 
   const toggleChat = () => {
-    soundEngine.playPop();
+    soundEngine.playClick();
     setIsOpen(!isOpen);
   };
 
@@ -95,13 +95,13 @@ export default function GlobalChat() {
             
             <div className="flex bg-slate-900 rounded-lg p-1 border border-slate-800">
               <button 
-                onClick={() => { setActiveMode('copilot'); soundEngine.playPop(); }}
+                onClick={() => { setActiveMode('copilot'); soundEngine.playClick(); }}
                 className={`flex-1 text-xs font-bold py-1.5 rounded-md transition-colors ${activeMode === 'copilot' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'}`}
               >
                 🤖 Support Bot
               </button>
               <button 
-                onClick={() => { setActiveMode('nexus'); soundEngine.playPop(); }}
+                onClick={() => { setActiveMode('nexus'); soundEngine.playClick(); }}
                 className={`flex-1 text-xs font-bold py-1.5 rounded-md transition-colors ${activeMode === 'nexus' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'}`}
               >
                 💬 Community Lounge
@@ -164,7 +164,7 @@ export default function GlobalChat() {
                 {['global', 'prompt-hilfe', 'showcase'].map(ch => (
                   <button 
                     key={ch}
-                    onClick={() => { setActiveChannel(ch); soundEngine.playPop(); }}
+                    onClick={() => { setActiveChannel(ch); soundEngine.playClick(); }}
                     className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-colors ${activeChannel === ch ? 'bg-slate-700 text-white' : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800'}`}
                   >
                     # {ch}
