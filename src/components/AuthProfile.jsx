@@ -3,6 +3,7 @@ import { supabase } from '../supabaseClient';
 import { toast } from 'react-hot-toast';
 import { soundEngine } from '../utils/SoundEngine';
 import { useCredits } from '../context/CreditsContext';
+import { communityPrompts, marketplacePrompts } from '../data';
 
 export default function AuthProfile() {
   const { credits } = useCredits();
@@ -11,7 +12,19 @@ export default function AuthProfile() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
-  const [isCybertron, setIsCybertron] = useState(document.body.classList.contains('theme-cybertron'));
+  
+  // Profile specific states
+  const [activeTab, setActiveTab] = useState('showcase'); // showcase, shop, likes
+  const [isEditing, setIsEditing] = useState(false);
+  
+  const [profileData, setProfileData] = useState({
+    name: 'Prompt Master',
+    bio: 'Digital Artist & Prompt Engineer. Spezialisiert auf Midjourney Architektur & Cinematic Portraits. Open for commissions.',
+    website: 'https://prompt-studio.live',
+    twitter: '@prompt_master',
+    avatar: '🤖',
+    banner: 'https://picsum.photos/seed/cyber/1200/400'
+  });
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -49,23 +62,6 @@ export default function AuthProfile() {
     }
   };
 
-  const toggleCybertron = () => {
-    soundEngine.playClick();
-    if (isCybertron) {
-      document.body.classList.remove('theme-cybertron');
-      setIsCybertron(false);
-      toast('Protokoll: Erde. Reaktiviert.', { icon: '🌍', style: { background: '#1e293b', color: '#fff' }});
-    } else {
-      soundEngine.playTransform();
-      document.body.classList.add('theme-cybertron');
-      setIsCybertron(true);
-      toast.success('Cybertron-Protokoll aktiviert. System-Override...', { 
-        icon: '🤖', 
-        style: { background: '#050a15', color: '#00e6ff', border: '1px solid #00e6ff', textShadow: '0 0 5px #00e6ff' }
-      });
-    }
-  };
-
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) toast.error(error.message);
@@ -77,104 +73,234 @@ export default function AuthProfile() {
     toast('OAuth Provider bald verfügbar.', { icon: '🚧' });
   };
 
+  const handleSaveProfile = () => {
+    soundEngine.playSuccess();
+    setIsEditing(false);
+    toast.success('Creator Profil aktualisiert!');
+  };
+
+  // Mock data for the portfolio
+  const userShowcase = communityPrompts.slice(0, 3);
+  const userProducts = marketplacePrompts.slice(0, 2);
+
   // ------------------------------------------------------------------
-  // LOGGED IN VIEW
+  // LOGGED IN VIEW - CREATOR PORTFOLIO
   // ------------------------------------------------------------------
   if (session) {
-    return (
-      <div className="max-w-5xl mx-auto mt-4 px-4 pb-12 animate-fade-in">
-        <h2 className="text-4xl font-black mb-8 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500 tracking-tight">👤 Kommando-Profil</h2>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* Left Column: User Card */}
-          <div className="lg:col-span-1 flex flex-col gap-6">
-            <div className="glass-card p-8 rounded-[2rem] border border-slate-700/50 shadow-2xl relative overflow-hidden group">
-              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-emerald-400"></div>
-              <div className="flex flex-col items-center text-center">
-                <div className="w-24 h-24 mb-4 bg-gradient-to-tr from-blue-500 to-emerald-400 rounded-full flex items-center justify-center text-4xl font-bold shadow-[0_0_30px_rgba(59,130,246,0.3)] border-4 border-slate-800 group-hover:scale-105 transition-transform">
-                  {session.user.email[0].toUpperCase()}
-                </div>
-                <h3 className="text-xl font-bold text-white mb-1">{session.user.email.split('@')[0]}</h3>
-                <p className="text-xs text-slate-400 font-mono mb-6">{session.user.email}</p>
-                
-                <div className="w-full bg-slate-900/80 rounded-xl p-4 border border-slate-700 mb-6 flex justify-between items-center">
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Sparks</span>
-                  <span className="text-lg font-black text-amber-400">⚡ {credits}</span>
-                </div>
+    const username = session.user.email.split('@')[0];
 
-                <button 
-                  onClick={() => { soundEngine.playClick(); handleSignOut(); }}
-                  className="w-full bg-slate-800 hover:bg-red-500/20 text-red-400 border border-slate-700 hover:border-red-500/50 px-6 py-3 rounded-xl font-bold transition-all shadow-lg"
-                >
-                  System verlassen
+    return (
+      <div className="max-w-6xl mx-auto mt-4 pb-16 animate-fade-in relative">
+        
+        {/* Floating Actions */}
+        <div className="absolute top-4 right-4 z-20 flex gap-2">
+           <button 
+             onClick={() => setIsEditing(!isEditing)} 
+             className="bg-slate-900/80 backdrop-blur-md border border-slate-700 hover:border-blue-500 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-lg transition-all"
+           >
+             {isEditing ? '👀 Vorschau' : '✏️ Profil bearbeiten'}
+           </button>
+           <button 
+             onClick={() => { soundEngine.playClick(); handleSignOut(); }}
+             className="bg-red-500/20 hover:bg-red-500/40 border border-red-500/50 text-red-400 px-4 py-2 rounded-xl text-sm font-bold shadow-lg transition-all"
+           >
+             Logout
+           </button>
+        </div>
+
+        {/* HEADER / BANNER */}
+        <div className="relative w-full h-64 md:h-80 rounded-[2rem] overflow-hidden mb-20 shadow-2xl border border-slate-700/50 group">
+          <img src={profileData.banner} alt="Profile Banner" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent"></div>
+          
+          {isEditing && (
+            <button className="absolute inset-0 m-auto w-12 h-12 bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/20 hover:bg-black/70 transition-colors">
+              📷
+            </button>
+          )}
+
+          {/* Avatar Positioned over the edge */}
+          <div className="absolute -bottom-16 left-8 md:left-12 flex items-end gap-6 z-10">
+            <div className="relative">
+              <div className="w-32 h-32 md:w-40 md:h-40 rounded-3xl bg-slate-800 border-4 border-slate-950 shadow-2xl flex items-center justify-center text-6xl overflow-hidden bg-gradient-to-br from-blue-600 to-indigo-800">
+                {profileData.avatar}
+              </div>
+              {isEditing && (
+                <button className="absolute bottom-2 right-2 w-8 h-8 bg-slate-900 rounded-full flex items-center justify-center text-xs border border-slate-600 hover:bg-slate-800">
+                  ✏️
                 </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="px-8 md:px-12">
+          {/* PROFILE INFO & STATS */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
+            
+            {/* Bio Section */}
+            <div className="max-w-xl">
+              {isEditing ? (
+                <div className="space-y-3 w-full">
+                  <input type="text" value={profileData.name} onChange={e => setProfileData({...profileData, name: e.target.value})} className="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-2xl font-black text-white w-full" />
+                  <textarea value={profileData.bio} onChange={e => setProfileData({...profileData, bio: e.target.value})} className="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-300 w-full h-24 resize-none" />
+                </div>
+              ) : (
+                <>
+                  <h1 className="text-4xl font-black text-white mb-1">{profileData.name} <span className="text-blue-500 text-2xl">☑</span></h1>
+                  <p className="text-slate-500 font-mono text-sm mb-4">@{username}</p>
+                  <p className="text-slate-300 text-[15px] leading-relaxed mb-4">{profileData.bio}</p>
+                </>
+              )}
+              
+              <div className="flex flex-wrap gap-3">
+                <span className="flex items-center gap-1.5 text-xs font-medium bg-slate-900/80 border border-slate-700 px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:border-slate-500 cursor-pointer transition-colors">
+                  🔗 {profileData.website.replace('https://', '')}
+                </span>
+                <span className="flex items-center gap-1.5 text-xs font-medium bg-slate-900/80 border border-slate-700 px-3 py-1.5 rounded-lg text-slate-300 hover:text-blue-400 hover:border-blue-500 cursor-pointer transition-colors">
+                  🐦 {profileData.twitter}
+                </span>
               </div>
             </div>
 
-            {/* Cybertron Protocol Card */}
-            <div className={`glass-card p-6 rounded-[2rem] border transition-all relative overflow-hidden group cursor-pointer ${isCybertron ? 'border-cyan-500/50 shadow-[0_0_30px_rgba(0,230,255,0.15)] bg-slate-900' : 'border-slate-700/50 hover:border-slate-500'}`} onClick={toggleCybertron}>
-               {isCybertron && <div className="absolute inset-0 bg-cyan-500/5 animate-pulse pointer-events-none"></div>}
-               <div className="flex justify-between items-center relative z-10">
-                 <div>
-                   <h4 className={`text-lg font-black mb-1 transition-colors ${isCybertron ? 'text-cyan-400' : 'text-white group-hover:text-slate-200'}`}>Cybertron-Protokoll</h4>
-                   <p className="text-xs text-slate-400">Visueller System-Override.</p>
-                 </div>
-                 <div className={`w-12 h-6 rounded-full transition-colors relative ${isCybertron ? 'bg-cyan-500 shadow-[0_0_15px_#00e6ff]' : 'bg-slate-700'}`}>
-                   <div className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${isCybertron ? 'translate-x-6' : 'translate-x-0'}`}></div>
-                 </div>
-               </div>
+            {/* Stats Cards */}
+            <div className="flex gap-4 w-full md:w-auto overflow-x-auto pb-4 md:pb-0 hide-scrollbar">
+              <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 min-w-[120px] text-center backdrop-blur-sm">
+                <div className="text-2xl font-black text-white mb-1">12.4k</div>
+                <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Follower</div>
+              </div>
+              <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 min-w-[120px] text-center backdrop-blur-sm">
+                <div className="text-2xl font-black text-emerald-400 mb-1">340</div>
+                <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Verkäufe</div>
+              </div>
+              <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 min-w-[120px] text-center backdrop-blur-sm">
+                <div className="text-2xl font-black text-blue-400 mb-1">2.1k</div>
+                <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Generiert</div>
+              </div>
             </div>
           </div>
 
-          {/* Right Column: Settings & History */}
-          <div className="lg:col-span-2 flex flex-col gap-6">
-            
-            <div className="glass-panel p-8 rounded-[2.5rem] border border-slate-700/50">
-               <div className="flex items-center justify-between mb-8 border-b border-slate-700/50 pb-4">
-                 <h4 className="text-xl font-bold text-white flex items-center gap-2"><span className="text-blue-400">💎</span> Mein Inventar</h4>
-               </div>
-
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-5 hover:border-blue-500/50 transition-colors cursor-pointer group">
-                   <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest block mb-2">Gekauft</span>
-                   <h5 className="font-bold text-slate-200 mb-2 group-hover:text-blue-400 transition-colors">Das ultimative SEO-Content Framework</h5>
-                   <p className="text-xs text-slate-500">Master-Prompt für ChatGPT</p>
-                 </div>
-                 <div className="bg-slate-900/30 border border-slate-700/50 rounded-2xl p-5 border-dashed flex flex-col items-center justify-center text-slate-500 min-h-[120px] hover:border-slate-500 transition-colors cursor-pointer">
-                   <span className="text-2xl mb-2">🛒</span>
-                   <span className="text-sm font-bold">Marktplatz erkunden</span>
-                 </div>
-               </div>
+          {/* BADGES / ACHIEVEMENTS */}
+          <div className="mb-12">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+              🏆 Creator Abzeichen <span className="bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full text-[10px]">4 Freigeschaltet</span>
+            </h3>
+            <div className="flex flex-wrap gap-3">
+              <div className="flex items-center gap-2 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 px-4 py-2 rounded-xl">
+                <span className="text-xl">🌟</span>
+                <span className="text-sm font-bold text-amber-400">Top Seller</span>
+              </div>
+              <div className="flex items-center gap-2 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/30 px-4 py-2 rounded-xl">
+                <span className="text-xl">🎨</span>
+                <span className="text-sm font-bold text-purple-400">Midjourney Pro</span>
+              </div>
+              <div className="flex items-center gap-2 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/30 px-4 py-2 rounded-xl">
+                <span className="text-xl">🚀</span>
+                <span className="text-sm font-bold text-blue-400">Early Adopter</span>
+              </div>
+              <div className="flex items-center gap-2 bg-slate-900 border border-slate-700 px-4 py-2 rounded-xl opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-not-allowed">
+                <span className="text-xl">🎥</span>
+                <span className="text-sm font-bold text-slate-400">Video Master (Locked)</span>
+              </div>
             </div>
-
-            <div className="glass-panel p-8 rounded-[2.5rem] border border-slate-700/50">
-               <h4 className="text-xl font-bold text-white mb-6 flex items-center gap-2"><span className="text-emerald-400">⚙️</span> Account Einstellungen</h4>
-               
-               <div className="space-y-4">
-                 <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-900/50 rounded-xl border border-slate-700/50">
-                   <div>
-                     <div className="font-bold text-slate-200">Abonnement-Status</div>
-                     <div className="text-xs text-slate-400 mt-1">Free Tier (Sparks-basiert)</div>
-                   </div>
-                   <button onClick={() => window.location.href='/app/pricing'} className="mt-3 sm:mt-0 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold px-4 py-2 rounded-lg text-sm shadow-lg hover:scale-105 transition-transform">
-                     Pro Upgrade
-                   </button>
-                 </div>
-
-                 <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-900/50 rounded-xl border border-slate-700/50">
-                   <div>
-                     <div className="font-bold text-slate-200">Passwort ändern</div>
-                     <div className="text-xs text-slate-400 mt-1">Letzte Änderung: Nie</div>
-                   </div>
-                   <button className="mt-3 sm:mt-0 bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 font-bold px-4 py-2 rounded-lg text-sm transition-colors">
-                     Aktualisieren
-                   </button>
-                 </div>
-               </div>
-            </div>
-
           </div>
+
+          {isEditing && (
+            <div className="mb-12 flex justify-end">
+               <button onClick={handleSaveProfile} className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-xl font-bold shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:scale-105 transition-transform">
+                 Änderungen speichern
+               </button>
+            </div>
+          )}
+
+          {/* PORTFOLIO TABS */}
+          <div className="border-b border-slate-800 mb-8">
+            <div className="flex gap-8">
+              <button 
+                onClick={() => setActiveTab('showcase')}
+                className={`pb-4 font-bold text-sm transition-colors relative ${activeTab === 'showcase' ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`}
+              >
+                🖼️ Showcase
+                {activeTab === 'showcase' && <div className="absolute bottom-0 left-0 w-full h-1 bg-blue-500 rounded-t-full shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>}
+              </button>
+              <button 
+                onClick={() => setActiveTab('shop')}
+                className={`pb-4 font-bold text-sm transition-colors relative ${activeTab === 'shop' ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`}
+              >
+                🛒 Shop ({userProducts.length})
+                {activeTab === 'shop' && <div className="absolute bottom-0 left-0 w-full h-1 bg-emerald-500 rounded-t-full shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>}
+              </button>
+              <button 
+                onClick={() => setActiveTab('likes')}
+                className={`pb-4 font-bold text-sm transition-colors relative ${activeTab === 'likes' ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`}
+              >
+                ❤️ Gefällt mir
+                {activeTab === 'likes' && <div className="absolute bottom-0 left-0 w-full h-1 bg-pink-500 rounded-t-full shadow-[0_0_10px_rgba(236,72,153,0.5)]"></div>}
+              </button>
+            </div>
+          </div>
+
+          {/* TAB CONTENT */}
+          <div className="animate-fade-in">
+            {activeTab === 'showcase' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {userShowcase.map((item, idx) => (
+                  <div key={idx} className="glass-card rounded-2xl overflow-hidden border border-slate-700/50 group">
+                    <div className="h-48 bg-slate-800 relative">
+                      <img src={`https://picsum.photos/seed/${item.id + 50}/600/400`} alt={item.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                      <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
+                        ❤️ {item.likes}
+                      </div>
+                    </div>
+                    <div className="p-4">
+                      <h4 className="font-bold text-white mb-1 truncate">{item.title}</h4>
+                      <p className="text-xs text-slate-400 line-clamp-2">{item.prompt}</p>
+                    </div>
+                  </div>
+                ))}
+                {isEditing && (
+                  <div className="glass-card rounded-2xl border-2 border-dashed border-slate-700 hover:border-blue-500 flex flex-col items-center justify-center h-full min-h-[250px] cursor-pointer group transition-colors">
+                    <div className="w-12 h-12 rounded-full bg-slate-800 group-hover:bg-blue-500/20 flex items-center justify-center text-2xl text-slate-500 group-hover:text-blue-400 transition-colors mb-3">
+                      +
+                    </div>
+                    <span className="text-sm font-bold text-slate-400 group-hover:text-blue-400">Werk hinzufügen</span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'shop' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {userProducts.map((product) => (
+                  <div key={product.id} className="glass-card p-5 rounded-2xl border border-slate-700/50 flex gap-4 hover:border-emerald-500/50 transition-colors">
+                    <div className="w-24 h-24 rounded-xl bg-slate-800 flex-shrink-0 flex items-center justify-center text-3xl">
+                      {product.category === 'Midjourney' ? '🎨' : '🤖'}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start mb-1">
+                        <h4 className="font-bold text-white text-lg">{product.title}</h4>
+                        <span className="text-emerald-400 font-black">${product.price}</span>
+                      </div>
+                      <p className="text-xs text-slate-400 mb-3 line-clamp-2">{product.preview}</p>
+                      <div className="flex items-center gap-4 text-xs font-bold">
+                        <span className="text-slate-500">🛒 {product.sales} Verkäufe</span>
+                        <span className="text-yellow-500">⭐ {product.rating}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {activeTab === 'likes' && (
+              <div className="text-center py-12">
+                <div className="text-4xl mb-4">👻</div>
+                <h3 className="text-xl font-bold text-white mb-2">Noch keine Favoriten</h3>
+                <p className="text-slate-400">Durchsuche den Community Feed und markiere Prompts mit einem Herz.</p>
+              </div>
+            )}
+          </div>
+
         </div>
       </div>
     );
