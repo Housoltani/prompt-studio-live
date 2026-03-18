@@ -69,16 +69,25 @@ export default function FlowBuilder() {
         <div className="w-72 glass-panel border border-slate-700/50 rounded-3xl p-6 bg-slate-900/80 flex flex-col overflow-y-auto hidden md:flex">
           <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">Modell-Bibliothek</h3>
           
-          <div className="space-y-4">
+          <div className="space-y-4 pb-4">
+            
             <div className="space-y-2">
               <div className="text-[10px] text-slate-400 font-bold uppercase ml-1">Text & Logik</div>
               <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-blue-500/50 transition-colors flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg">🤖</div>
                 <div className="text-sm font-bold text-slate-300">GPT-4 Omni</div>
               </div>
-              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-blue-500/50 transition-colors flex items-center gap-3">
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-orange-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center text-lg">🧠</div>
+                <div className="text-sm font-bold text-slate-300">Claude 3.5 Sonnet</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-indigo-500/50 transition-colors flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg">🐋</div>
                 <div className="text-sm font-bold text-slate-300">DeepSeek V3</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-blue-400/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-400/20 text-blue-400 flex items-center justify-center text-lg">✨</div>
+                <div className="text-sm font-bold text-slate-300">Gemini 1.5 Pro</div>
               </div>
             </div>
 
@@ -92,6 +101,14 @@ export default function FlowBuilder() {
                 <div className="w-8 h-8 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center text-lg">🍌</div>
                 <div className="text-sm font-bold text-slate-300">Nano Banana Pro</div>
               </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-emerald-400/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-400/20 text-emerald-400 flex items-center justify-center text-lg">🖼️</div>
+                <div className="text-sm font-bold text-slate-300">DALL-E 3</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-purple-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg">✨</div>
+                <div className="text-sm font-bold text-slate-300">Stable Diffusion 3</div>
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -100,11 +117,52 @@ export default function FlowBuilder() {
                 <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg">🎥</div>
                 <div className="text-sm font-bold text-slate-300">Kling 3.0</div>
               </div>
-              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-emerald-500/50 transition-colors flex items-center gap-3">
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-teal-500/50 transition-colors flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center text-lg">🌀</div>
                 <div className="text-sm font-bold text-slate-300">Sora 2</div>
               </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-cyan-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg">🎞️</div>
+                <div className="text-sm font-bold text-slate-300">Runway Gen-3</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-indigo-400/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-indigo-400/20 text-indigo-400 flex items-center justify-center text-lg">🌙</div>
+                <div className="text-sm font-bold text-slate-300">Luma Dream Machine</div>
+              </div>
             </div>
+
+            <div className="space-y-2">
+              <div className="text-[10px] text-slate-400 font-bold uppercase ml-1 mt-4">Audio & Musik</div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-yellow-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-lg">🎵</div>
+                <div className="text-sm font-bold text-slate-300">Suno v3.5</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-rose-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-lg">🎙️</div>
+                <div className="text-sm font-bold text-slate-300">ElevenLabs TTS</div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="text-[10px] text-slate-400 font-bold uppercase ml-1 mt-4">Utilities & Tools</div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-amber-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg">🔍</div>
+                <div className="text-sm font-bold text-slate-300">Web Scraper / Search</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-emerald-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg">🔄</div>
+                <div className="text-sm font-bold text-slate-300">Prompt Extractor</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-fuchsia-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-fuchsia-500/20 text-fuchsia-400 flex items-center justify-center text-lg">⬆️</div>
+                <div className="text-sm font-bold text-slate-300">Upscaler (4x / 8x)</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-pink-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center text-lg">✂️</div>
+                <div className="text-sm font-bold text-slate-300">Background Remover</div>
+              </div>
+            </div>
+
           </div>
         </div>
 
