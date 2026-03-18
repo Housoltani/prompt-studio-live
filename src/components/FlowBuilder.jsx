@@ -74,72 +74,140 @@ export default function FlowBuilder() {
             <div className="space-y-2">
               <div className="text-[10px] text-slate-400 font-bold uppercase ml-1">Text & Logik</div>
               <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-blue-500/50 transition-colors flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg">🤖</div>
-                <div className="text-sm font-bold text-slate-300">GPT-4 Omni</div>
+                <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg">✨</div>
+                <div className="text-sm font-bold text-slate-300">GPT 5 mini</div>
               </div>
-              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-orange-500/50 transition-colors flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center text-lg">🧠</div>
-                <div className="text-sm font-bold text-slate-300">Claude 3.5 Sonnet</div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-blue-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg">✨</div>
+                <div className="text-sm font-bold text-slate-300">GPT 4.1</div>
               </div>
               <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-indigo-500/50 transition-colors flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg">🐋</div>
-                <div className="text-sm font-bold text-slate-300">DeepSeek V3</div>
+                <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg">🐳</div>
+                <div className="text-sm font-bold text-slate-300">DeepSeek V3.2 Speciale</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-indigo-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg">🐳</div>
+                <div className="text-sm font-bold text-slate-300">DeepSeek V3.2</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-indigo-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg">🐳</div>
+                <div className="text-sm font-bold text-slate-300">DeepSeek R1</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-slate-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-slate-500/20 text-slate-400 flex items-center justify-center text-lg">∅</div>
+                <div className="text-sm font-bold text-slate-300">Grok 4</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-slate-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-slate-500/20 text-slate-400 flex items-center justify-center text-lg">∅</div>
+                <div className="text-sm font-bold text-slate-300">Grok 4.1 Fast</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-yellow-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-lg">〰️</div>
+                <div className="text-sm font-bold text-slate-300">MiniMax M2.5</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-purple-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg">🌑</div>
+                <div className="text-sm font-bold text-slate-300">Kimi K2.5</div>
               </div>
               <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-blue-400/50 transition-colors flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-400/20 text-blue-400 flex items-center justify-center text-lg">✨</div>
-                <div className="text-sm font-bold text-slate-300">Gemini 1.5 Pro</div>
+                <div className="w-8 h-8 rounded-lg bg-blue-400/20 text-blue-400 flex items-center justify-center text-lg">🤖</div>
+                <div className="text-sm font-bold text-slate-300">GPT OSS 120B</div>
               </div>
             </div>
 
             <div className="space-y-2">
               <div className="text-[10px] text-slate-400 font-bold uppercase ml-1 mt-4">Bild-Generatoren</div>
-              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-fuchsia-500/50 transition-colors flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-fuchsia-500/20 text-fuchsia-400 flex items-center justify-center text-lg">🎨</div>
-                <div className="text-sm font-bold text-slate-300">Midjourney v6</div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-pink-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center text-lg">✨</div>
+                <div className="text-sm font-bold text-slate-300">Nano Banana 2</div>
               </div>
               <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-pink-500/50 transition-colors flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center text-lg">🍌</div>
                 <div className="text-sm font-bold text-slate-300">Nano Banana Pro</div>
               </div>
-              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-emerald-400/50 transition-colors flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-emerald-400/20 text-emerald-400 flex items-center justify-center text-lg">🖼️</div>
-                <div className="text-sm font-bold text-slate-300">DALL-E 3</div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-emerald-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg">📊</div>
+                <div className="text-sm font-bold text-slate-300">Seedream V5.0 Lite</div>
               </div>
-              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-purple-500/50 transition-colors flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg">✨</div>
-                <div className="text-sm font-bold text-slate-300">Stable Diffusion 3</div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-red-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center text-lg">💃</div>
+                <div className="text-sm font-bold text-slate-300">Seedance 2.0</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-pink-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center text-lg">✨</div>
+                <div className="text-sm font-bold text-slate-300">Nano Banana 1 (Flash)</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-blue-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg">🤖</div>
+                <div className="text-sm font-bold text-slate-300">GPT Image 1.5</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-emerald-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg">📊</div>
+                <div className="text-sm font-bold text-slate-300">Seedream v4.5</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-blue-400/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-400/20 text-blue-400 flex items-center justify-center text-lg">✨</div>
+                <div className="text-sm font-bold text-slate-300">Gemini 3.1 Pro</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-blue-400/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-400/20 text-blue-400 flex items-center justify-center text-lg">✨</div>
+                <div className="text-sm font-bold text-slate-300">Gemini 3 Flash</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-blue-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg">🤖</div>
+                <div className="text-sm font-bold text-slate-300">GPT 5.4</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-blue-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg">🤖</div>
+                <div className="text-sm font-bold text-slate-300">GPT 5.2 Pro</div>
               </div>
             </div>
 
             <div className="space-y-2">
               <div className="text-[10px] text-slate-400 font-bold uppercase ml-1 mt-4">Video-Engines</div>
-              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-emerald-500/50 transition-colors flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg">🎥</div>
-                <div className="text-sm font-bold text-slate-300">Kling 3.0</div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-blue-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg">🔵</div>
+                <div className="text-sm font-bold text-slate-300">Kling 3.0 Standard</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-blue-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg">🔵</div>
+                <div className="text-sm font-bold text-slate-300">Kling V2.6 Pro</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-red-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center text-lg">💃</div>
+                <div className="text-sm font-bold text-slate-300">Seedance 2.0</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-indigo-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg">✡️</div>
+                <div className="text-sm font-bold text-slate-300">Wan V2.6</div>
               </div>
               <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-teal-500/50 transition-colors flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center text-lg">🌀</div>
+                <div className="text-sm font-bold text-slate-300">Veo 3.1</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-blue-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg">🤖</div>
                 <div className="text-sm font-bold text-slate-300">Sora 2</div>
-              </div>
-              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-cyan-500/50 transition-colors flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg">🎞️</div>
-                <div className="text-sm font-bold text-slate-300">Runway Gen-3</div>
-              </div>
-              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-indigo-400/50 transition-colors flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-indigo-400/20 text-indigo-400 flex items-center justify-center text-lg">🌙</div>
-                <div className="text-sm font-bold text-slate-300">Luma Dream Machine</div>
               </div>
             </div>
 
             <div className="space-y-2">
               <div className="text-[10px] text-slate-400 font-bold uppercase ml-1 mt-4">Audio & Musik</div>
-              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-yellow-500/50 transition-colors flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-lg">🎵</div>
-                <div className="text-sm font-bold text-slate-300">Suno v3.5</div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-emerald-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg">🎵</div>
+                <div className="text-sm font-bold text-slate-300">Suno v3.5 / v3</div>
               </div>
-              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-rose-500/50 transition-colors flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-lg">🎙️</div>
-                <div className="text-sm font-bold text-slate-300">ElevenLabs TTS</div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-purple-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg">🎵</div>
+                <div className="text-sm font-bold text-slate-300">Udio</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-slate-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-slate-500/20 text-slate-400 flex items-center justify-center text-lg">🎙️</div>
+                <div className="text-sm font-bold text-slate-300">ElevenLabs</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-indigo-500/50 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg">🔊</div>
+                <div className="text-sm font-bold text-slate-300">Stable Audio</div>
               </div>
             </div>
 
