@@ -1,294 +1,236 @@
 import React, { useState } from 'react';
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  horizontalListSortingStrategy,
-  useSortable,
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import { toast } from 'react-hot-toast';
-import { useCredits } from '../context/CreditsContext';
+import { soundEngine } from '../utils/SoundEngine';
 
-// Hilfskomponente für die sortierbaren Elemente (Tags im Builder)
-function SortableItem({ id, title, onRemove }) {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className="group relative flex items-center gap-2 bg-blue-600 text-white px-3 py-1.5 rounded-lg cursor-grab active:cursor-grabbing text-sm font-bold shadow-lg"
-    >
-      <span className="cursor-move">⋮⋮</span>
-      {title}
-      <button 
-        onPointerDown={(e) => {
-          e.stopPropagation();
-          onRemove(id);
-        }}
-        className="ml-1 opacity-0 group-hover:opacity-100 hover:text-red-300 transition-opacity"
-      >
-        ×
-      </button>
-    </div>
-  );
-}
-
-const AVAILABLE_BLOCKS = [
-  // Quality
-  { id: 'b1', title: '8k Resolution', category: 'Quality' },
-  { id: 'b2', title: 'Unreal Engine 5', category: 'Quality' },
-  { id: 'q3', title: 'Masterpiece', category: 'Quality' },
-  { id: 'q4', title: 'Best Quality', category: 'Quality' },
-  { id: 'q5', title: 'Highly Detailed', category: 'Quality' },
-  { id: 'q6', title: 'Intricate Details', category: 'Quality' },
-  { id: 'q7', title: 'Sharp Focus', category: 'Quality' },
-  { id: 'q8', title: 'HDR', category: 'Quality' },
-
-  // Lighting
-  { id: 'b3', title: 'Cinematic Lighting', category: 'Lighting' },
-  { id: 'b4', title: 'Neon Volumetric', category: 'Lighting' },
-  { id: 'l3', title: 'Golden Hour', category: 'Lighting' },
-  { id: 'l4', title: 'Rembrandt Lighting', category: 'Lighting' },
-  { id: 'l5', title: 'Bioluminescence', category: 'Lighting' },
-  { id: 'l6', title: 'Studio Lighting', category: 'Lighting' },
-  { id: 'l7', title: 'Soft Light', category: 'Lighting' },
-  { id: 'l8', title: 'Backlit', category: 'Lighting' },
-  { id: 'l9', title: 'Global Illumination', category: 'Lighting' },
-
-  // Style / Medium
-  { id: 'b5', title: 'Cyberpunk', category: 'Style' },
-  { id: 'b6', title: 'Watercolor', category: 'Style' },
-  { id: 's3', title: 'Digital Art', category: 'Style' },
-  { id: 's4', title: 'Oil Painting', category: 'Style' },
-  { id: 's5', title: 'Anime', category: 'Style' },
-  { id: 's6', title: 'Pixel Art', category: 'Style' },
-  { id: 's7', title: 'Synthwave', category: 'Style' },
-  { id: 's8', title: 'Steampunk', category: 'Style' },
-  { id: 's9', title: 'Ukiyo-e', category: 'Style' },
-  { id: 's10', title: 'Low Poly', category: 'Style' },
-  { id: 's11', title: 'Claymation', category: 'Style' },
-
-  // Camera
-  { id: 'b7', title: '35mm Lens', category: 'Camera' },
-  { id: 'b8', title: 'Drone View', category: 'Camera' },
-  { id: 'c3', title: 'Wide-angle', category: 'Camera' },
-  { id: 'c4', title: 'Macro Photography', category: 'Camera' },
-  { id: 'c5', title: 'Isometric', category: 'Camera' },
-  { id: 'c6', title: 'Fisheye Lens', category: 'Camera' },
-  { id: 'c7', title: 'Dutch Angle', category: 'Camera' },
-  { id: 'c8', title: 'Close-up Portrait', category: 'Camera' },
-  { id: 'c9', title: 'GoPro', category: 'Camera' },
-  
-  // Atmosphere / Mood
-  { id: 'm1', title: 'Dark & Eerie', category: 'Mood' },
-  { id: 'm2', title: 'Epic & Majestic', category: 'Mood' },
-  { id: 'm3', title: 'Melancholic', category: 'Mood' },
-  { id: 'm4', title: 'Dreamy & Ethereal', category: 'Mood' },
-  { id: 'm5', title: 'Nostalgic', category: 'Mood' },
-  { id: 'm6', title: 'Dystopian', category: 'Mood' }
-];
+const PROMPT_BLOCKS = {
+  Subject: [
+    { id: 'sub1', text: 'A futuristic cyborg samurai', icon: '🥷' },
+    { id: 'sub2', text: 'A massive glowing crystal monolith', icon: '💎' },
+    { id: 'sub3', text: 'An abandoned overgrown train station', icon: '🌿' },
+    { id: 'sub4', text: 'A majestic space cruiser floating in orbit', icon: '🚀' },
+    { id: 'sub5', text: 'A cyberpunk street vendor cooking noodles', icon: '🍜' }
+  ],
+  Environment: [
+    { id: 'env1', text: 'in a rainy neon-lit alleyway', icon: '🌧️' },
+    { id: 'env2', text: 'on the surface of Mars', icon: '🔴' },
+    { id: 'env3', text: 'underwater surrounded by glowing coral', icon: '🌊' },
+    { id: 'env4', text: 'in a dense enchanted forest', icon: '🌲' }
+  ],
+  Lighting: [
+    { id: 'lit1', text: 'cinematic volumetric lighting', icon: '🎬' },
+    { id: 'lit2', text: 'golden hour sunset', icon: '🌅' },
+    { id: 'lit3', text: 'harsh neon rim lights', icon: '🟣' },
+    { id: 'lit4', text: 'moody low key lighting', icon: '🌑' }
+  ],
+  Camera: [
+    { id: 'cam1', text: 'shot on 35mm lens, depth of field', icon: '📷' },
+    { id: 'cam2', text: 'wide angle establishing shot', icon: '🔭' },
+    { id: 'cam3', text: 'extreme close up macro', icon: '🔎' },
+    { id: 'cam4', text: 'drone FPV shot', icon: '🛸' }
+  ],
+  Style: [
+    { id: 'sty1', text: '8k resolution, highly detailed masterpiece', icon: '✨' },
+    { id: 'sty2', text: 'Studio Ghibli anime style', icon: '🌸' },
+    { id: 'sty3', text: 'Unreal Engine 5 render, raytracing', icon: '🎮' },
+    { id: 'sty4', text: 'watercolor illustration', icon: '🖌️' }
+  ]
+};
 
 export default function PromptMixer() {
-  const [basePrompt, setBasePrompt] = useState('/imagine prompt: A futuristic city');
+  const [activeCategory, setActiveCategory] = useState('Subject');
   const [selectedBlocks, setSelectedBlocks] = useState([]);
-  const [isOptimizing, setIsOptimizing] = useState(false);
-  const { spendCredits } = useCredits();
+  const [aspectRatio, setAspectRatio] = useState('--ar 16:9');
+  const [engine, setEngine] = useState('--v 6.0');
 
-
-  const handleOptimize = async () => {
-    if (!basePrompt || basePrompt.trim() === '') {
-      toast.error('Bitte gib zuerst einen Basis-Prompt ein!');
-      return;
-    }
-    
-    if (!spendCredits(2, 'KI Magic Optimize')) {
-      return;
-    }
-    
-    const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
-    if (!apiKey) {
-      toast.error('API Key fehlt! Bitte in der .env Datei als VITE_OPENROUTER_API_KEY eintragen.');
-      return;
-    }
-
-    setIsOptimizing(true);
-    const toastId = toast.loading('KI optimiert deinen Prompt...');
-
-    try {
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`,
-          'HTTP-Referer': 'http://localhost:5173',
-          'X-Title': 'Prompt Studio Live'
-        },
-        body: JSON.stringify({
-          model: 'meta-llama/llama-3-8b-instruct:free',
-          messages: [
-            { 
-              role: 'system', 
-              content: 'Du bist ein professioneller Prompt-Engineer für Bildgeneratoren (Midjourney, DALL-E). Nimm den kurzen Input des Users und verwandle ihn in einen extrem detaillierten, hochwertigen englischen Prompt. Nutze Keywords für Lighting, Camera, Style und Mood. Antworte NUR mit dem finalen Prompt, ohne Erklärungen.' 
-            },
-            { role: 'user', content: basePrompt }
-          ],
-          temperature: 0.7
-        })
-      });
-
-      const data = await response.json();
-      
-      if (response.ok && data.choices && data.choices.length > 0) {
-        setBasePrompt(data.choices[0].message.content.trim());
-        toast.success('Prompt erfolgreich hochgerüstet!', { id: toastId });
-      } else {
-        const errMsg = data.error?.message || 'Unbekannter API Fehler';
-        console.error('OpenRouter Error:', data);
-        toast.error('API Fehler: ' + errMsg, { id: toastId });
-      }
-    } catch (error) {
-      toast.error('Verbindungsfehler zur KI-API.', { id: toastId });
-    } finally {
-      setIsOptimizing(false);
-    }
-  };
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  );
-
-  const handleDragEnd = (event) => {
-    const { active, over } = event;
-    if (active.id !== over.id) {
-      setSelectedBlocks((items) => {
-        const oldIndex = items.findIndex(i => i.id === active.id);
-        const newIndex = items.findIndex(i => i.id === over.id);
-        return arrayMove(items, oldIndex, newIndex);
-      });
-    }
-  };
-
-  const addBlock = (block) => {
-    if (!selectedBlocks.find(b => b.id === block.id)) {
-      setSelectedBlocks([...selectedBlocks, block]);
+  const handleAddBlock = (block) => {
+    soundEngine.playPop();
+    // check if already added
+    if (selectedBlocks.find(b => b.id === block.id)) {
+      setSelectedBlocks(selectedBlocks.filter(b => b.id !== block.id));
     } else {
-      toast.error('Block ist bereits im Prompt!');
+      setSelectedBlocks([...selectedBlocks, block]);
     }
   };
 
-  const removeBlock = (id) => {
+  const handleRemoveBlock = (id) => {
+    soundEngine.playPop();
     setSelectedBlocks(selectedBlocks.filter(b => b.id !== id));
   };
 
-  const finalPrompt = `${basePrompt}${selectedBlocks.length > 0 ? ', ' + selectedBlocks.map(b => b.title).join(', ') : ''}`;
+  const generateFinalPrompt = () => {
+    const core = selectedBlocks.map(b => b.text).join(', ');
+    if (!core) return '';
+    return `/imagine prompt: ${core} ${aspectRatio} ${engine} --stylize 250`;
+  };
+
+  const finalPrompt = generateFinalPrompt();
+
+  const handleCopy = () => {
+    if (!finalPrompt) return;
+    navigator.clipboard.writeText(finalPrompt);
+    soundEngine.playSuccess();
+    toast.success('Mix kopiert!', { icon: '📋' });
+  };
 
   return (
-    <div className="max-w-7xl animate-fade-in mx-auto mt-4">
-      <h2 className="text-3xl font-bold mb-2">🎛️ Prompt Mixer</h2>
-      <p className="text-slate-400 mb-8">Klicke auf Blöcke, um sie hinzuzufügen. Ziehe sie per Drag & Drop in die gewünschte Reihenfolge.</p>
+    <div className="max-w-7xl animate-fade-in mx-auto mt-4 px-4 pb-20 h-full min-h-[calc(100vh-120px)] flex flex-col">
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* LInke Spalte: Verfügbare Blöcke */}
-        <div className="lg:col-span-1 bg-slate-800/50 border border-slate-700 p-6 rounded-2xl">
-          <h3 className="text-xl font-bold mb-4">Bausteine</h3>
-          <div className="space-y-6">
-            {['Style', 'Lighting', 'Camera', 'Quality', 'Mood'].map(category => (
-              <div key={category}>
-                <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">{category}</h4>
-                <div className="flex flex-wrap gap-2">
-                  {AVAILABLE_BLOCKS.filter(b => b.category === category).map(block => (
-                    <button
-                      key={block.id}
-                      onClick={() => addBlock(block)}
-                      className="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs px-3 py-1.5 rounded border border-slate-600 transition-colors"
-                    >
-                      + {block.title}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* HEADER */}
+      <div className="flex justify-between items-end mb-6">
+        <div>
+          <h2 className="text-4xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-500 tracking-tight">
+            🎛️ Prompt Mixer
+          </h2>
+          <p className="text-slate-400 text-lg">Konstruiere Meisterwerke Block für Block. Perfekt für Midjourney & DALL-E.</p>
         </div>
+        <button 
+          onClick={() => { setSelectedBlocks([]); soundEngine.playPop(); }}
+          className="text-sm font-bold bg-slate-800 text-slate-400 px-4 py-2 rounded-xl border border-slate-700 hover:text-white hover:border-slate-500 transition-colors"
+        >
+          Mixer leeren
+        </button>
+      </div>
 
-        {/* Rechte Spalte: Der Builder */}
-        <div className="lg:col-span-2 flex flex-col gap-6">
-          
-          <div className="bg-slate-800 border border-slate-700 p-6 rounded-2xl">
-            <h3 className="text-sm font-bold text-slate-400 mb-2 uppercase tracking-wider">Basis-Prompt</h3>
-            <div className="relative">
-              <textarea 
-                value={basePrompt}
-                onChange={(e) => setBasePrompt(e.target.value)}
-                rows={3}
-                className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 pr-32 text-white focus:outline-none focus:border-emerald-500 transition-colors resize-none"
-              />
-              <button 
-                onClick={handleOptimize}
-                disabled={isOptimizing}
-                className="absolute right-2 bottom-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white text-xs font-bold px-3 py-2 rounded-md shadow-lg transition-all flex items-center gap-1 disabled:opacity-50"
-              >
-                {isOptimizing ? (
-                  <><svg className="animate-spin h-3 w-3 text-white" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Magie wirkt...</>
-                ) : (
-                  <>✨ KI Magic</>
-                )}
-              </button>
-            </div>
-
-            <h3 className="text-sm font-bold text-slate-400 mt-6 mb-3 uppercase tracking-wider">Drag & Drop Modifikatoren</h3>
-            <div className="bg-slate-900/80 border border-slate-700/50 rounded-lg p-4 min-h-[80px] flex flex-wrap gap-2 items-start">
-              {selectedBlocks.length === 0 && <span className="text-slate-500 text-sm italic mt-1">Keine Modifikatoren ausgewählt...</span>}
-              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                <SortableContext items={selectedBlocks.map(b => b.id)} strategy={horizontalListSortingStrategy}>
-                  {selectedBlocks.map(block => (
-                    <SortableItem key={block.id} id={block.id} title={block.title} onRemove={removeBlock} />
-                  ))}
-                </SortableContext>
-              </DndContext>
-            </div>
+      {/* THE CONSOLE (Result Area) */}
+      <div className="glass-panel p-6 rounded-[2rem] border-2 border-emerald-500/30 bg-slate-900/80 shadow-[0_0_40px_rgba(16,185,129,0.15)] mb-8 relative overflow-hidden flex-shrink-0">
+        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-emerald-400 to-teal-600 shadow-[0_0_15px_#34d399]"></div>
+        
+        <div className="flex justify-between items-center mb-3">
+          <div className="text-[10px] font-black text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-3 py-1 rounded-md border border-emerald-500/20">
+            Output Console
           </div>
-
-          <div className="bg-blue-900/20 border border-blue-500/30 p-6 rounded-2xl relative group">
-            <h3 className="text-blue-400 font-bold mb-3 flex items-center gap-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-              Dein finaler Prompt
-            </h3>
-            <textarea 
-              readOnly 
-              value={finalPrompt}
-              className="w-full h-24 bg-transparent text-white font-mono text-sm leading-relaxed resize-none focus:outline-none"
-            />
+          <div className="flex gap-2">
+            <button className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 hover:text-emerald-400 flex items-center justify-center transition-colors" title="Settings">⚙️</button>
             <button 
-              onClick={() => {
-                navigator.clipboard.writeText(finalPrompt);
-                toast.success('Mixer Prompt kopiert!', { iconTheme: { primary: '#3b82f6', secondary: '#fff' } });
-              }}
-              className="absolute bottom-4 right-4 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors shadow-lg"
+              onClick={handleCopy}
+              disabled={!finalPrompt}
+              className={`px-4 py-1.5 rounded-lg font-bold text-sm transition-all shadow-lg flex items-center gap-2 ${finalPrompt ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-slate-800 text-slate-600 cursor-not-allowed'}`}
             >
-              Kopieren
+              📋 Kopieren
             </button>
           </div>
-
         </div>
+
+        <div className="w-full min-h-[100px] bg-slate-950 rounded-xl border border-slate-800 p-4 font-mono text-sm leading-loose text-slate-300 break-words shadow-inner flex flex-wrap items-center gap-2">
+          {!finalPrompt ? (
+            <span className="text-slate-600 animate-pulse">Wähle Blöcke aus der Bibliothek aus, um den Prompt zu generieren...</span>
+          ) : (
+            <>
+              <span className="text-blue-400 font-bold">/imagine prompt:</span>
+              {selectedBlocks.map((block, idx) => (
+                <span key={block.id} className="bg-slate-800 border border-slate-700 px-2 py-0.5 rounded text-white inline-flex items-center gap-1 hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => handleRemoveBlock(block.id)}>
+                  <span className="opacity-50 text-xs">{block.icon}</span> {block.text}
+                  <span className="text-slate-500 ml-1 hover:text-red-400">×</span>
+                  {idx < selectedBlocks.length - 1 && <span className="text-slate-600 ml-1">,</span>}
+                </span>
+              ))}
+              <span className="text-emerald-400 font-bold bg-emerald-900/30 border border-emerald-500/30 px-2 py-0.5 rounded ml-1">{aspectRatio}</span>
+              <span className="text-fuchsia-400 font-bold bg-fuchsia-900/30 border border-fuchsia-500/30 px-2 py-0.5 rounded ml-1">{engine}</span>
+              <span className="text-amber-400 font-bold bg-amber-900/30 border border-amber-500/30 px-2 py-0.5 rounded ml-1">--stylize 250</span>
+            </>
+          )}
+        </div>
+      </div>
+
+      <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
+        
+        {/* CATEGORY SELECTOR */}
+        <div className="w-full lg:w-64 glass-card border border-slate-700/50 rounded-3xl p-5 bg-slate-900/80 flex flex-col gap-2 flex-shrink-0">
+          <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-2 px-2">Kategorien</h3>
+          
+          {Object.keys(PROMPT_BLOCKS).map(cat => (
+            <button 
+              key={cat}
+              onClick={() => { setActiveCategory(cat); soundEngine.playPop(); }}
+              className={`w-full flex items-center justify-between p-3 rounded-xl font-bold transition-all ${activeCategory === cat ? 'bg-slate-800 text-white shadow-md border border-slate-600' : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'}`}
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-lg">
+                  {cat === 'Subject' ? '🎯' : cat === 'Environment' ? '🌍' : cat === 'Lighting' ? '💡' : cat === 'Camera' ? '📷' : '🎨'}
+                </span>
+                {cat}
+              </div>
+              <span className="text-[10px] bg-slate-950 px-2 py-1 rounded border border-slate-800">
+                {PROMPT_BLOCKS[cat].length}
+              </span>
+            </button>
+          ))}
+
+          <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mt-6 mb-2 px-2">Parameter</h3>
+          
+          <div className="p-3 bg-slate-950/50 border border-slate-800 rounded-xl mb-2">
+            <div className="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider">Aspect Ratio</div>
+            <div className="grid grid-cols-2 gap-1.5">
+              {['--ar 16:9', '--ar 9:16', '--ar 1:1', '--ar 4:5'].map(ar => (
+                <button key={ar} onClick={() => { setAspectRatio(ar); soundEngine.playPop(); }} className={`text-[10px] py-1 rounded font-bold transition-colors ${aspectRatio === ar ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>
+                  {ar.split(' ')[1]}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="p-3 bg-slate-950/50 border border-slate-800 rounded-xl">
+            <div className="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider">Engine Version</div>
+            <div className="grid grid-cols-2 gap-1.5">
+              {['--v 6.0', '--v 5.2', '--niji 6', '--style raw'].map(eng => (
+                <button key={eng} onClick={() => { setEngine(eng); soundEngine.playPop(); }} className={`text-[10px] py-1 rounded font-bold transition-colors ${engine === eng ? 'bg-fuchsia-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>
+                  {eng.replace('--', '')}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* BLOCKS LIBRARY */}
+        <div className="flex-1 glass-card border border-slate-700/50 rounded-3xl bg-slate-900/50 p-6 overflow-y-auto">
+          <div className="flex justify-between items-center mb-6 border-b border-slate-800/50 pb-4">
+            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+              <span className="text-emerald-400">⚡</span> Bausteine: {activeCategory}
+            </h3>
+            <span className="text-xs text-slate-500 font-bold uppercase tracking-widest bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">
+              {selectedBlocks.filter(b => PROMPT_BLOCKS[activeCategory].find(catBlock => catBlock.id === b.id)).length} Ausgewählt
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {PROMPT_BLOCKS[activeCategory].map(block => {
+              const isSelected = selectedBlocks.find(b => b.id === block.id);
+              return (
+                <div 
+                  key={block.id}
+                  onClick={() => handleAddBlock(block)}
+                  className={`p-4 rounded-2xl cursor-pointer transition-all duration-300 group flex items-start gap-4 border-2 ${isSelected ? 'bg-emerald-900/20 border-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.15)] transform scale-[1.02]' : 'bg-slate-800/50 border-slate-700 hover:border-slate-500 hover:bg-slate-800'}`}
+                >
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0 transition-colors ${isSelected ? 'bg-emerald-500/20' : 'bg-slate-900 group-hover:bg-slate-800'}`}>
+                    {block.icon}
+                  </div>
+                  <div className="flex-1">
+                    <p className={`text-sm font-bold leading-snug transition-colors ${isSelected ? 'text-white' : 'text-slate-300 group-hover:text-white'}`}>
+                      {block.text}
+                    </p>
+                  </div>
+                  <div className="flex-shrink-0">
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? 'border-emerald-500 bg-emerald-500 text-white' : 'border-slate-600 group-hover:border-slate-400'}`}>
+                      {isSelected && <span className="text-xs font-black">✓</span>}
+                      {!isSelected && <span className="text-xs font-black text-slate-600 group-hover:text-slate-400">+</span>}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Add custom block */}
+          <div className="mt-8 pt-6 border-t border-slate-800/50">
+            <div className="flex gap-3 max-w-xl">
+              <input type="text" placeholder="Eigener Baustein (z.B. 'Cybernetic eye')..." className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors" />
+              <button className="bg-slate-800 hover:bg-slate-700 text-white font-bold px-6 py-3 rounded-xl border border-slate-600 transition-colors flex items-center gap-2">
+                <span>+</span> Hinzufügen
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
