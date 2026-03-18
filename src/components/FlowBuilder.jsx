@@ -12,6 +12,7 @@ export default function FlowBuilder() {
 
   const [isRunning, setIsRunning] = useState(false);
   const [activeNode, setActiveNode] = useState(null);
+  const [selectedConfigNode, setSelectedConfigNode] = useState(null);
 
   const runFlow = () => {
     soundEngine.playTransform();
@@ -260,7 +261,7 @@ export default function FlowBuilder() {
               <div className="text-[10px] text-slate-400 font-bold uppercase ml-1 mt-4">Social Publishing (Auto-Post)</div>
               
               {/* YouTube Shorts Node */}
-              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-red-500 transition-all duration-300 flex items-center gap-3 group relative overflow-hidden">
+              <div onClick={() => { setSelectedConfigNode('youtube'); soundEngine.playPop(); }} className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-pointer hover:border-red-500 transition-all duration-300 flex items-center gap-3 group relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-8 h-8 bg-red-500/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
                 <div className="w-8 h-8 rounded-lg bg-red-500/20 text-red-500 flex items-center justify-center text-lg shadow-[0_0_10px_rgba(239,68,68,0.2)]">
                   ▶️
@@ -273,7 +274,7 @@ export default function FlowBuilder() {
               </div>
 
               {/* Instagram Reels Node */}
-              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-pink-500 transition-all duration-300 flex items-center gap-3 group relative overflow-hidden">
+              <div onClick={() => { setSelectedConfigNode('instagram'); soundEngine.playPop(); }} className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-pointer hover:border-pink-500 transition-all duration-300 flex items-center gap-3 group relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-8 h-8 bg-gradient-to-tr from-yellow-500/10 via-pink-500/10 to-purple-500/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-yellow-500/20 via-pink-500/20 to-purple-500/20 text-pink-400 flex items-center justify-center text-lg">
                   📸
@@ -286,7 +287,7 @@ export default function FlowBuilder() {
               </div>
 
               {/* TikTok Node */}
-              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-cyan-500 transition-all duration-300 flex items-center gap-3 group relative overflow-hidden">
+              <div onClick={() => { setSelectedConfigNode('tiktok'); soundEngine.playPop(); }} className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-pointer hover:border-cyan-500 transition-all duration-300 flex items-center gap-3 group relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-8 h-8 bg-cyan-500/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
                 <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-700 text-white flex items-center justify-center text-lg font-bold shadow-[0_0_10px_rgba(6,182,212,0.1)] group-hover:shadow-[0_0_15px_rgba(6,182,212,0.4)]">
                   <span className="text-cyan-400 drop-shadow-[1px_1px_0_#f43f5e]">♪</span>
@@ -377,6 +378,88 @@ export default function FlowBuilder() {
               </button>
             </div>
             
+          </div>
+
+          {/* Social Publisher Config Sidebar (Overlay) */}
+          <div className={`absolute top-0 right-0 h-full w-80 bg-slate-900 border-l border-slate-700/50 shadow-2xl transition-transform duration-300 z-50 flex flex-col ${selectedConfigNode ? 'translate-x-0' : 'translate-x-full'}`}>
+            <div className="flex items-center justify-between p-4 border-b border-slate-700/50">
+              <h3 className="font-bold text-white flex items-center gap-2">
+                {selectedConfigNode === 'youtube' && <><span className="text-red-500">▶️</span> YouTube Config</>}
+                {selectedConfigNode === 'instagram' && <><span className="text-pink-500">📸</span> Instagram Config</>}
+                {selectedConfigNode === 'tiktok' && <><span className="text-cyan-400">♪</span> TikTok Config</>}
+              </h3>
+              <button 
+                onClick={() => { setSelectedConfigNode(null); soundEngine.playPop(); }}
+                className="w-8 h-8 rounded-lg hover:bg-slate-800 text-slate-400 flex items-center justify-center transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-5 space-y-6">
+              
+              {/* Account Connection */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Account</label>
+                <button className={`w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-transform hover:scale-[1.02] shadow-lg ${
+                  selectedConfigNode === 'youtube' ? 'bg-red-600 hover:bg-red-500 text-white' :
+                  selectedConfigNode === 'instagram' ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white' :
+                  'bg-white hover:bg-gray-100 text-black'
+                }`}>
+                  {selectedConfigNode === 'youtube' && 'Mit Google verbinden'}
+                  {selectedConfigNode === 'instagram' && 'Mit Meta verbinden'}
+                  {selectedConfigNode === 'tiktok' && 'Mit TikTok verbinden'}
+                </button>
+                <div className="text-[10px] text-emerald-400 flex items-center gap-1 mt-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  Status: Warte auf Autorisierung
+                </div>
+              </div>
+
+              {/* Post Settings */}
+              <div className="space-y-4 pt-4 border-t border-slate-800">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-400">Post Titel / Caption</label>
+                  <textarea 
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-slate-300 h-24 focus:outline-none focus:border-indigo-500 transition-colors"
+                    placeholder="Generierter Titel wird hier eingefügt..."
+                    defaultValue="{{flow.generated_text.title}}"
+                  ></textarea>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-400">Hashtags</label>
+                  <input 
+                    type="text"
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-slate-300 focus:outline-none focus:border-indigo-500 transition-colors"
+                    defaultValue="#ai #generated #viral"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-400">Veröffentlichung</label>
+                  <select className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-slate-300 focus:outline-none focus:border-indigo-500 transition-colors">
+                    <option value="draft">Als Entwurf speichern</option>
+                    <option value="public">Sofort veröffentlichen (Öffentlich)</option>
+                    <option value="private">Privat hochladen</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+
+            <div className="p-4 border-t border-slate-700/50 bg-slate-900/80 backdrop-blur-sm">
+              <button 
+                onClick={() => { 
+                  toast.success('Einstellungen gespeichert!'); 
+                  setSelectedConfigNode(null);
+                  soundEngine.playSuccess();
+                }}
+                className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-colors shadow-lg"
+              >
+                Speichern
+              </button>
+            </div>
           </div>
         </div>
 
