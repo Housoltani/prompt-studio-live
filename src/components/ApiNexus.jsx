@@ -118,32 +118,52 @@ export default function ApiNexus() {
           </button>
         </div>
 
-        {/* Code Snippet Example */}
+        {/* Code Snippets & n8n Guide */}
         <div className="flex flex-col gap-6">
           <h3 className="font-black text-slate-500 uppercase tracking-widest flex items-center gap-2">
-            <span className="text-blue-400">💻</span> Integration (cURL)
+            <span className="text-rose-400 font-black">n8n</span> Integration
           </h3>
           
-          <div className="glass-panel p-6 rounded-2xl border border-slate-700/50 bg-[#0f172a] shadow-2xl relative overflow-hidden group h-full">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Request Beispiel</span>
-              <span className="text-xs bg-slate-800 text-slate-300 px-2 py-1 rounded font-mono border border-slate-700">Bash</span>
+          <div className="glass-panel p-6 rounded-2xl border border-rose-500/30 bg-[#0f172a] shadow-[0_0_30px_rgba(244,63,94,0.05)] relative overflow-hidden group h-full flex flex-col">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-500 to-orange-500"></div>
+            
+            {/* n8n Mini-Guide */}
+            <div className="mb-6 flex-1">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center">
+                  <span className="text-rose-500 font-black text-sm">n8n</span>
+                </div>
+                <div>
+                  <h4 className="text-white font-bold text-sm">HTTP Request Node</h4>
+                  <p className="text-xs text-slate-400">Verbinde Prompt Studio in 3 Schritten</p>
+                </div>
+              </div>
+              
+              <ol className="space-y-4 text-xs text-slate-300">
+                <li className="flex gap-3">
+                  <span className="w-5 h-5 rounded bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold flex-shrink-0">1</span>
+                  <p>Wähle Methode <span className="font-mono text-blue-400 bg-blue-900/30 px-1 rounded">POST</span> und setze die Flow-URL (siehe links) als Endpoint.</p>
+                </li>
+                <li className="flex gap-3">
+                  <span className="w-5 h-5 rounded bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold flex-shrink-0">2</span>
+                  <p>Füge unter "Headers" den Key <span className="font-mono text-slate-400">Authorization</span> mit dem Wert <span className="font-mono text-emerald-400">Bearer DEIN_API_KEY</span> hinzu.</p>
+                </li>
+                <li className="flex gap-3">
+                  <span className="w-5 h-5 rounded bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold flex-shrink-0">3</span>
+                  <p>Sende deine Parameter unter "Body" (JSON) an den Flow und verarbeite die Antwort im nächsten n8n Node.</p>
+                </li>
+              </ol>
             </div>
-            <pre className="text-[11px] text-emerald-300 font-mono whitespace-pre-wrap leading-relaxed overflow-x-auto bg-slate-950 p-4 rounded-xl border border-slate-800/50 shadow-inner">
-{`curl -X POST https://api.prompt-studio.live/v1/flows/execute/f-891 \\
-  -H "Authorization: Bearer ps_live_sk_..." \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "inputs": {
-      "topic": "Cyberpunk Samurai",
-      "style": "Photorealistic"
-    },
-    "webhook_url": "https://your-app.com/webhook"
-  }'`}
-            </pre>
-            <div className="mt-6 text-xs text-slate-500 leading-relaxed">
-              Dieser Request startet deinen Flow. Da Video- und Bildgenerierung Zeit benötigt, sendet die API nach Abschluss einen Callback an deine <span className="text-slate-300 font-mono">webhook_url</span>.
+
+            <div className="mt-auto">
+              <div className="flex justify-between items-center mb-3">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">cURL Fallback</span>
+              </div>
+              <pre className="text-[10px] text-emerald-300 font-mono whitespace-pre-wrap leading-relaxed overflow-x-auto bg-slate-950 p-3 rounded-xl border border-slate-800/50 shadow-inner">
+{`curl -X POST https://api.../f-891 \\
+  -H "Authorization: Bearer sk_..." \\
+  -d '{"topic": "Cyberpunk"}'`}
+              </pre>
             </div>
           </div>
         </div>

@@ -231,6 +231,29 @@ export default function FlowBuilder() {
               </div>
             </div>
 
+            <div className="space-y-2">
+              <div className="text-[10px] text-slate-400 font-bold uppercase ml-1 mt-4">Automatisierung & Export</div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-rose-500/50 transition-colors flex items-center gap-3 group relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-8 h-8 bg-rose-500/10 rounded-full blur-xl group-hover:scale-150 transition-transform"></div>
+                <div className="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center justify-center text-sm font-black shadow-[0_0_10px_rgba(244,63,94,0.3)]">
+                  n8n
+                </div>
+                <div className="text-sm font-bold text-white group-hover:text-rose-400 transition-colors">n8n Webhook</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-orange-500/50 transition-colors flex items-center gap-3 group">
+                <div className="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center text-lg font-black font-mono">
+                  Z_
+                </div>
+                <div className="text-sm font-bold text-slate-300 group-hover:text-orange-400 transition-colors">Zapier Action</div>
+              </div>
+              <div className="bg-slate-950/50 border border-slate-700 p-3 rounded-xl cursor-grab hover:border-purple-500/50 transition-colors flex items-center gap-3 group">
+                <div className="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg">
+                  🌐
+                </div>
+                <div className="text-sm font-bold text-slate-300 group-hover:text-purple-400 transition-colors">Custom REST API</div>
+              </div>
+            </div>
+
           </div>
         </div>
 
