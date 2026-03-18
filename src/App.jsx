@@ -32,6 +32,7 @@ const ImageLibrary = lazy(() => import('./components/ImageLibrary'))
 const VideoLibrary = lazy(() => import('./components/VideoLibrary'))
 const MusicLibrary = lazy(() => import('./components/MusicLibrary'))
 const Feedback = lazy(() => import('./components/Feedback'))
+const Offers = lazy(() => import('./components/Offers'))
 
 function AppContent() {
   const [lang, setLang] = useState('de')
@@ -528,6 +529,13 @@ function AppContent() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
           </div>
         }><Feedback /></Suspense>} />
+
+        {/* --- OFFERS --- */}
+        <Route path="offers" element={<Suspense fallback={
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
+          </div>
+        }><Offers /></Suspense>} />
 
         {/* --- PLACEHOLDER FOR OTHERS --- */}
         <Route path="*" element={<>

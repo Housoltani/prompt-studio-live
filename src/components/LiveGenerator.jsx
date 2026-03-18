@@ -488,6 +488,7 @@ export default function LiveGenerator() {
                     <option>✨ Nano Banana 2</option>
                     <option>✨ Nano Banana Pro (🍌 Pro)</option>
                     <option>📊 Seedream V5.0 Lite</option>
+                    <option>💃 Seedance 2.0</option>
                     <option>✨ Nano Banana 1 (🍌 Flash)</option>
                     <option>🤖 GPT Image 1.5</option>
                     <option>📊 Seedream v4.5</option>
@@ -550,6 +551,7 @@ export default function LiveGenerator() {
                   <label className="text-xs text-slate-400 font-bold uppercase mb-1.5 block">Video Engine</label>
                   <select className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-red-500">
                     <option>🔵 Kling 3.0 Standard | Text-to-video</option>
+                    <option>💃 Seedance 2.0 | AI Dance Video</option>
                     <option>🔵 Kling V2.6 Pro | Image-to-video</option>
                     <option>🔵 Kling 3.0 Standard | Image-to-video</option>
                     <option>🔵 Kling V2.6 Pro | Text-to-video</option>
