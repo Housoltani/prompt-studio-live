@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { useCredits } from '../context/CreditsContext';
+import { useLanguage } from '../context/LanguageContext';
 import { soundEngine } from '../utils/SoundEngine';
 
 
