@@ -1,5 +1,38 @@
 export const translations = {
   de: {
+    imgLib: {
+      title: "🖼️ KI Bild-Prompts",
+      subtitle: "Über 5.000 handverlesene Prompts für Midjourney, DALL-E 3 & Stable Diffusion.",
+      searchPlaceholder: "Suchen (z.B. Cyberpunk, Portrait...)",
+      uploadBtn: "Upload",
+      favoritesBtn: "Favoriten",
+      catAll: "Alle",
+      catPeople: "People",
+      catRomance: "Romance",
+      cat3D: "3D",
+      catCharacter: "Character",
+      catDesign: "Design",
+      catRealistic: "Realistic",
+      catCyberpunk: "Cyberpunk",
+      catNature: "Nature",
+      catAnime: "Anime",
+      catFantasy: "Fantasy",
+      catArchitecture: "Architecture",
+      catVehicles: "Vehicles",
+      catFood: "Food"
+    },
+    modelCompare: {
+      title: "⚖️ Modell-Vergleich",
+      subtitle: "Gleicher Prompt, unterschiedliche KIs. Wer liefert das beste Ergebnis?",
+      promptLabel: "Dein Universal-Prompt",
+      compareBtn: "🚀 Splitt-Screen Render starten (15 Sparks)",
+      missingPrompt: "Prompt fehlt!",
+      initText: "Beide KI-Systeme initiieren Rendering...",
+      doneText: "ist fertig!",
+      modelALabel: "🤖 Modell A",
+      modelBLabel: "🤖 Modell B",
+      waitingText: "Warte auf Render..."
+    },
     promptMixer: {
       title: "🎛️ Prompt Mixer",
       subtitle: "Kombiniere Bausteine zu perfekten Prompts",
@@ -45,6 +78,39 @@ export const translations = {
       resultTitle: "Extrahierter Prompt"
     },
     liveGen: {
+    imgLib: {
+      title: "🖼️ AI Image Prompts",
+      subtitle: "Over 5,000 hand-picked prompts for Midjourney, DALL-E 3 & Stable Diffusion.",
+      searchPlaceholder: "Search (e.g. Cyberpunk, Portrait...)",
+      uploadBtn: "Upload",
+      favoritesBtn: "Favorites",
+      catAll: "All",
+      catPeople: "People",
+      catRomance: "Romance",
+      cat3D: "3D",
+      catCharacter: "Character",
+      catDesign: "Design",
+      catRealistic: "Realistic",
+      catCyberpunk: "Cyberpunk",
+      catNature: "Nature",
+      catAnime: "Anime",
+      catFantasy: "Fantasy",
+      catArchitecture: "Architecture",
+      catVehicles: "Vehicles",
+      catFood: "Food"
+    },
+    modelCompare: {
+      title: "⚖️ Model Compare",
+      subtitle: "Same prompt, different AIs. Who delivers the best result?",
+      promptLabel: "Your Universal Prompt",
+      compareBtn: "🚀 Start Split-Screen Render (15 Sparks)",
+      missingPrompt: "Prompt missing!",
+      initText: "Both AI systems initiating rendering...",
+      doneText: "is ready!",
+      modelALabel: "🤖 Model A",
+      modelBLabel: "🤖 Model B",
+      waitingText: "Waiting for render..."
+    },
       assistant: "Standard Assistent",
       engineer: "Prompt Engineer",
       seo: "SEO Copywriter",
@@ -254,6 +320,39 @@ export const translations = {
     }
   },
   ar: {
+    imgLib: {
+      title: "🖼️ تلقينات الصور",
+      subtitle: "أكثر من 5000 تلقين مختار بعناية لـ Midjourney و DALL-E 3 و Stable Diffusion.",
+      searchPlaceholder: "...بحث (مثال: سايبربانك، صورة شخصية)",
+      uploadBtn: "رفع",
+      favoritesBtn: "المفضلة",
+      catAll: "الكل",
+      catPeople: "أشخاص",
+      catRomance: "رومانسية",
+      cat3D: "ثلاثي الأبعاد",
+      catCharacter: "شخصيات",
+      catDesign: "تصميم",
+      catRealistic: "واقعي",
+      catCyberpunk: "سايبربانك",
+      catNature: "طبيعة",
+      catAnime: "أنيمي",
+      catFantasy: "خيال",
+      catArchitecture: "هندسة معمارية",
+      catVehicles: "مركبات",
+      catFood: "طعام"
+    },
+    modelCompare: {
+      title: "⚖️ مقارنة النماذج",
+      subtitle: "نفس التلقين، ذكاء اصطناعي مختلف. من يقدم أفضل نتيجة؟",
+      promptLabel: "تلقينك العالمي",
+      compareBtn: "🚀 بدء تصيير الشاشة المزدوجة (15 شرارة)",
+      missingPrompt: "التلقين مفقود!",
+      initText: "نظاما الذكاء الاصطناعي يبدآن التصيير...",
+      doneText: "جاهز!",
+      modelALabel: "🤖 النموذج أ",
+      modelBLabel: "🤖 النموذج ب",
+      waitingText: "في انتظار التصيير..."
+    },
     promptMixer: {
       title: "🎛️ خلاط التلقينات",
       subtitle: "اجمع الكتل لإنشاء تلقينات مثالية",

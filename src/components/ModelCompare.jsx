@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useCredits } from '../context/CreditsContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function ModelCompare() {
+  const { t } = useLanguage();
   const { credits, spendCredits } = useCredits();
   const [prompt, setPrompt] = useState('A highly detailed cyberpunk sports car driving through a neon-lit futuristic city, cinematic lighting, 8k resolution');
   const [modelA, setModelA] = useState('image/kling-3');
@@ -12,7 +14,7 @@ export default function ModelCompare() {
   const [loading, setLoading] = useState(false);
 
   const handleCompare = () => {
-    if (!prompt.trim()) return toast.error('Prompt fehlt!');
+    if (!prompt.trim()) return toast.error(t?.modelCompare?.missingPrompt || 'Prompt fehlt!');
     
     // Cost for a split-screen premium generation (2 models)
     if (!spendCredits(15, 'Split-Screen Render')) return;
@@ -20,7 +22,7 @@ export default function ModelCompare() {
     setLoading(true);
     setResultA(null);
     setResultB(null);
-    toast.success('Beide KI-Systeme initiieren Rendering...', { icon: '⚖️' });
+    toast.success(t?.modelCompare?.initText || 'Beide KI-Systeme initiieren Rendering...', { icon: '⚖️' });
 
     // Simulate concurrent generation
     setTimeout(() => {
