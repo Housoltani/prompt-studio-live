@@ -51,14 +51,14 @@ export default function LandingPage() {
       <main className="relative pt-40 pb-24 px-6 z-10 flex flex-col items-center justify-center min-h-[90vh]">
         <div className="max-w-5xl mx-auto text-center relative">
           
-          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-white mb-10 backdrop-blur-md hover:bg-white/10 transition-colors cursor-pointer">
+          <Link to="/app" className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-white mb-10 backdrop-blur-md hover:bg-white/10 transition-colors cursor-pointer">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
             <span className="text-slate-300">Prompt Studio Pro ist da.</span>
             <span className="text-blue-400 font-bold">Entdecken &rarr;</span>
-          </div>
+          </Link>
 
           <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[1.05] text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-500 pb-2">
             Der Blueprint für <br />

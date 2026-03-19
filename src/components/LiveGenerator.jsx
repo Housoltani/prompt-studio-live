@@ -28,6 +28,7 @@ export default function LiveGenerator() {
   
   const chatEndRef = useRef(null);
   const { spendCredits, credits } = useCredits();
+  const { t, lang } = useLanguage();
 
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;

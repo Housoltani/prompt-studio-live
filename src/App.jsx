@@ -38,9 +38,10 @@ const PromptArena = lazy(() => import('./components/PromptArena'))
 const AITrendsRadar = lazy(() => import('./components/AITrendsRadar'))
 const ApiNexus = lazy(() => import('./components/ApiNexus'))
 
+import { useLanguage } from "./context/LanguageContext";
 function AppContent() {
-  const [lang, setLang] = useState('de')
-  const t = translations[lang]
+  const { lang, setLang, t } = useLanguage();
+  
   const { credits } = useCredits()
 
   const [user, setUser] = useState(null)
@@ -311,13 +312,13 @@ function AppContent() {
           ).map(([category, tabs]) => {
             const isExpanded = expandedCategories[category] !== false;
             return (
-            <div key={category} className="mb-4">
+            <div key={t.categories?.[category] || category} className="mb-4">
               <div 
                 onClick={() => toggleCategory(category)}
                 className="flex items-center justify-between cursor-pointer group px-2 py-1.5 mb-1 rounded-md hover:bg-slate-800/40 transition-colors"
               >
                 <h3 className="text-[10px] font-black text-slate-400 group-hover:text-slate-300 uppercase tracking-[0.2em] transition-colors">
-                  {category}
+                  {t.categories?.[category] || category}
                 </h3>
                 <svg 
                   className={`w-3.5 h-3.5 text-slate-500 group-hover:text-slate-400 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} 
@@ -673,4 +674,5 @@ function AppContent() {
   )
 }
 
-export default function App() { return <CreditsProvider><AppContent /></CreditsProvider>; }
+import { LanguageProvider } from "./context/LanguageContext";
+export default function App() { return <LanguageProvider><CreditsProvider><AppContent /></CreditsProvider></LanguageProvider>; }

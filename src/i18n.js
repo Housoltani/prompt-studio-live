@@ -14,6 +14,12 @@ export const translations = {
     btnVideo: "🎥 Video",
     btnMusic: "🎵 Musik",
     resultPlaceholder: "Das Ergebnis erscheint hier.",
+    categories: {
+      "KREATION & GENERATOREN": "KREATION & GENERATOREN",
+      "BIBLIOTHEKEN & INSPIRATION": "BIBLIOTHEKEN & INSPIRATION",
+      "WORKSPACE & AUTOMATISIERUNG": "WORKSPACE & AUTOMATISIERUNG",
+      "SYSTEM & LERNEN": "SYSTEM & LERNEN"
+    },
     tabs: {
       generator: "✨ Live Generator",
       mixer: "🎛️ Prompt Mixer",
@@ -33,6 +39,10 @@ export const translations = {
       credits: "⚡ Sparks & Credits",
       repair: "🛠️ Tech Repair",
       feedback: "💬 Feedback",
+      arena: "⚔️ Prompt Arena",
+      radar: "📡 KI-Radar",
+      "api-nexus": "🔌 API Nexus",
+      offers: "🎁 Angebote",
       auth: "🔐 Profil & Settings"
     },
     sections: {
@@ -58,6 +68,12 @@ export const translations = {
     btnVideo: "🎥 Video",
     btnMusic: "🎵 Music",
     resultPlaceholder: "The result will appear here.",
+    categories: {
+      "KREATION & GENERATOREN": "CREATION & GENERATORS",
+      "BIBLIOTHEKEN & INSPIRATION": "LIBRARIES & INSPIRATION",
+      "WORKSPACE & AUTOMATISIERUNG": "WORKSPACE & AUTOMATION",
+      "SYSTEM & LERNEN": "SYSTEM & LEARNING"
+    },
     tabs: {
       generator: "✨ Live Generator",
       mixer: "🎛️ Prompt Mixer",
@@ -77,6 +93,10 @@ export const translations = {
       credits: "⚡ Sparks & Credits",
       repair: "🛠️ Tech Repair",
       feedback: "💬 Feedback",
+      arena: "⚔️ Prompt Arena",
+      radar: "📡 AI Radar",
+      "api-nexus": "🔌 API Nexus",
+      offers: "🎁 Offers",
       auth: "🔐 Profile & Settings"
     },
     sections: {
@@ -102,6 +122,12 @@ export const translations = {
     btnVideo: "🎥 فيديو",
     btnMusic: "🎵 موسيقى",
     resultPlaceholder: ".ستظهر النتيجة هنا",
+    categories: {
+      "KREATION & GENERATOREN": "الإنشاء والمولدات",
+      "BIBLIOTHEKEN & INSPIRATION": "المكتبات والإلهام",
+      "WORKSPACE & AUTOMATISIERUNG": "مساحة العمل والأتمتة",
+      "SYSTEM & LERNEN": "النظام والتعلم"
+    },
     tabs: {
       generator: "✨ المولد المباشر",
       mixer: "🎛️ خلاط التلقينات",
@@ -121,6 +147,10 @@ export const translations = {
       credits: "⚡ شرارات ورصيد",
       repair: "🛠️ إصلاح التكنولوجيا",
       feedback: "💬 ملاحظات",
+      arena: "⚔️ ساحة التلقين",
+      radar: "📡 رادار الذكاء الاصطناعي",
+      "api-nexus": "🔌 واجهة برمجة التطبيقات",
+      offers: "🎁 العروض",
       auth: "🔐 الملف الشخصي والإعدادات"
     },
     sections: {
