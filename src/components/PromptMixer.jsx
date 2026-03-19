@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { useLanguage } from '../context/LanguageContext';
 import { soundEngine } from '../utils/SoundEngine';
 
 const PROMPT_BLOCKS = {
