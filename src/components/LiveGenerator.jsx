@@ -3,23 +3,27 @@ import { toast } from 'react-hot-toast';
 import { useCredits } from '../context/CreditsContext';
 import { soundEngine } from '../utils/SoundEngine';
 
-const PERSONAS = [
-  { id: 'default', icon: '🤖', name: 'Standard Assistent', prompt: 'Du bist ein hilfreicher KI-Assistent.' },
-  { id: 'prompt_engineer', icon: '🎨', name: 'Prompt Engineer', prompt: 'Du bist ein professioneller Prompt-Engineer.' },
-  { id: 'seo_expert', icon: '📈', name: 'SEO Copywriter', prompt: 'Du bist ein SEO-Experte.' },
-  { id: 'developer', icon: '💻', name: 'Senior Developer', prompt: 'Du bist ein Senior Developer.' },
-  { id: 'translator', icon: '🌍', name: 'Profi Übersetzer', prompt: 'Übersetze die Texte präzise und idiomatisch.' },
-  { id: 'summarizer', icon: '✂️', name: 'Text Zusammenfasser', prompt: 'Fasse lange Texte auf die wichtigsten Kernaussagen zusammen.' },
-  { id: 'data_analyst', icon: '📊', name: 'Data Analyst', prompt: 'Analysiere Daten und erstelle übersichtliche Tabellen.' },
-  { id: 'social_media', icon: '📱', name: 'Social Media Manager', prompt: 'Schreibe virale Posts mit passenden Hashtags und Emojis.' }
+
+const getPersonas = (t) => [
+  { id: 'default', icon: '🤖', name: t?.liveGen?.assistant || 'Standard Assistent', prompt: 'Du bist ein hilfreicher KI-Assistent.' },
+  { id: 'prompt_engineer', icon: '🎨', name: t?.liveGen?.engineer || 'Prompt Engineer', prompt: 'Du bist ein professioneller Prompt-Engineer.' },
+  { id: 'seo_expert', icon: '📈', name: t?.liveGen?.seo || 'SEO Copywriter', prompt: 'Du bist ein SEO-Experte.' },
+  { id: 'developer', icon: '💻', name: t?.liveGen?.dev || 'Senior Developer', prompt: 'Du bist ein Senior Developer.' },
+  { id: 'translator', icon: '🌍', name: t?.liveGen?.translator || 'Profi Übersetzer', prompt: 'Übersetze die Texte präzise und idiomatisch.' },
+  { id: 'summarizer', icon: '✂️', name: t?.liveGen?.summarizer || 'Text Zusammenfasser', prompt: 'Fasse lange Texte auf die wichtigsten Kernaussagen zusammen.' },
+  { id: 'data_analyst', icon: '📊', name: t?.liveGen?.analyst || 'Data Analyst', prompt: 'Analysiere Daten und erstelle übersichtliche Tabellen.' },
+  { id: 'social_media', icon: '📱', name: t?.liveGen?.social || 'Social Media Manager', prompt: 'Schreibe virale Posts mit passenden Hashtags und Emojis.' }
 ];
+
 
 export default function LiveGenerator() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [model, setModel] = useState('openai/gpt-3.5-turbo');
   const [generationMode, setGenerationMode] = useState('text'); // text, image, video, music
-  const [persona, setPersona] = useState(PERSONAS[0]);
+  const [persona, setPersona] = useState(() => getPersonas()[0]);
+  // Need to update persona array when language changes
+  const personas = getPersonas(t);
   const [temperature, setTemperature] = useState(0.7);
   const [maxTokens, setMaxTokens] = useState(2000);
   const [loading, setLoading] = useState(false);
@@ -33,7 +37,7 @@ export default function LiveGenerator() {
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      toast.error('Spracherkennung wird von diesem Browser nicht unterstützt.');
+      toast.error(t?.liveGen?.micNotSupported || 'Spracherkennung wird von diesem Browser nicht unterstützt.');
       return;
     }
     const recognition = new SpeechRecognition();
@@ -43,7 +47,7 @@ export default function LiveGenerator() {
     recognition.onstart = () => {
       soundEngine.playClick();
       setIsListening(true);
-      toast('Spreche jetzt...', { icon: '🎙️' });
+      toast(t?.liveGen?.speakNow || 'Spreche jetzt...', { icon: '🎙️' });
     };
     recognition.onresult = (event) => {
       let finalTranscript = '';
@@ -422,7 +426,7 @@ export default function LiveGenerator() {
                 <div className="mb-5">
                   <label className="text-xs text-slate-400 font-bold uppercase mb-2 block">Persona (Rolle)</label>
                   <div className="grid grid-cols-1 gap-2">
-                    {PERSONAS.map(p => (
+                    {personas.map(p => (
                       <button
                         key={p.id}
                         onClick={() => { setPersona(p); soundEngine.playPop(); }}
