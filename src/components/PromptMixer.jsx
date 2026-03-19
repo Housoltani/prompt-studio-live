@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { useLanguage } from '../context/LanguageContext';
 import { soundEngine } from '../utils/SoundEngine';
@@ -44,12 +44,23 @@ export default function PromptMixer() {
   const PROMPT_BLOCKS = getPromptBlocks(t);
   const categories = Object.keys(PROMPT_BLOCKS);
   
+  
   const [activeCategoryState, setActiveCategoryState] = useState(categories[0]);
-  const activeCategory = PROMPT_BLOCKS[activeCategoryState] ? activeCategoryState : categories[0];
+  
+  useEffect(() => {
+    if (!PROMPT_BLOCKS[activeCategoryState]) {
+      setActiveCategoryState(Object.keys(PROMPT_BLOCKS)[0]);
+    }
+  }, [t]); // update on language change
+
+  
+  const activeCategory = PROMPT_BLOCKS && PROMPT_BLOCKS[activeCategoryState] ? activeCategoryState : (PROMPT_BLOCKS ? Object.keys(PROMPT_BLOCKS)[0] : '');
+
 
   const setActiveCategory = (cat) => {
     setActiveCategoryState(cat);
   };
+
 
 
   const [selectedBlocks, setSelectedBlocks] = useState([]);
