@@ -43,13 +43,14 @@ export default function PromptMixer() {
   const { t } = useLanguage();
   const PROMPT_BLOCKS = getPromptBlocks(t);
   const categories = Object.keys(PROMPT_BLOCKS);
-  const [activeCategory, setActiveCategory] = useState(categories[0]);
+  
+  const [activeCategoryState, setActiveCategoryState] = useState(categories[0]);
+  const activeCategory = PROMPT_BLOCKS[activeCategoryState] ? activeCategoryState : categories[0];
 
-  // If language changes, the old activeCategory (e.g. "Subject") won't match the new Arabic keys.
-  // We need to re-sync it if it doesn't exist.
-  if (!PROMPT_BLOCKS[activeCategory]) {
-    setActiveCategory(categories[0]);
-  }
+  const setActiveCategory = (cat) => {
+    setActiveCategoryState(cat);
+  };
+
 
   const [selectedBlocks, setSelectedBlocks] = useState([]);
   const [aspectRatio, setAspectRatio] = useState('--ar 16:9');
