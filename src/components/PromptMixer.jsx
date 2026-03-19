@@ -37,6 +37,7 @@ const PROMPT_BLOCKS = {
 };
 
 export default function PromptMixer() {
+  const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState('Subject');
   const [selectedBlocks, setSelectedBlocks] = useState([]);
   const [aspectRatio, setAspectRatio] = useState('--ar 16:9');

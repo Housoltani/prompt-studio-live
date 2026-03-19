@@ -1,5 +1,19 @@
 export const translations = {
   de: {
+    promptMixer: {
+      title: "🎛️ Prompt Mixer",
+      subtitle: "Kombiniere Bausteine zu perfekten Prompts",
+      dragText: "Ziehe Bausteine hierher",
+      clearBtn: "Leeren",
+      copyBtn: "Kopieren"
+    },
+    promptExtractor: {
+      title: "🔄 Prompt Extractor",
+      subtitle: "Bild hochladen und Prompt extrahieren",
+      uploadBtn: "Bild hochladen",
+      extractBtn: "Extrahieren",
+      resultTitle: "Extrahierter Prompt"
+    },
     liveGen: {
       assistant: "Standard Assistent",
       engineer: "Prompt Engineer",
@@ -83,6 +97,20 @@ export const translations = {
     }
   },
   en: {
+    promptMixer: {
+      title: "🎛️ Prompt Mixer",
+      subtitle: "Combine blocks to perfect prompts",
+      dragText: "Drag blocks here",
+      clearBtn: "Clear",
+      copyBtn: "Copy"
+    },
+    promptExtractor: {
+      title: "🔄 Prompt Extractor",
+      subtitle: "Upload image and extract prompt",
+      uploadBtn: "Upload Image",
+      extractBtn: "Extract",
+      resultTitle: "Extracted Prompt"
+    },
     liveGen: {
       assistant: "Standard Assistant",
       engineer: "Prompt Engineer",
@@ -166,6 +194,20 @@ export const translations = {
     }
   },
   ar: {
+    promptMixer: {
+      title: "🎛️ خلاط التلقينات",
+      subtitle: "اجمع الكتل لإنشاء تلقينات مثالية",
+      dragText: "اسحب الكتل إلى هنا",
+      clearBtn: "مسح",
+      copyBtn: "نسخ"
+    },
+    promptExtractor: {
+      title: "🔄 مستخرج التلقين",
+      subtitle: "قم بتحميل صورة واستخراج التلقين",
+      uploadBtn: "تحميل صورة",
+      extractBtn: "استخراج",
+      resultTitle: "التلقين المستخرج"
+    },
     liveGen: {
       assistant: "مساعد قياسي",
       engineer: "مهندس تلقين",
