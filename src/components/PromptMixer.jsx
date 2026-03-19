@@ -3,43 +3,46 @@ import { toast } from 'react-hot-toast';
 import { useLanguage } from '../context/LanguageContext';
 import { soundEngine } from '../utils/SoundEngine';
 
-const PROMPT_BLOCKS = {
-  Subject: [
-    { id: 'sub1', text: 'A futuristic cyborg samurai', icon: '🥷' },
-    { id: 'sub2', text: 'A massive glowing crystal monolith', icon: '💎' },
-    { id: 'sub3', text: 'An abandoned overgrown train station', icon: '🌿' },
-    { id: 'sub4', text: 'A majestic space cruiser floating in orbit', icon: '🚀' },
-    { id: 'sub5', text: 'A cyberpunk street vendor cooking noodles', icon: '🍜' }
+
+const getPromptBlocks = (t) => ({
+  [t?.promptMixer?.catSubject || 'Subject']: [
+    { id: 'sub1', text: t?.promptMixer?.sub1 || 'A futuristic cyborg samurai', icon: '🥷' },
+    { id: 'sub2', text: t?.promptMixer?.sub2 || 'A massive glowing crystal monolith', icon: '💎' },
+    { id: 'sub3', text: t?.promptMixer?.sub3 || 'An abandoned overgrown train station', icon: '🌿' },
+    { id: 'sub4', text: t?.promptMixer?.sub4 || 'A majestic space cruiser floating in orbit', icon: '🚀' },
+    { id: 'sub5', text: t?.promptMixer?.sub5 || 'A cyberpunk street vendor cooking noodles', icon: '🍜' }
   ],
-  Environment: [
-    { id: 'env1', text: 'in a rainy neon-lit alleyway', icon: '🌧️' },
-    { id: 'env2', text: 'on the surface of Mars', icon: '🔴' },
-    { id: 'env3', text: 'underwater surrounded by glowing coral', icon: '🌊' },
-    { id: 'env4', text: 'in a dense enchanted forest', icon: '🌲' }
+  [t?.promptMixer?.catEnv || 'Environment']: [
+    { id: 'env1', text: t?.promptMixer?.env1 || 'in a rainy neon-lit alleyway', icon: '🌧️' },
+    { id: 'env2', text: t?.promptMixer?.env2 || 'on the surface of Mars', icon: '🔴' },
+    { id: 'env3', text: t?.promptMixer?.env3 || 'underwater surrounded by glowing coral', icon: '🌊' },
+    { id: 'env4', text: t?.promptMixer?.env4 || 'in a dense enchanted forest', icon: '🌲' }
   ],
-  Lighting: [
-    { id: 'lit1', text: 'cinematic volumetric lighting', icon: '🎬' },
-    { id: 'lit2', text: 'golden hour sunset', icon: '🌅' },
-    { id: 'lit3', text: 'harsh neon rim lights', icon: '🟣' },
-    { id: 'lit4', text: 'moody low key lighting', icon: '🌑' }
+  [t?.promptMixer?.catLit || 'Lighting']: [
+    { id: 'lit1', text: t?.promptMixer?.lit1 || 'cinematic volumetric lighting', icon: '🎬' },
+    { id: 'lit2', text: t?.promptMixer?.lit2 || 'golden hour sunset', icon: '🌅' },
+    { id: 'lit3', text: t?.promptMixer?.lit3 || 'harsh neon rim lights', icon: '🟣' },
+    { id: 'lit4', text: t?.promptMixer?.lit4 || 'moody low key lighting', icon: '🌑' }
   ],
-  Camera: [
-    { id: 'cam1', text: 'shot on 35mm lens, depth of field', icon: '📷' },
-    { id: 'cam2', text: 'wide angle establishing shot', icon: '🔭' },
-    { id: 'cam3', text: 'extreme close up macro', icon: '🔎' },
-    { id: 'cam4', text: 'drone FPV shot', icon: '🛸' }
+  [t?.promptMixer?.catCam || 'Camera']: [
+    { id: 'cam1', text: t?.promptMixer?.cam1 || 'shot on 35mm lens, depth of field', icon: '📷' },
+    { id: 'cam2', text: t?.promptMixer?.cam2 || 'drone aerial view from above', icon: '🚁' },
+    { id: 'cam3', text: t?.promptMixer?.cam3 || 'macro close up, high detail', icon: '🔍' },
+    { id: 'cam4', text: t?.promptMixer?.cam4 || 'wide angle fisheye lens', icon: '👁️' }
   ],
-  Style: [
-    { id: 'sty1', text: '8k resolution, highly detailed masterpiece', icon: '✨' },
-    { id: 'sty2', text: 'Studio Ghibli anime style', icon: '🌸' },
-    { id: 'sty3', text: 'Unreal Engine 5 render, raytracing', icon: '🎮' },
-    { id: 'sty4', text: 'watercolor illustration', icon: '🖌️' }
+  [t?.promptMixer?.catStyle || 'Style']: [
+    { id: 'sty1', text: t?.promptMixer?.sty1 || 'in the style of Studio Ghibli', icon: '🎨' },
+    { id: 'sty2', text: t?.promptMixer?.sty2 || 'hyperrealistic Unreal Engine 5 render', icon: '🎮' },
+    { id: 'sty3', text: t?.promptMixer?.sty3 || 'vintage 80s anime aesthetic', icon: '📺' },
+    { id: 'sty4', text: t?.promptMixer?.sty4 || 'oil painting, thick impasto brushstrokes', icon: '🖌️' }
   ]
-};
+});
+
 
 export default function PromptMixer() {
   const { t } = useLanguage();
-  const [activeCategory, setActiveCategory] = useState('Subject');
+  const PROMPT_BLOCKS = getPromptBlocks(t);
+  const [activeCategory, setActiveCategory] = useState(Object.keys(PROMPT_BLOCKS)[0]);
   const [selectedBlocks, setSelectedBlocks] = useState([]);
   const [aspectRatio, setAspectRatio] = useState('--ar 16:9');
   const [engine, setEngine] = useState('--v 6.0');
@@ -138,7 +141,7 @@ export default function PromptMixer() {
         
         {/* CATEGORY SELECTOR */}
         <div className="w-full lg:w-64 glass-card border border-slate-700/50 rounded-3xl p-5 bg-slate-900/80 flex flex-col gap-2 flex-shrink-0">
-          <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-2 px-2">Kategorien</h3>
+          <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-2 px-2">{t?.promptMixer?.categoriesTitle || 'Kategorien'}</h3>
           
           {Object.keys(PROMPT_BLOCKS).map(cat => (
             <button 
@@ -158,7 +161,7 @@ export default function PromptMixer() {
             </button>
           ))}
 
-          <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mt-6 mb-2 px-2">Parameter</h3>
+          <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mt-6 mb-2 px-2">{t?.promptMixer?.parametersTitle || 'Parameter'}</h3>
           
           <div className="p-3 bg-slate-950/50 border border-slate-800 rounded-xl mb-2">
             <div className="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider">Aspect Ratio</div>
