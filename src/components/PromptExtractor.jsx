@@ -3,6 +3,7 @@ import { toast } from 'react-hot-toast';
 import { soundEngine } from '../utils/SoundEngine';
 
 export default function PromptExtractor() {
+  const { t } = useLanguage();
   const [image, setImage] = useState(null);
   const [extractedPrompt, setExtractedPrompt] = useState('');
   const [loading, setLoading] = useState(false);
