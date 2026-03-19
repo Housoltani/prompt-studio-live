@@ -45,21 +45,16 @@ export default function PromptMixer() {
   const categories = Object.keys(PROMPT_BLOCKS);
   
   
+  
   const [activeCategoryState, setActiveCategoryState] = useState(categories[0]);
   
-  useEffect(() => {
-    if (!PROMPT_BLOCKS[activeCategoryState]) {
-      setActiveCategoryState(Object.keys(PROMPT_BLOCKS)[0]);
-    }
-  }, [t]); // update on language change
-
-  
-  const activeCategory = PROMPT_BLOCKS && PROMPT_BLOCKS[activeCategoryState] ? activeCategoryState : (PROMPT_BLOCKS ? Object.keys(PROMPT_BLOCKS)[0] : '');
-
+  // Safe active category determination without effects
+  const activeCategory = (PROMPT_BLOCKS && PROMPT_BLOCKS[activeCategoryState]) ? activeCategoryState : (PROMPT_BLOCKS ? Object.keys(PROMPT_BLOCKS)[0] : '');
 
   const setActiveCategory = (cat) => {
     setActiveCategoryState(cat);
   };
+
 
 
 
