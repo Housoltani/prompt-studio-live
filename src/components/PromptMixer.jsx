@@ -42,7 +42,15 @@ const getPromptBlocks = (t) => ({
 export default function PromptMixer() {
   const { t } = useLanguage();
   const PROMPT_BLOCKS = getPromptBlocks(t);
-  const [activeCategory, setActiveCategory] = useState(Object.keys(PROMPT_BLOCKS)[0]);
+  const categories = Object.keys(PROMPT_BLOCKS);
+  const [activeCategory, setActiveCategory] = useState(categories[0]);
+
+  // If language changes, the old activeCategory (e.g. "Subject") won't match the new Arabic keys.
+  // We need to re-sync it if it doesn't exist.
+  if (!PROMPT_BLOCKS[activeCategory]) {
+    setActiveCategory(categories[0]);
+  }
+
   const [selectedBlocks, setSelectedBlocks] = useState([]);
   const [aspectRatio, setAspectRatio] = useState('--ar 16:9');
   const [engine, setEngine] = useState('--v 6.0');
@@ -193,12 +201,12 @@ export default function PromptMixer() {
               <span className="text-emerald-400">⚡</span> Bausteine: {activeCategory}
             </h3>
             <span className="text-xs text-slate-500 font-bold uppercase tracking-widest bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">
-              {selectedBlocks.filter(b => PROMPT_BLOCKS[activeCategory].find(catBlock => catBlock.id === b.id)).length} Ausgewählt
+              {selectedBlocks.filter(b => (PROMPT_BLOCKS[activeCategory] || []).find(catBlock => catBlock.id === b.id)).length} Ausgewählt
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {PROMPT_BLOCKS[activeCategory].map(block => {
+            {(PROMPT_BLOCKS[activeCategory] || []).map(block => {
               const isSelected = selectedBlocks.find(b => b.id === block.id);
               return (
                 <div 
