@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { useLanguage } from '../context/LanguageContext';
 import { musicPromptsData } from '../data_music_prompts';
 
 
 export default function MusicLibrary() {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   
@@ -40,7 +42,7 @@ export default function MusicLibrary() {
     const matchesSearch = p.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           p.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesFavorites = showFavoritesOnly ? favorites.includes(p.id) : true;
-    const matchesCategory = selectedCategory === 'Alle' ? true : p.tags.some(tag => tag.includes(selectedCategory));
+    const matchesCategory = (selectedCategory === 'Alle' || selectedCategory === 'All' || selectedCategory === 'الكل') ? true : p.tags.some(tag => tag.includes(selectedCategory));
     return matchesSearch && matchesFavorites && matchesCategory;
   });
 

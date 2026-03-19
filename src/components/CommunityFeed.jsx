@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function CommunityFeed() {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('trending');
 
   const feedItems = [
