@@ -76,12 +76,8 @@ export default function MusicLibrary() {
     <div className="p-6 max-w-7xl mx-auto space-y-8 animate-fade-in relative">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500 flex items-center gap-3">
-            🎵 Hit-Labor (Musik-Prompts)
-          </h1>
-          <p className="text-gray-400 mt-2">
-            Kopiere perfekte Song-Strukturen, Metatags und Lyrics für Suno, Udio und andere KI-Musik-Generatoren.
-          </p>
+          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500 flex items-center gap-3">{t?.musicLib?.title || '🎵 Hit-Labor (Musik-Prompts)'}</h1>
+          <p className="text-gray-400 mt-2">{t?.musicLib?.subtitle || 'Kopiere perfekte Song-Strukturen, Metatags und Lyrics für Suno, Udio und andere KI-Musik-Generatoren.'}</p>
         </div>
 
         

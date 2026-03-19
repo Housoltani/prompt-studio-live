@@ -98,12 +98,8 @@ export default function VideoLibrary() {
     <div className="p-6 max-w-7xl mx-auto space-y-8 animate-fade-in relative">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500 flex items-center gap-3">
-            🎥 Video-Prompts Bibliothek
-          </h1>
-          <p className="text-gray-400 mt-2">
-            Entdecke die besten Kamerafahrten, Animationen und Prompts für Sora, Runway Gen-3, Kling und Luma.
-          </p>
+          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500 flex items-center gap-3">{t?.vidLib?.title || '🎥 Video-Prompts Bibliothek'}</h1>
+          <p className="text-gray-400 mt-2">{t?.vidLib?.subtitle || 'Entdecke die besten Kamerafahrten, Animationen und Prompts für Sora, Runway Gen-3, Kling und Luma.'}</p>
         </div>
         
         <div className="flex flex-wrap w-full md:w-auto gap-3">

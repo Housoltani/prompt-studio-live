@@ -85,11 +85,9 @@ export default function CommunityFeed() {
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div>
             <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">
-              Community <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-purple-400">Feed</span>
+              {t?.communityFeed?.title || 'Community Feed'}
             </h1>
-            <p className="text-slate-400 text-lg max-w-2xl">
-              Die globale Galerie. Entdecke die besten Prompts der Community, sammle Inspirationen und verdiene Sparks für deine eigenen Meisterwerke.
-            </p>
+            <p className="text-slate-400 text-lg max-w-2xl">{t?.communityFeed?.subtitle || 'Die globale Galerie. Entdecke die besten Prompts der Community, sammle Inspirationen und verdiene Sparks für deine eigenen Meisterwerke.'}</p>
           </div>
           
           <div className="flex bg-slate-900/50 p-1.5 rounded-xl border border-slate-700/50">
