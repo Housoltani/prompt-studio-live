@@ -22,7 +22,7 @@ export default function LiveGenerator() {
   const [input, setInput] = useState('');
   const [model, setModel] = useState('openai/gpt-3.5-turbo');
   const [generationMode, setGenerationMode] = useState('text'); // text, image, video, music
-  const [persona, setPersona] = useState(() => getPersonas()[0]);
+  const [persona, setPersona] = useState(() => getPersonas(null)[0]);
   // Need to update persona array when language changes
   const personas = getPersonas(t);
   const [temperature, setTemperature] = useState(0.7);
