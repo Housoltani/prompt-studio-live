@@ -3,7 +3,15 @@ import { toast } from 'react-hot-toast';
 import { soundEngine } from '../utils/SoundEngine';
 
 export default function PromptArena() {
+  
   const [voted, setVoted] = useState(false);
+  const [mode, setMode] = useState('vote'); // 'vote' or 'battle'
+  const [battleInput, setBattleInput] = useState('');
+  const [battleStatus, setBattleStatus] = useState('idle'); // 'idle', 'generating', 'done'
+  const [myBattleImg, setMyBattleImg] = useState('');
+  const [opponentImg, setOpponentImg] = useState('');
+  const [opponentProgress, setOpponentProgress] = useState(0);
+
 
   // Mock data for the current battle
   const currentBattle = {
@@ -15,6 +23,36 @@ export default function PromptArena() {
       { id: 1, creator: '@NeonBlade', avatar: '🥷', img: 'https://picsum.photos/seed/samurai1/600/800', votes: 1420 },
       { id: 2, creator: '@RoninArt', avatar: '⚔️', img: 'https://picsum.photos/seed/samurai2/600/800', votes: 1380 }
     ]
+  };
+
+  
+  const startLiveBattle = () => {
+    if (!battleInput.trim()) {
+      toast.error('Schreibe zuerst einen Prompt für dein Bild!', { icon: '⚠️' });
+      return;
+    }
+    soundEngine.playPop();
+    setBattleStatus('generating');
+    setOpponentProgress(0);
+    
+    // Simulate opponent generation
+    const interval = setInterval(() => {
+      setOpponentProgress(p => {
+        if (p >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return p + 15;
+      });
+    }, 500);
+
+    setTimeout(() => {
+      setMyBattleImg('https://images.unsplash.com/photo-1535295972055-1c762f4483e5?auto=format&fit=crop&w=800&q=80');
+      setOpponentImg('https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=800&q=80');
+      setBattleStatus('done');
+      soundEngine.playSuccess();
+      toast.success('Battle beendet! Die Community stimmt jetzt ab.', { icon: '🏆' });
+    }, 4000);
   };
 
   const handleVote = (id) => {
@@ -39,6 +77,23 @@ export default function PromptArena() {
           Tritt gegen die besten Prompt-Engineers an. Stimme ab oder reiche dein eigenes Meisterwerk ein, um den Preispool zu gewinnen.
         </p>
       </div>
+
+      {/* MODE TOGGLE */}
+      <div className="flex justify-center gap-4 mb-10">
+        <button 
+          onClick={() => { setMode('vote'); soundEngine.playPop(); }}
+          className={`px-6 py-2 rounded-full font-bold text-sm transition-all ${mode === 'vote' ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.4)]' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+        >
+          🗳️ Community Voting
+        </button>
+        <button 
+          onClick={() => { setMode('battle'); soundEngine.playPop(); }}
+          className={`px-6 py-2 rounded-full font-bold text-sm transition-all ${mode === 'battle' ? 'bg-orange-500 text-white shadow-[0_0_15px_rgba(249,115,22,0.4)]' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+        >
+          ⚔️ Live Battle starten
+        </button>
+      </div>
+
 
       {/* CURRENT BATTLE INFO */}
       <div className="glass-panel p-6 rounded-[2rem] border border-red-500/30 bg-gradient-to-br from-red-900/20 to-slate-900 shadow-[0_0_30px_rgba(239,68,68,0.1)] mb-10 flex flex-col md:flex-row justify-between items-center gap-6">

@@ -1,22 +1,10 @@
-export const translations = {
+const fs = require('fs');
+const path = require('path');
+
+const targetPath = path.join(__dirname, 'i18n.js');
+
+const newTranslations = `export const translations = {
   de: {
-    Marketplace: {
-      all: "Alle",
-      promptMarketplaceTitle: "💰 Prompt Marktplatz",
-      promptMarketplaceDescription: "Kaufe und verkaufe Premium-Prompts mit deinen Sparks ⚡.",
-      searchPromptsPlaceholder: "Suche Prompts...",
-      buyButton: "Kaufen",
-      noPromptsFound: "Keine Prompts für diese Kategorie gefunden.",
-      categoryMidjourney: "Midjourney",
-      categoryStableDiffusion: "Stable Diffusion",
-      categoryGPT4: "GPT-4",
-      categoryVideo: "Video",
-      categoryWebDev: "Web Dev",
-      costPrefix: "Kauf:",
-      successMessage: "Prompt \"{title}\" gekauft! Jetzt in deinem Studio.",
-      promptPreviewFallback: "Ein detaillierter Prompt für maximale Ergebnisse...",
-      creatorPrefix: "👤 @CreatorAI"
-    },
     vidLib: {
       title: "🎥 KI Video-Prompts",
       subtitle: "Die besten Prompt-Strukturen für Sora, Runway Gen-3 & Kling.",
@@ -135,23 +123,6 @@ export const translations = {
       resultTitle: "Extrahierter Prompt"
     },
     liveGen: {
-    Marketplace: {
-      all: "All",
-      promptMarketplaceTitle: "💰 Prompt Marketplace",
-      promptMarketplaceDescription: "Buy and sell premium prompts with your Sparks ⚡.",
-      searchPromptsPlaceholder: "Search Prompts...",
-      buyButton: "Buy",
-      noPromptsFound: "No prompts found for this category.",
-      categoryMidjourney: "Midjourney",
-      categoryStableDiffusion: "Stable Diffusion",
-      categoryGPT4: "GPT-4",
-      categoryVideo: "Video",
-      categoryWebDev: "Web Dev",
-      costPrefix: "Purchase:",
-      successMessage: "Prompt \"{title}\" purchased! Now in your studio.",
-      promptPreviewFallback: "A detailed prompt for maximum results...",
-      creatorPrefix: "👤 @CreatorAI"
-    },
       assistant: "Standard Assistent",
       engineer: "Prompt Engineer",
       seo: "SEO Copywriter",
@@ -210,9 +181,7 @@ export const translations = {
       music: "🎵 Hit-Labor",
       community: "🏆 Community Feed",
       marketplace: "💰 Prompt Marktplatz",
-      analytics: "📊 Creator Dashboard",
       studio: "📂 Mein Workspace",
-      notebook: "📚 Notebook LM",
       agents: "🤖 Agenten Hub",
       flows: "⚡ Flow Builder",
       "command-center": "🎯 Social Media Suite",
@@ -412,9 +381,7 @@ export const translations = {
       music: "🎵 Music Lab",
       community: "🏆 Community Feed",
       marketplace: "💰 Prompt Marketplace",
-      analytics: "📊 Creator Dashboard",
       studio: "📂 My Workspace",
-      notebook: "📚 Notebook LM",
       agents: "🤖 Agents Hub",
       flows: "⚡ Flow Builder",
       "command-center": "🎯 Social Media Suite",
@@ -438,23 +405,6 @@ export const translations = {
     }
   },
   ar: {
-    Marketplace: {
-      all: "الكل",
-      promptMarketplaceTitle: "💰 سوق الموجهات",
-      promptMarketplaceDescription: "اشترِ وبع الموجهات المميزة باستخدام شراراتك ⚡.",
-      searchPromptsPlaceholder: "ابحث عن موجهات...",
-      buyButton: "شراء",
-      noPromptsFound: "لم يتم العثور على موجهات لهذه الفئة.",
-      categoryMidjourney: "Midjourney",
-      categoryStableDiffusion: "Stable Diffusion",
-      categoryGPT4: "GPT-4",
-      categoryVideo: "فيديو",
-      categoryWebDev: "تطوير الويب",
-      costPrefix: "شراء:",
-      successMessage: "تم شراء الموجه \"{title}\"! الآن في الاستوديو الخاص بك.",
-      promptPreviewFallback: "موجه مفصل للحصول على أقصى النتائج...",
-      creatorPrefix: "👤 @CreatorAI"
-    },
     vidLib: {
       title: "🎥 تلقينات الفيديو",
       subtitle: "أفضل هياكل التلقين لـ Sora و Runway Gen-3 و Kling.",
@@ -631,9 +581,7 @@ export const translations = {
       music: "🎵 مختبر الموسيقى",
       community: "🏆 مجتمع",
       marketplace: "💰 سوق التلقينات",
-      analytics: "📊 لوحة تحكم المبدع",
       studio: "📂 مساحة العمل",
-      notebook: "📚 الدفتر الذكي",
       agents: "🤖 مركز الوكلاء",
       flows: "⚡ منشئ التدفق",
       "command-center": "🎯 جناح وسائل التواصل",
@@ -656,4 +604,7 @@ export const translations = {
       repair: "دروس فيديو وأدلة لإصلاح أجهزتك بنفسك."
     }
   }
-};
+};`;
+
+fs.writeFileSync(targetPath, newTranslations, 'utf8');
+console.log('i18n.js updated successfully.');

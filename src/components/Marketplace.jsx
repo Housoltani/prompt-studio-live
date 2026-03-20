@@ -2,21 +2,23 @@ import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useCredits } from '../context/CreditsContext';
 import { marketplacePrompts as initialPrompts } from '../data.js';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Marketplace() {
   const { credits, spendCredits } = useCredits();
   const [searchQuery, setSearchQuery] = useState('');
   const [prompts, setPrompts] = useState(initialPrompts);
   const [activeCategory, setActiveCategory] = useState('Alle');
+  const { t } = useLanguage();
 
-  const categories = ['Alle', 'Midjourney', 'Stable Diffusion', 'GPT-4', 'Video', 'Web Dev'];
+  const categories = [t.Marketplace.all, t.Marketplace.categoryMidjourney, t.Marketplace.categoryStableDiffusion, t.Marketplace.categoryGPT4, t.Marketplace.categoryVideo, t.Marketplace.categoryWebDev];
 
   const handleBuyPrompt = (item) => {
     // Determine cost (dummy logic: strip non-digits, fallback to 50)
     const cost = parseInt(item.price.replace(/\D/g, '')) || 50;
     
-    if (spendCredits(cost, `Kauf: ${item.title}`)) {
-      toast.success(`Prompt "${item.title}" gekauft! Jetzt in deinem Studio.`, {
+    if (spendCredits(cost, `${t.Marketplace.costPrefix} ${item.title}`)) {
+      toast.success(t.Marketplace.successMessage.replace('{title}', item.title), {
         icon: '🛍️',
         style: { background: '#10b981', color: '#fff' }
       });
@@ -25,7 +27,7 @@ export default function Marketplace() {
 
   const filteredPrompts = prompts.filter(item => {
     const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) || item.category.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = activeCategory === 'Alle' || item.category === activeCategory;
+    const matchesCategory = activeCategory === t.Marketplace.all || item.category === activeCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -33,15 +35,15 @@ export default function Marketplace() {
     <div className="max-w-7xl animate-fade-in mx-auto mt-4 px-4 pb-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
         <div>
-          <h2 className="text-4xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-600 tracking-tight">💰 Prompt Marktplatz</h2>
-          <p className="text-slate-400 text-lg">Kaufe und verkaufe Premium-Prompts mit deinen Sparks ⚡.</p>
+          <h2 className="text-4xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-600 tracking-tight">{t.Marketplace.promptMarketplaceTitle}</h2>
+          <p className="text-slate-400 text-lg">{t.Marketplace.promptMarketplaceDescription}</p>
         </div>
         
         <div className="flex items-center gap-3 bg-slate-800 p-2 rounded-2xl border border-slate-700 w-full md:w-auto">
           <span className="pl-3 text-slate-400">🔍</span>
           <input 
             type="text" 
-            placeholder="Suche Prompts..." 
+            placeholder={t.Marketplace.searchPromptsPlaceholder} 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="bg-transparent border-none text-white focus:outline-none w-full md:w-64"
@@ -83,11 +85,11 @@ export default function Marketplace() {
               
               <h3 className="font-bold text-white text-lg mb-2">{item.title}</h3>
               <p className="text-sm text-slate-400 mb-6 flex-grow font-mono bg-slate-900/50 p-3 rounded-xl border border-slate-800/50 line-clamp-4">
-                {item.preview || "Ein detaillierter Prompt für maximale Ergebnisse..."}
+                {item.preview || t.Marketplace.promptPreviewFallback}
               </p>
               
               <div className="flex items-center gap-2 mb-4 text-xs text-slate-500 font-bold">
-                <span>👤 @CreatorAI</span>
+                <span>{t.Marketplace.creatorPrefix}</span>
                 <span>•</span>
                 <span>⭐ 4.9 (128)</span>
               </div>
@@ -96,7 +98,7 @@ export default function Marketplace() {
                 onClick={() => handleBuyPrompt(item)}
                 className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-900 font-black py-3 px-4 rounded-xl transition-all shadow-lg shadow-amber-500/20 flex justify-center items-center gap-2 group-hover:scale-[1.02]"
               >
-                <span>Kaufen</span>
+                <span>{t.Marketplace.buyButton}</span>
               </button>
             </div>
           </div>
@@ -106,7 +108,7 @@ export default function Marketplace() {
       {filteredPrompts.length === 0 && (
         <div className="text-center py-20 text-slate-500">
           <span className="text-4xl block mb-4">🕵️‍♂️</span>
-          Keine Prompts für diese Kategorie gefunden.
+          {t.Marketplace.noPromptsFound}
         </div>
       )}
     </div>

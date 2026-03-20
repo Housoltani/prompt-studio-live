@@ -24,6 +24,8 @@ const CommandCenter = lazy(() => import('./components/CommandCenter'))
 const FlowBuilder = lazy(() => import('./components/FlowBuilder'))
 const EbookStudio = lazy(() => import('./components/EbookStudio'))
 const AuthProfile = lazy(() => import('./components/AuthProfile'))
+const NotebookLM = lazy(() => import('./components/NotebookLM'))
+const CreatorDashboard = lazy(() => import('./components/CreatorDashboard'))
 const EarnCredits = lazy(() => import('./components/EarnCredits'))
 const Pricing = lazy(() => import('./components/Pricing'))
 const AIAcademy = lazy(() => import('./components/AIAcademy'))
@@ -398,6 +400,20 @@ function AppContent() {
 
         <Routes>
           <Route path="/" element={<Navigate to="agents" replace />} />
+          
+        <Route path="analytics" element={<Suspense fallback={
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+          </div>
+        }><CreatorDashboard /></Suspense>} />
+
+          
+        <Route path="notebook" element={<Suspense fallback={
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          </div>
+        }><NotebookLM /></Suspense>} />
+
           {/* --- 1. MEIN STUDIO (MIT SHARE BUTTONS) --- */}
         <Route path="studio" element={<Suspense fallback={
     <div className="flex items-center justify-center h-64">

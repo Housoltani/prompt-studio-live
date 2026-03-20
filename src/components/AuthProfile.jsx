@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { toast } from 'react-hot-toast';
@@ -239,7 +240,9 @@ export default function AuthProfile() {
             </div>
           )}
 
-          {/* PORTFOLIO TABS */}
+          
+        
+\n\n          {/* PORTFOLIO TABS */}
           <div className="border-b border-slate-800 mb-8">
             <div className="flex gap-8">
               <button 

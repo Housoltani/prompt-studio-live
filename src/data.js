@@ -11,11 +11,13 @@ export const tabs = [
   { id: 'music', name: '🎵 Hit-Labor', category: 'BIBLIOTHEKEN & INSPIRATION', desc: 'Prompts für Suno, Udio' },
   { id: 'community', name: '🏆 Community Feed', category: 'BIBLIOTHEKEN & INSPIRATION', desc: 'User Uploads & Trending' },
   { id: 'marketplace', name: '💰 Prompt Marktplatz', category: 'BIBLIOTHEKEN & INSPIRATION', desc: 'Prompts kaufen & verkaufen' },
+  { id: 'analytics', name: '📊 Creator Dashboard', category: 'BIBLIOTHEKEN & INSPIRATION', desc: 'Deine Verkäufe & Analysen' },
   { id: 'arena', name: '⚔️ Prompt Arena', category: 'BIBLIOTHEKEN & INSPIRATION', desc: 'Tägliche Battles & Preisgelder' },
   { id: 'radar', name: '📡 KI-Radar', category: 'BIBLIOTHEKEN & INSPIRATION', desc: 'KI-News, Updates & Trends' },
 
   // --- WORKSPACE & AUTOMATISIERUNG ---
   { id: 'studio', name: '📂 Mein Workspace', category: 'WORKSPACE & AUTOMATISIERUNG', desc: 'Deine gespeicherten Werke' },
+  { id: 'notebook', name: '📚 Notebook LM', category: 'WORKSPACE & AUTOMATISIERUNG', desc: 'Dokumenten Analyse & Podcast' },
   { id: 'agents', name: '🤖 Agenten Hub', category: 'WORKSPACE & AUTOMATISIERUNG', desc: 'Spezialisierte KI-Assistenten' },
   { id: 'flows', name: '⚡ Flow Builder', category: 'WORKSPACE & AUTOMATISIERUNG', desc: 'Prompt Chains & Automatisierung' },
   { id: 'api-nexus', name: '🔌 API Nexus', category: 'WORKSPACE & AUTOMATISIERUNG', desc: 'Webhooks & Entwickler-Zugang' },
