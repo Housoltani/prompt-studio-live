@@ -7,6 +7,7 @@ export const tabs = [
   { id: 'compare', name: '⚖️ Modell-Vergleich', category: 'KREATION & GENERATOREN', desc: 'Midjourney vs DALL-E vs SD' },
   { id: 'assetlab', name: '🧊 3D & Asset Labor', category: 'KREATION & GENERATOREN', desc: 'Game Assets & 3D Modelle' },
   { id: 'voice-avatar', name: '🎙️ Deep Voice & Avatar Studio', category: 'KREATION & GENERATOREN', desc: 'KI-Stimmen & Video-Avatare' },
+  { id: 'storyboard', name: '🎬 AI Storyboard Studio', category: 'KREATION & GENERATOREN', desc: 'Visual Narrative & Mega-Prompt Builder' },
 
   // --- BIBLIOTHEKEN & INSPIRATION ---
   { id: 'images', name: '🖼️ Bild-Prompts', category: 'BIBLIOTHEKEN & INSPIRATION', desc: 'Prompts für Midjourney, DALL-E' },
