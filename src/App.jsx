@@ -13,6 +13,7 @@ import { CreditsProvider, useCredits } from './context/CreditsContext'
 import InteractivePrompt from './components/InteractivePrompt'
 import GlobalChat from './components/GlobalChat'
 const PromptMixer = lazy(() => import('./components/PromptMixer'))
+const AssetLab = lazy(() => import('./components/AssetLab'))
 const LiveGenerator = lazy(() => import('./components/LiveGenerator'))
 const PromptExtractor = lazy(() => import('./components/PromptExtractor'))
 const VideoGenerator = lazy(() => import('./components/VideoGenerator'))
@@ -25,6 +26,7 @@ const FlowBuilder = lazy(() => import('./components/FlowBuilder'))
 const EbookStudio = lazy(() => import('./components/EbookStudio'))
 const AuthProfile = lazy(() => import('./components/AuthProfile'))
 const NotebookLM = lazy(() => import('./components/NotebookLM'))
+const CommandDashboard = lazy(() => import('./components/CommandDashboard'))
 const CreatorDashboard = lazy(() => import('./components/CreatorDashboard'))
 const EarnCredits = lazy(() => import('./components/EarnCredits'))
 const Pricing = lazy(() => import('./components/Pricing'))
@@ -399,7 +401,7 @@ function AppContent() {
         </div>
 
         <Routes>
-          <Route path="/" element={<Navigate to="agents" replace />} />
+          <Route path="/" element={<Navigate to="home" replace />} />
           
         <Route path="analytics" element={<Suspense fallback={
           <div className="flex items-center justify-center h-64">
@@ -413,6 +415,13 @@ function AppContent() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
           </div>
         }><NotebookLM /></Suspense>} />
+
+          
+        <Route path="home" element={<Suspense fallback={
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          </div>
+        }><CommandDashboard /></Suspense>} />
 
           {/* --- 1. MEIN STUDIO (MIT SHARE BUTTONS) --- */}
         <Route path="studio" element={<Suspense fallback={
@@ -445,6 +454,14 @@ function AppContent() {
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
     </div>
   }><PromptMixer /></Suspense>} />
+
+        {/* --- ASSET LAB --- */}
+        <Route path="assetlab" element={
+  <Suspense fallback={
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+    </div>
+  }><AssetLab /></Suspense>} />
 
         {/* --- LIVE GENERATOR --- */}
         <Route path="generator" element={

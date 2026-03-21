@@ -201,6 +201,7 @@ export const translations = {
       "SYSTEM & LERNEN": "SYSTEM & LERNEN"
     },
     tabs: {
+      home: "🏠 Command Dashboard",
       generator: "✨ Live Generator",
       mixer: "🎛️ Prompt Mixer",
       extractor: "🔄 Prompt Extractor",
@@ -403,6 +404,7 @@ export const translations = {
       "SYSTEM & LERNEN": "SYSTEM & LEARNING"
     },
     tabs: {
+      home: "🏠 Command Dashboard",
       generator: "✨ Live Generator",
       mixer: "🎛️ Prompt Mixer",
       extractor: "🔄 Prompt Extractor",
@@ -622,6 +624,7 @@ export const translations = {
       "SYSTEM & LERNEN": "النظام والتعلم"
     },
     tabs: {
+      home: "🏠 لوحة القيادة",
       generator: "✨ المولد المباشر",
       mixer: "🎛️ خلاط التلقينات",
       extractor: "🔄 مستخرج التلقين",

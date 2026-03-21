@@ -3,15 +3,34 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { toast } from 'react-hot-toast';
 import { soundEngine } from '../utils/SoundEngine';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function FlowBuilder() {
   const { t } = useLanguage();
-  const [nodes] = useState([
+  
+  const defaultNodes = [
     { id: 1, type: 'trigger', name: 'User Input (Thema)', provider: 'System', color: 'slate', icon: '📝', desc: 'Wartet auf eine Texteingabe (z.B. "Cyberpunk Stadt").' },
     { id: 2, type: 'action', name: 'Prompt Generator', provider: 'GPT-4o', color: 'blue', icon: '🤖', desc: 'Erweitert das Thema zu einem massiven 8k Midjourney Prompt.' },
     { id: 3, type: 'action', name: 'Bild-Renderer', provider: 'Midjourney v6', color: 'fuchsia', icon: '🎨', desc: 'Generiert ein 16:9 Meisterwerk in fotorealistischer Qualität.' },
     { id: 4, type: 'action', name: 'Video-Animator', provider: 'Kling 3.0', color: 'emerald', icon: '🎥', desc: 'Animiert das generierte Bild mit einem langsamen Kamera-Pan.' }
-  ]);
+  ];
+
+  const textToBlogNodes = [
+    { id: 1, type: 'trigger', name: 'Kurze Idee', provider: 'System', color: 'slate', icon: '📝', desc: 'Wartet auf 2-3 Stichworte.' },
+    { id: 2, type: 'action', name: 'SEO Strukturierer', provider: 'GPT-4o', color: 'blue', icon: '🧠', desc: 'Erstellt eine SEO-optimierte Outline.' },
+    { id: 3, type: 'action', name: 'Artikel Writer', provider: 'Claude 3', color: 'purple', icon: '✍️', desc: 'Schreibt den vollen 1000-Wörter Blogartikel.' },
+    { id: 4, type: 'action', name: 'WordPress Export', provider: 'Webhook', color: 'orange', icon: '🌐', desc: 'Pusht als Draft nach WordPress.' }
+  ];
+
+  const [nodes, setNodes] = useState(defaultNodes);
+  const [showTemplates, setShowTemplates] = useState(false);
+
+  const loadTemplate = (templateNodes, name) => {
+    setNodes(templateNodes);
+    setShowTemplates(false);
+    toast.success(`Template "${name}" geladen!`, { icon: '🚀' });
+    soundEngine.playSuccess();
+  };
 
   const [isRunning, setIsRunning] = useState(false);
   const [showApiModal, setShowApiModal] = useState(false);
@@ -77,6 +96,13 @@ export default function FlowBuilder() {
         
         
         <div className="flex gap-3">
+          <button 
+            onClick={() => setShowTemplates(true)}
+            className="px-4 py-3 rounded-xl font-bold bg-purple-600/20 text-purple-400 border border-purple-500/50 hover:bg-purple-600/30 transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)] flex items-center gap-2"
+          >
+            🧩 Smart Templates
+          </button>
+          
           {/* Multiplayer Toggle */}
           <button 
             onClick={() => setIsMultiplayer(!isMultiplayer)}
@@ -505,6 +531,67 @@ export default function FlowBuilder() {
         </div>
 
       </div>
+
+      {/* SMART TEMPLATES MODAL */}
+      <AnimatePresence>
+        {showTemplates && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          >
+            <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-md" onClick={() => setShowTemplates(false)}></div>
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="bg-slate-900/90 border border-slate-700 rounded-3xl p-8 max-w-4xl w-full relative z-10 shadow-2xl glass-panel"
+            >
+              <button onClick={() => setShowTemplates(false)} className="absolute top-6 right-6 text-slate-400 hover:text-white text-2xl">✕</button>
+              
+              <div className="mb-8">
+                <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 mb-2">Smart Templates</h2>
+                <p className="text-slate-400">Lade vorgefertigte KI-Workflows mit einem Klick in deinen Flow Builder.</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                {/* Template 1: Text-to-Blog */}
+                <div onClick={() => loadTemplate(textToBlogNodes, "Text-to-Blog")} className="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl cursor-pointer hover:border-purple-500 hover:bg-slate-800 transition-all group shadow-lg hover:shadow-[0_0_20px_rgba(168,85,247,0.2)]">
+                  <div className="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">📝</div>
+                  <h3 className="font-bold text-white mb-2">Text-to-Blog Automat</h3>
+                  <p className="text-sm text-slate-400 mb-4">Von einer kurzen Idee zum fertigen SEO-Artikel, direkt in WordPress gepusht.</p>
+                  <div className="flex gap-2">
+                    <span className="text-[10px] bg-slate-900 text-slate-300 px-2 py-1 rounded-md border border-slate-700">GPT-4o</span>
+                    <span className="text-[10px] bg-slate-900 text-slate-300 px-2 py-1 rounded-md border border-slate-700">Claude 3</span>
+                  </div>
+                </div>
+
+                {/* Template 2: Viral Short */}
+                <div onClick={() => loadTemplate(defaultNodes, "Viral Short")} className="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl cursor-pointer hover:border-emerald-500 hover:bg-slate-800 transition-all group shadow-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                  <div className="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">🎥</div>
+                  <h3 className="font-bold text-white mb-2">Viral Short Creator</h3>
+                  <p className="text-sm text-slate-400 mb-4">Skript generieren, Bild rendern, Video animieren. Perfekt für TikTok & Reels.</p>
+                  <div className="flex gap-2">
+                    <span className="text-[10px] bg-slate-900 text-slate-300 px-2 py-1 rounded-md border border-slate-700">Midjourney</span>
+                    <span className="text-[10px] bg-slate-900 text-slate-300 px-2 py-1 rounded-md border border-slate-700">Kling 3.0</span>
+                  </div>
+                </div>
+
+                {/* Template 3: Podcast Summary */}
+                <div onClick={() => {toast("Template kommt bald!", {icon: '🚧'})}} className="bg-slate-800/50 border border-slate-700 p-6 rounded-2xl cursor-not-allowed opacity-50 relative">
+                  <div className="absolute top-3 right-3 text-[10px] font-bold bg-amber-500 text-black px-2 py-1 rounded-full">SOON</div>
+                  <div className="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-500 flex items-center justify-center text-2xl mb-4">🎙️</div>
+                  <h3 className="font-bold text-white mb-2">Podcast Summarizer</h3>
+                  <p className="text-sm text-slate-400 mb-4">YouTube-Link rein, fertiges Transkript und Zusammenfassung raus.</p>
+                </div>
+
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* API EXPORT MODAL */}
       {showApiModal && (

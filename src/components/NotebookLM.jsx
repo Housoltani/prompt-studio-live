@@ -16,16 +16,31 @@ export default function NotebookLM() {
   const [input, setInput] = useState('');
   const [isGeneratingPodcast, setIsGeneratingPodcast] = useState(false);
 
+  const [podcastConfig, setPodcastConfig] = useState({ hosts: 2, tone: 'casual', focus: '' });
+  const [showFlowModal, setShowFlowModal] = useState(false);
+  const [showStyleModal, setShowStyleModal] = useState(false);
+
+
+  
   const handleUpload = () => {
     soundEngine.playClick();
-    toast.success('Dokument hochgeladen und zur Analyse eingereiht.');
-    setSources([...sources, { id: Date.now(), name: 'Neues_Dokument.pdf', type: 'pdf', status: 'processing', size: '1.1 MB' }]);
+    toast.success('Quelle hinzugefügt und zur Analyse eingereiht.');
+    
+    // Simulate detecting a YouTube URL or Image for style extraction
+    const isYoutube = Math.random() > 0.5;
+    const newSource = isYoutube 
+      ? { id: Date.now(), name: 'Midjourney v6 Masterclass (YouTube)', type: 'video', status: 'processing', size: '12:45' }
+      : { id: Date.now(), name: 'Client_Briefing_Q3.pdf', type: 'pdf', status: 'processing', size: '1.8 MB' };
+      
+    setSources([...sources, newSource]);
+    
     setTimeout(() => {
       setSources(prev => prev.map(s => s.status === 'processing' ? { ...s, status: 'ready' } : s));
       soundEngine.playSuccess();
-      toast.success('Analyse abgeschlossen.');
+      toast.success('Analyse abgeschlossen. Transcript & Meta-Daten extrahiert.');
     }, 3000);
   };
+
 
   const handleChat = (e) => {
     e.preventDefault();
@@ -80,9 +95,11 @@ export default function NotebookLM() {
           <div className="space-y-3 overflow-y-auto flex-1">
             {sources.map(source => (
               <div key={source.id} className="bg-slate-950/50 border border-slate-800 p-3 rounded-xl flex items-start gap-3 hover:border-blue-500/30 transition-colors cursor-pointer group">
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${source.type === 'pdf' ? 'bg-red-500/20 text-red-400' : 'bg-blue-500/20 text-blue-400'}`}>
-                  {source.type === 'pdf' ? '📄' : '🔗'}
+                
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${source.type === 'pdf' ? 'bg-red-500/20 text-red-400' : source.type === 'video' ? 'bg-rose-500/20 text-rose-400' : 'bg-blue-500/20 text-blue-400'}`}>
+                  {source.type === 'pdf' ? '📄' : source.type === 'video' ? '▶️' : '🔗'}
                 </div>
+
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-bold text-slate-200 truncate group-hover:text-blue-400 transition-colors">{source.name}</p>
                   <div className="flex items-center gap-2 mt-1">
@@ -98,11 +115,19 @@ export default function NotebookLM() {
             ))}
           </div>
 
-          <div className="mt-4 pt-4 border-t border-slate-800">
-             <button className="w-full py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-sm font-bold rounded-xl transition-colors">
+          
+          <div className="mt-4 pt-4 border-t border-slate-800 space-y-2">
+             <button onClick={() => setShowFlowModal(true)} className="w-full py-2 bg-emerald-600/20 hover:bg-emerald-600/40 border border-emerald-500/30 text-emerald-400 text-sm font-bold rounded-xl transition-colors flex items-center justify-center gap-2">
+               ⚡ Auto-Flow generieren
+             </button>
+             <button onClick={() => setShowStyleModal(true)} className="w-full py-2 bg-fuchsia-600/20 hover:bg-fuchsia-600/40 border border-fuchsia-500/30 text-fuchsia-400 text-sm font-bold rounded-xl transition-colors flex items-center justify-center gap-2">
+               🎨 Style-Guide extrahieren
+             </button>
+             <button className="w-full py-2 mt-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-sm font-bold rounded-xl transition-colors">
                Quellen verwalten
              </button>
           </div>
+
         </div>
 
         {/* RIGHT PANEL: INTERACTION */}
@@ -219,6 +244,55 @@ export default function NotebookLM() {
         </div>
 
       </div>
+
+      {/* AUTO-FLOW MODAL */}
+      {showFlowModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" onClick={() => setShowFlowModal(false)}></div>
+          <div className="bg-slate-900 border border-slate-700 rounded-3xl p-8 max-w-md w-full relative z-10 shadow-2xl animate-scale-in">
+            <button onClick={() => setShowFlowModal(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white">✕</button>
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">⚡</div>
+              <h3 className="text-2xl font-black text-white mb-2">Flow Generator</h3>
+              <p className="text-slate-400 text-sm">Die KI analysiert dein Briefing-PDF und baut automatisch eine passende Pipeline im Flow Builder.</p>
+            </div>
+            <button onClick={() => { 
+              setShowFlowModal(false); 
+              toast.success('Pipeline generiert! Wechsle zum Flow Builder.', { icon: '🚀' }); 
+              soundEngine.playTransform();
+            }} className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-colors shadow-lg">
+              Workflow aus PDF extrahieren
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* STYLE GUIDE MODAL */}
+      {showStyleModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" onClick={() => setShowStyleModal(false)}></div>
+          <div className="bg-slate-900 border border-slate-700 rounded-3xl p-8 max-w-md w-full relative z-10 shadow-2xl animate-scale-in">
+            <button onClick={() => setShowStyleModal(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white">✕</button>
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-fuchsia-500/20 text-fuchsia-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">🎨</div>
+              <h3 className="text-2xl font-black text-white mb-2">Style-Clone</h3>
+              <p className="text-slate-400 text-sm">Extrahiere Farben, Beleuchtung und Kameraführung aus deinen Quellen als globalen Parameter für den Live Generator.</p>
+            </div>
+            <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 mb-6">
+              <p className="text-xs text-slate-500 mb-2 font-mono">Generierter Parameter:</p>
+              <p className="text-sm text-fuchsia-400 font-mono break-all">--style raw --v 6.0 --ar 16:9 --c 5 "Neon Cyberpunk, Volumetric Fog, 35mm lens"</p>
+            </div>
+            <button onClick={() => { 
+              setShowStyleModal(false); 
+              toast.success('Style-Guide in Live Generator Persona gespeichert!', { icon: '✨' }); 
+              soundEngine.playSuccess();
+            }} className="w-full bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold py-3 rounded-xl transition-colors shadow-lg">
+              Als Persona speichern
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
