@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Toaster, toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 const ProfitMatrix = () => {
   const [costs, setCosts] = useState({

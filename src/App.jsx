@@ -17,6 +17,7 @@ const AssetLab = lazy(() => import('./components/AssetLab'))
 const LiveGenerator = lazy(() => import('./components/LiveGenerator'))
 const PromptExtractor = lazy(() => import('./components/PromptExtractor'))
 const VideoGenerator = lazy(() => import('./components/VideoGenerator'))
+const PromptAnalyzer = lazy(() => import('./components/PromptAnalyzer'))
 const ModelCompare = lazy(() => import('./components/ModelCompare'))
 const MusicGenerator = lazy(() => import('./components/MusicGenerator'))
 const CommunityFeed = lazy(() => import('./components/CommunityFeed'))
@@ -411,243 +412,120 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Navigate to="home" replace />} />
           
-        <Route path="analytics" element={<Suspense fallback={
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
-          </div>
-        }><CreatorDashboard /></Suspense>} />
+        <Route path="analytics" element={<Suspense fallback={<LoadingCore />}><CreatorDashboard /></Suspense>} />
 
           
-        <Route path="notebook" element={<Suspense fallback={
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-          </div>
-        }><NotebookLM /></Suspense>} />
+        <Route path="notebook" element={<Suspense fallback={<LoadingCore />}><NotebookLM /></Suspense>} />
 
           
-        <Route path="home" element={<Suspense fallback={
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-          </div>
-        }><CommandDashboard /></Suspense>} />
+        <Route path="home" element={<Suspense fallback={<LoadingCore />}><CommandDashboard /></Suspense>} />
 
           {/* --- 1. MEIN STUDIO (MIT SHARE BUTTONS) --- */}
-        <Route path="studio" element={<Suspense fallback={
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-    </div>
-  }><Studio /></Suspense>} />
+        <Route path="studio" element={<Suspense fallback={<LoadingCore />}><Studio /></Suspense>} />
 
         {/* --- MARKTPLATZ (MIT SHARE BUTTON) --- */}
         <Route path="marketplace" element={
-  <Suspense fallback={
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
-    </div>
-  }><Marketplace /></Suspense>} />
+  <Suspense fallback={<LoadingCore />}><Marketplace /></Suspense>} />
         {/* --- KI BILDER BIBLIOTHEK --- */}
         <Route path="images" element={
-          <Suspense fallback={
-            <div className="flex items-center justify-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
-            </div>
-          }><ImageLibrary /></Suspense>
+          <Suspense fallback={<LoadingCore />}><ImageLibrary /></Suspense>
         } />
 
 
         {/* --- PROMPT MIXER --- */}
         <Route path="mixer" element={
-  <Suspense fallback={
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-    </div>
-  }><PromptMixer /></Suspense>} />
+  <Suspense fallback={<LoadingCore />}><PromptMixer /></Suspense>} />
 
         {/* --- ASSET LAB --- */}
         <Route path="assetlab" element={
-  <Suspense fallback={
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
-    </div>
-  }><AssetLab /></Suspense>} />
+  <Suspense fallback={<LoadingCore />}><AssetLab /></Suspense>} />
 
         {/* --- LIVE GENERATOR --- */}
         <Route path="generator" element={
-  <Suspense fallback={
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-    </div>
-  }><LiveGenerator /></Suspense>} />
+  <Suspense fallback={<LoadingCore />}><LiveGenerator /></Suspense>} />
 
         {/* --- PROMPT EXTRACTOR --- */}
         <Route path="extractor" element={
-  <Suspense fallback={
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-    </div>
-  }><PromptExtractor /></Suspense>} />
+  <Suspense fallback={<LoadingCore />}><PromptExtractor /></Suspense>} />
 
         {/* --- VIDEO GENERATOR --- */}
         {/* --- KI VIDEO BIBLIOTHEK --- */}
         <Route path="videos" element={
-          <Suspense fallback={
-            <div className="flex items-center justify-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500"></div>
-            </div>
-          }><VideoLibrary /></Suspense>
+          <Suspense fallback={<LoadingCore />}><VideoLibrary /></Suspense>
         } />
 
         {/* --- MODEL COMPARE --- */}
+        <Route path="analyzer" element={<Suspense fallback={<LoadingCore />}><PromptAnalyzer /></Suspense>} />
         <Route path="compare" element={
-  <Suspense fallback={
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-    </div>
-  }><ModelCompare /></Suspense>} />
+  <Suspense fallback={<LoadingCore />}><ModelCompare /></Suspense>} />
 
         {/* --- MUSIC GENERATOR --- */}
         {/* --- KI MUSIK BIBLIOTHEK --- */}
         <Route path="music" element={
-          <Suspense fallback={
-            <div className="flex items-center justify-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
-            </div>
-          }><MusicLibrary /></Suspense>
+          <Suspense fallback={<LoadingCore />}><MusicLibrary /></Suspense>
         } />
 
         {/* --- COMMUNITY FEED --- */}
         <Route path="community" element={
-  <Suspense fallback={
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-    </div>
-  }><CommunityFeed /></Suspense>} />
+  <Suspense fallback={<LoadingCore />}><CommunityFeed /></Suspense>} />
 
         {/* --- FLOW BUILDER --- */}
         <Route path="flows" element={
-  <Suspense fallback={
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-    </div>
-  }><FlowBuilder /></Suspense>} />
+  <Suspense fallback={<LoadingCore />}><FlowBuilder /></Suspense>} />
 
         
         {/* --- AUTH / PROFILE --- */}
         <Route path="auth" element={
-  <Suspense fallback={
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-    </div>
-  }><AuthProfile /></Suspense>} />
+  <Suspense fallback={<LoadingCore />}><AuthProfile /></Suspense>} />
 
         
         {/* --- AGENTEN HUB --- */}
                 <Route path="command-center" element={
-          <Suspense fallback={
-            <div className="flex items-center justify-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-            </div>
-          }><CommandCenter /></Suspense>
+          <Suspense fallback={<LoadingCore />}><CommandCenter /></Suspense>
         } />
         <Route path="ebook-studio" element={
-          <Suspense fallback={
-            <div className="flex items-center justify-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-            </div>
-          }><EbookStudio /></Suspense>
+          <Suspense fallback={<LoadingCore />}><EbookStudio /></Suspense>
         } />
         <Route path="agents" element={
-  <Suspense fallback={
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-    </div>
-  }><AgentsHub /></Suspense>} />
+  <Suspense fallback={<LoadingCore />}><AgentsHub /></Suspense>} />
 
         
         {/* --- EARN CREDITS --- */}
-        <Route path="credits" element={<Suspense fallback={
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-    </div>
-  }><EarnCredits /></Suspense>} />
+        <Route path="credits" element={<Suspense fallback={<LoadingCore />}><EarnCredits /></Suspense>} />
 
         {/* --- PRICING --- */}
-        <Route path="pricing" element={<Suspense fallback={
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
-    </div>
-  }><Pricing /></Suspense>} />
+        <Route path="pricing" element={<Suspense fallback={<LoadingCore />}><Pricing /></Suspense>} />
 
         {/* --- KI ACADEMY (LEARNING) --- */}
-        <Route path="learning" element={<Suspense fallback={
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
-    </div>
-  }><AIAcademy /></Suspense>} />
+        <Route path="learning" element={<Suspense fallback={<LoadingCore />}><AIAcademy /></Suspense>} />
 
         {/* --- PROMPT ARENA --- */}
-        <Route path="arena" element={<Suspense fallback={
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500"></div>
-          </div>
-        }><PromptArena /></Suspense>} />
+        <Route path="arena" element={<Suspense fallback={<LoadingCore />}><PromptArena /></Suspense>} />
 
         {/* --- KI TRENDS RADAR --- */}
-        <Route path="radar" element={<Suspense fallback={
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500"></div>
-          </div>
-        }><AITrendsRadar /></Suspense>} />
+        <Route path="radar" element={<Suspense fallback={<LoadingCore />}><AITrendsRadar /></Suspense>} />
 
         {/* --- API NEXUS --- */}
-        <Route path="api-nexus" element={<Suspense fallback={
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
-          </div>
-        }><ApiNexus /></Suspense>} />
+        <Route path="api-nexus" element={<Suspense fallback={<LoadingCore />}><ApiNexus /></Suspense>} />
 
         {/* --- FEEDBACK --- */}
-        <Route path="feedback" element={<Suspense fallback={
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-          </div>
-        }><Feedback /></Suspense>} />
+        <Route path="feedback" element={<Suspense fallback={<LoadingCore />}><Feedback /></Suspense>} />
 
         {/* --- OFFERS --- */}
-        <Route path="offers" element={<Suspense fallback={
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
-          </div>
-        }><Offers /></Suspense>} />
+        <Route path="offers" element={<Suspense fallback={<LoadingCore />}><Offers /></Suspense>} />
 
-        <Route path="voice-avatar" element={<Suspense fallback={
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
-          </div>
-        }><VoiceAvatarStudio /></Suspense>} />
+        <Route path="voice-avatar" element={<Suspense fallback={<LoadingCore />}><VoiceAvatarStudio /></Suspense>} />
 
-        <Route path="dev-architect" element={<Suspense fallback={
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
-          </div>
-        }><DevArchitect /></Suspense>} />
+        <Route path="dev-architect" element={<Suspense fallback={<LoadingCore />}><DevArchitect /></Suspense>} />
 
-        <Route path="storyboard" element={<Suspense fallback={
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-500"></div>
-          </div>
-        }><AIStoryboard /></Suspense>} />
+        <Route path="storyboard" element={<Suspense fallback={<LoadingCore />}><AIStoryboard /></Suspense>} />
 
-        <Route path="side-hustle" element={<Suspense fallback={ <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div></div> }><SideHustleRadar /></Suspense>} />
-        <Route path="agency-blueprint" element={<Suspense fallback={ <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div></div> }><AIAgencyBlueprint /></Suspense>} />
-        <Route path="digital-product" element={<Suspense fallback={ <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-500"></div></div> }><DigitalProductArchitect /></Suspense>} />
-        <Route path="profit-matrix" element={<Suspense fallback={ <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div></div> }><ProfitMatrix /></Suspense>} />
+        <Route path="side-hustle" element={<Suspense fallback={<LoadingCore />}><SideHustleRadar /></Suspense>} />
+        <Route path="agency-blueprint" element={<Suspense fallback={<LoadingCore />}><AIAgencyBlueprint /></Suspense>} />
+        <Route path="digital-product" element={<Suspense fallback={<LoadingCore />}><DigitalProductArchitect /></Suspense>} />
+        <Route path="profit-matrix" element={<Suspense fallback={<LoadingCore />}><ProfitMatrix /></Suspense>} />
 
-        <Route path="prompt-versioning" element={<Suspense fallback={
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-          </div>
-        }><PromptVersioning /></Suspense>} />
+        <Route path="prompt-versioning" element={<Suspense fallback={<LoadingCore />}><PromptVersioning /></Suspense>} />
 
         {/* --- PLACEHOLDER FOR OTHERS --- */}
         <Route path="*" element={<>
@@ -745,4 +623,28 @@ function AppContent() {
 }
 
 import { LanguageProvider } from "./context/LanguageContext";
-export default function App() { return <LanguageProvider><CreditsProvider><AppContent /></CreditsProvider></LanguageProvider>; }
+export default 
+const LoadingCore = () => (
+  <div className="flex flex-col items-center justify-center h-64 w-full">
+    <div className="relative flex items-center justify-center w-24 h-24">
+      {/* Outer Ring */}
+      <div className="absolute inset-0 rounded-full border-4 border-slate-700/50"></div>
+      
+      {/* Spinning Outer Ring */}
+      <div className="absolute inset-0 rounded-full border-4 border-t-cyan-500 border-r-blue-500 border-b-transparent border-l-transparent animate-spin"></div>
+      
+      {/* Counter-Spinning Inner Ring */}
+      <div className="absolute inset-2 rounded-full border-4 border-t-transparent border-r-transparent border-b-fuchsia-500 border-l-purple-500 animate-[spin_1.5s_linear_reverse_infinite]"></div>
+      
+      {/* Pulsing Core */}
+      <div className="absolute inset-6 rounded-full bg-cyan-400 blur-sm animate-pulse"></div>
+      <div className="absolute inset-7 rounded-full bg-white shadow-[0_0_15px_#22d3ee]"></div>
+    </div>
+    <div className="mt-6 text-sm font-mono text-cyan-400 animate-pulse uppercase tracking-widest">
+      Initializing Systems...
+    </div>
+  </div>
+);
+
+
+function App() { return <LanguageProvider><CreditsProvider><AppContent /></CreditsProvider></LanguageProvider>; }

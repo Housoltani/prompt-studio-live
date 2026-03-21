@@ -3,6 +3,7 @@ export const tabs = [
   { id: 'home', name: '🏠 Command Dashboard', category: 'KREATION & GENERATOREN', desc: 'Deine Startzentrale' },
   { id: 'generator', name: '✨ Live Generator', category: 'KREATION & GENERATOREN', desc: 'Text, Bild, Video & Musik Generieren' },
   { id: 'mixer', name: '🎛️ Prompt Mixer', category: 'KREATION & GENERATOREN', desc: 'Drag & Drop Baukasten' },
+  { id: 'analyzer', name: '🔍 Prompt-Röntgenblick', category: 'KREATION & GENERATOREN', desc: 'Prompts analysieren & optimieren' },
   { id: 'extractor', name: '🔄 Prompt Extractor', category: 'KREATION & GENERATOREN', desc: 'Bild zu Text' },
   { id: 'compare', name: '⚖️ Modell-Vergleich', category: 'KREATION & GENERATOREN', desc: 'Midjourney vs DALL-E vs SD' },
   { id: 'assetlab', name: '🧊 3D & Asset Labor', category: 'KREATION & GENERATOREN', desc: 'Game Assets & 3D Modelle' },
