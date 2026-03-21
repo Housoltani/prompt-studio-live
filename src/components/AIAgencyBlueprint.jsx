@@ -34,6 +34,46 @@ const AIAgencyBlueprint = () => {
   const selectedSkillsArr = Object.entries(skills).filter(([_, v]) => v).map(([k]) => k);
   const skillString = selectedSkillsArr.join(' & ');
 
+  const handleExportMarkdown = () => {
+    const markdown = `# AI Agency Blueprint
+## Gig Title
+I will create high-converting ${skillString} assets for your ${niche} business using Advanced AI
+
+## Pricing Tiers
+- Starter (Basic): $99
+  - Perfect for testing the waters.
+  - Features: 1 AI Asset, Basic Prompting, 2 Revisions
+- Growth (Standard): $299 (Bestseller)
+  - Most popular for growing brands.
+  - Features: 3 AI Assets, Advanced Workflows, Commercial Rights, 5 Revisions
+- Scale (Premium): $699
+  - Full AI Agency takeover.
+  - Features: 10 AI Assets, Custom AI Model Training, Full Copyrights, Unlimited Revisions, Priority Support
+
+## Cold Outreach Template
+Subject: Quick question about [Company Name]'s ${niche} strategy
+
+Hi [First Name],
+
+I've been following [Company Name] and love your recent work. I noticed an opportunity where you could significantly cut costs while speeding up production.
+
+I run an AI creative studio specializing in ${skillString} for ${niche} brands. We use cutting-edge AI to produce assets that convert 3x higher than traditional methods, at a fraction of the time.
+
+Would you be open to a 5-minute chat next Tuesday to see if this could be a fit for your upcoming campaigns?
+
+Best,
+[Your Name]
+`;
+    const blob = new Blob([markdown], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Agency_Blueprint_${niche.replace(/\\s+/g, '_')}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success('Als Markdown exportiert!');
+  };
+
   return (
     <div className="animate-fade-in p-6 max-w-7xl mx-auto text-slate-200 min-h-screen">
       <Toaster position="bottom-right" />
@@ -134,6 +174,16 @@ const AIAgencyBlueprint = () => {
           {generated && !isLoading && (
             <div className="space-y-6 animate-fade-in-up">
               
+              <div className="flex justify-end">
+                <button 
+                  onClick={handleExportMarkdown}
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  Export as Markdown
+                </button>
+              </div>
+
               {/* Gig Title */}
               <div className="bg-slate-900/80 backdrop-blur-xl border border-emerald-500/30 rounded-2xl p-6">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-500 mb-2">Gig Titel (Fiverr / Upwork)</h3>

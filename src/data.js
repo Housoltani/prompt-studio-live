@@ -34,6 +34,7 @@ export const tabs = [
   { id: 'side-hustle', name: '📈 Side-Hustle Radar', category: '💰 BUSINESS & MONETARISIERUNG', desc: 'Trending AI Monetization' },
   { id: 'agency-blueprint', name: '🏢 AI Agency Blueprint', category: '💰 BUSINESS & MONETARISIERUNG', desc: 'Freelance & Agency Tools' },
   { id: 'digital-product', name: '📦 Digital Product Architect', category: '💰 BUSINESS & MONETARISIERUNG', desc: 'End-to-End Product Creator' },
+  { id: 'profit-matrix', name: '🧮 Profit Margin Matrix', category: '💰 BUSINESS & MONETARISIERUNG', desc: 'AI ROI & Pricing Calculator' },
   
   // --- SYSTEM & LERNEN ---
   { id: 'learning', name: '🎓 KI Academy', category: 'SYSTEM & LERNEN', desc: 'Tools & Tutorials zum Starten' },

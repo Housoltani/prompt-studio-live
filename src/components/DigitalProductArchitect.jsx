@@ -34,6 +34,36 @@ const DigitalProductArchitect = () => {
     toast.success('Kopiert!');
   };
 
+  const handleExportMarkdown = () => {
+    if (!result) return;
+    const markdown = `# Digital Product Listing: ${productType}
+## Theme
+${theme}
+
+## SEO Title
+${result.title}
+
+## SEO Description
+${result.seoDesc}
+
+## Midjourney Prompt
+\`\`\`
+${result.prompt}
+\`\`\`
+
+## Keywords / Tags
+${result.keywords.join(', ')}
+`;
+    const blob = new Blob([markdown], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Product_Listing_${theme.replace(/\\s+/g, '_')}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success('Als Markdown exportiert!');
+  };
+
   return (
     <div className="animate-fade-in p-6 max-w-5xl mx-auto text-slate-200 min-h-screen">
       <Toaster position="bottom-right" />
@@ -153,9 +183,18 @@ const DigitalProductArchitect = () => {
                 </h2>
                 <p className="text-slate-400 text-sm mt-1">Bereit zum Kopieren für Etsy, Redbubble oder PromptBase.</p>
               </div>
-              <button onClick={() => { setStep(1); setResult(null); }} className="text-sm px-4 py-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors border border-slate-600">
-                Neues Produkt
-              </button>
+              <div className="flex gap-3">
+                <button 
+                  onClick={handleExportMarkdown}
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  Export Markdown
+                </button>
+                <button onClick={() => { setStep(1); setResult(null); }} className="text-sm px-4 py-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors border border-slate-600">
+                  Neues Produkt
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -48,6 +48,7 @@ const AIStoryboard = lazy(() => import('./components/AIStoryboard'))
 const SideHustleRadar = lazy(() => import('./components/SideHustleRadar'))
 const AIAgencyBlueprint = lazy(() => import('./components/AIAgencyBlueprint'))
 const DigitalProductArchitect = lazy(() => import('./components/DigitalProductArchitect'))
+const ProfitMatrix = lazy(() => import('./components/ProfitMatrix'))
 
 import { useLanguage } from "./context/LanguageContext";
 function AppContent() {
@@ -640,6 +641,7 @@ function AppContent() {
         <Route path="side-hustle" element={<Suspense fallback={ <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div></div> }><SideHustleRadar /></Suspense>} />
         <Route path="agency-blueprint" element={<Suspense fallback={ <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div></div> }><AIAgencyBlueprint /></Suspense>} />
         <Route path="digital-product" element={<Suspense fallback={ <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-500"></div></div> }><DigitalProductArchitect /></Suspense>} />
+        <Route path="profit-matrix" element={<Suspense fallback={ <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div></div> }><ProfitMatrix /></Suspense>} />
 
         <Route path="prompt-versioning" element={<Suspense fallback={
           <div className="flex items-center justify-center h-64">
