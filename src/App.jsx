@@ -41,6 +41,9 @@ const Offers = lazy(() => import('./components/Offers'))
 const PromptArena = lazy(() => import('./components/PromptArena'))
 const AITrendsRadar = lazy(() => import('./components/AITrendsRadar'))
 const ApiNexus = lazy(() => import('./components/ApiNexus'))
+const VoiceAvatarStudio = lazy(() => import('./components/VoiceAvatarStudio'))
+const DevArchitect = lazy(() => import('./components/DevArchitect'))
+const PromptVersioning = lazy(() => import('./components/PromptVersioning'))
 
 import { useLanguage } from "./context/LanguageContext";
 function AppContent() {
@@ -611,6 +614,24 @@ function AppContent() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
           </div>
         }><Offers /></Suspense>} />
+
+        <Route path="voice-avatar" element={<Suspense fallback={
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+          </div>
+        }><VoiceAvatarStudio /></Suspense>} />
+
+        <Route path="dev-architect" element={<Suspense fallback={
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+          </div>
+        }><DevArchitect /></Suspense>} />
+
+        <Route path="prompt-versioning" element={<Suspense fallback={
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          </div>
+        }><PromptVersioning /></Suspense>} />
 
         {/* --- PLACEHOLDER FOR OTHERS --- */}
         <Route path="*" element={<>

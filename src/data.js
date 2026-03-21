@@ -6,6 +6,7 @@ export const tabs = [
   { id: 'extractor', name: '🔄 Prompt Extractor', category: 'KREATION & GENERATOREN', desc: 'Bild zu Text' },
   { id: 'compare', name: '⚖️ Modell-Vergleich', category: 'KREATION & GENERATOREN', desc: 'Midjourney vs DALL-E vs SD' },
   { id: 'assetlab', name: '🧊 3D & Asset Labor', category: 'KREATION & GENERATOREN', desc: 'Game Assets & 3D Modelle' },
+  { id: 'voice-avatar', name: '🎙️ Deep Voice & Avatar Studio', category: 'KREATION & GENERATOREN', desc: 'KI-Stimmen & Video-Avatare' },
 
   // --- BIBLIOTHEKEN & INSPIRATION ---
   { id: 'images', name: '🖼️ Bild-Prompts', category: 'BIBLIOTHEKEN & INSPIRATION', desc: 'Prompts für Midjourney, DALL-E' },
@@ -25,6 +26,8 @@ export const tabs = [
   { id: 'api-nexus', name: '🔌 API Nexus', category: 'WORKSPACE & AUTOMATISIERUNG', desc: 'Webhooks & Entwickler-Zugang' },
   { id: 'command-center', name: '🎯 Social Media Suite', category: 'WORKSPACE & AUTOMATISIERUNG', desc: 'Deine Instagram KI-Crew' },
   { id: 'ebook-studio', name: '📚 E-Book Studio', category: 'WORKSPACE & AUTOMATISIERUNG', desc: 'Erstelle digitale Produkte' },
+  { id: 'dev-architect', name: '💻 Dev Architect & Copilot', category: 'WORKSPACE & AUTOMATISIERUNG', desc: 'Architektur & Code Generation' },
+  { id: 'prompt-versioning', name: '🌳 Prompt-Versionskontrolle', category: 'WORKSPACE & AUTOMATISIERUNG', desc: 'Git für Prompts & A/B Tests' },
   
   // --- SYSTEM & LERNEN ---
   { id: 'learning', name: '🎓 KI Academy', category: 'SYSTEM & LERNEN', desc: 'Tools & Tutorials zum Starten' },
