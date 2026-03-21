@@ -29,6 +29,11 @@ export const tabs = [
   { id: 'ebook-studio', name: '📚 E-Book Studio', category: 'WORKSPACE & AUTOMATISIERUNG', desc: 'Erstelle digitale Produkte' },
   { id: 'dev-architect', name: '💻 Dev Architect & Copilot', category: 'WORKSPACE & AUTOMATISIERUNG', desc: 'Architektur & Code Generation' },
   { id: 'prompt-versioning', name: '🌳 Prompt-Versionskontrolle', category: 'WORKSPACE & AUTOMATISIERUNG', desc: 'Git für Prompts & A/B Tests' },
+
+  // --- BUSINESS & MONETARISIERUNG ---
+  { id: 'side-hustle', name: '📈 Side-Hustle Radar', category: '💰 BUSINESS & MONETARISIERUNG', desc: 'Trending AI Monetization' },
+  { id: 'agency-blueprint', name: '🏢 AI Agency Blueprint', category: '💰 BUSINESS & MONETARISIERUNG', desc: 'Freelance & Agency Tools' },
+  { id: 'digital-product', name: '📦 Digital Product Architect', category: '💰 BUSINESS & MONETARISIERUNG', desc: 'End-to-End Product Creator' },
   
   // --- SYSTEM & LERNEN ---
   { id: 'learning', name: '🎓 KI Academy', category: 'SYSTEM & LERNEN', desc: 'Tools & Tutorials zum Starten' },
