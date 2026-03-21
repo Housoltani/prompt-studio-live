@@ -35,7 +35,60 @@ const getPromptBlocks = (t) => ({
     { id: 'sty2', text: t?.promptMixer?.sty2 || 'hyperrealistic Unreal Engine 5 render', icon: '🎮' },
     { id: 'sty3', text: t?.promptMixer?.sty3 || 'vintage 80s anime aesthetic', icon: '📺' },
     { id: 'sty4', text: t?.promptMixer?.sty4 || 'oil painting, thick impasto brushstrokes', icon: '🖌️' }
+  ],
+
+  [t?.promptMixer?.catArtStyles || 'Art Styles']: [
+    { id: 'as1', text: 'Photorealistic', icon: '🖼️' },
+    { id: 'as2', text: 'Cinematic', icon: '🎬' },
+    { id: 'as3', text: 'Anime', icon: '🌸' },
+    { id: 'as4', text: 'Cartoon & Comic', icon: '🗯️' },
+    { id: 'as5', text: 'CGI & 3D Rendered', icon: '💻' },
+    { id: 'as6', text: 'Digital Painting', icon: '🖌️' },
+    { id: 'as7', text: 'Fantasy', icon: '🐉' },
+    { id: 'as8', text: 'Pixel Art', icon: '👾' },
+    { id: 'as9', text: 'Sci-Fi & Cyberpunk', icon: '🤖' },
+    { id: 'as10', text: 'Surreal & Abstract', icon: '🌀' },
+    { id: 'as11', text: 'Black & White', icon: '⚫' },
+    { id: 'as12', text: 'Watercolor', icon: '💧' },
+    { id: 'as13', text: 'Oil Painting', icon: '🎨' },
+    { id: 'as14', text: 'Pop Art', icon: '💥' },
+    { id: 'as15', text: 'Steampunk', icon: '⚙️' },
+    { id: 'as16', text: 'Impressionist', icon: '🖼️' },
+    { id: 'as17', text: 'Vaporwave', icon: '🌴' },
+    { id: 'as18', text: 'Minimalist', icon: '➖' },
+    { id: 'as19', text: 'Art Nouveau', icon: '🌿' },
+    { id: 'as20', text: 'Gothic', icon: '🦇' }
+  ],
+  [t?.promptMixer?.catMood || 'Mood']: [
+    { id: 'md1', text: 'Serene', icon: '😌' },
+    { id: 'md2', text: 'Melancholic', icon: '😔' },
+    { id: 'md3', text: 'Tense', icon: '😬' },
+    { id: 'md4', text: 'Mysterious', icon: '🕵️' },
+    { id: 'md5', text: 'Romantic', icon: '❤️' },
+    { id: 'md6', text: 'Gritty', icon: '🧱' },
+    { id: 'md7', text: 'Ethereal', icon: '✨' },
+    { id: 'md8', text: 'Ominous', icon: '⛈️' },
+    { id: 'md9', text: 'Hopeful', icon: '🌅' },
+    { id: 'md10', text: 'Nostalgic', icon: '🕰️' },
+    { id: 'md11', text: 'Chaotic', icon: '🌪️' },
+    { id: 'md12', text: 'Contemplative', icon: '🤔' },
+    { id: 'md13', text: 'Triumphant', icon: '🏆' },
+    { id: 'md14', text: 'Desolate', icon: '🏜️' },
+    { id: 'md15', text: 'Whimsical', icon: '🎈' }
+  ],
+  [t?.promptMixer?.catColorTone || 'Color Tone']: [
+    { id: 'ct1', text: 'Warm Saturated', icon: '🔥' },
+    { id: 'ct2', text: 'Warm Desaturated', icon: '🍂' },
+    { id: 'ct3', text: 'Cool Saturated', icon: '❄️' },
+    { id: 'ct4', text: 'Cool Desaturated', icon: '🧊' },
+    { id: 'ct5', text: 'Neutral', icon: '⚖️' },
+    { id: 'ct6', text: 'Monochrome', icon: '⚫' },
+    { id: 'ct7', text: 'Sepia', icon: '📜' },
+    { id: 'ct8', text: 'Teal & Orange', icon: '🟠' },
+    { id: 'ct9', text: 'Cross Processed', icon: '🔀' },
+    { id: 'ct10', text: 'Bleach Bypass', icon: '🎞️' }
   ]
+
 });
 
 

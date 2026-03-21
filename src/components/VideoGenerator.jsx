@@ -3,6 +3,15 @@ import { toast } from 'react-hot-toast';
 
 export default function VideoGenerator() {
   const [prompt, setPrompt] = useState('');
+
+  const [cameraEquipment, setCameraEquipment] = useState('');
+  const [cameraMovement, setCameraMovement] = useState('');
+  const [cameraTiming, setCameraTiming] = useState('');
+
+  const EQUIPMENTS = ['Static (Tripod)', 'Handheld', 'Shoulder Rig', 'Steadicam', 'Gimbal', 'Dolly', 'Slider', 'Crane', 'Jib', 'Technocrane', 'Drone', 'Cable Cam', 'Car Mount', 'SnorriCam'];
+  const MOVEMENTS = ['Static', 'Pan', 'Tilt', 'Track In', 'Track Out', 'Push In', 'Pull Back', 'Crane Up', 'Crane Down', 'Arc', 'Dolly Zoom', 'Whip Pan', 'Follow', 'Orbit', 'Reveal', 'Fly Through'];
+  const TIMINGS = ['Static', 'Very Slow', 'Slow', 'Moderate', 'Fast', 'Whip Fast'];
+
   const [model, setModel] = useState('runway-gen3');
   const [aspectRatio, setAspectRatio] = useState('16:9');
   const [loading, setLoading] = useState(false);
@@ -10,10 +19,18 @@ export default function VideoGenerator() {
   const [videoUrl, setVideoUrl] = useState(null);
 
   const handleGenerate = () => {
-    if (!prompt.trim()) {
+    const finalPrompt = [
+      prompt.trim(),
+      cameraEquipment ? `Shot on ${cameraEquipment}` : '',
+      cameraMovement ? `${cameraMovement} motion` : '',
+      cameraTiming ? `${cameraTiming} timing` : ''
+    ].filter(Boolean).join(', ');
+
+    if (!finalPrompt) {
       toast.error('Bitte beschreibe dein Video!');
       return;
     }
+
 
     setLoading(true);
     setProgress(0);
@@ -81,12 +98,35 @@ export default function VideoGenerator() {
           </div>
 
           <div>
-            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Kamera-Bewegung</label>
-            <input type="range" min="1" max="10" defaultValue="5" className="w-full accent-purple-500" />
-            <div className="flex justify-between text-[10px] text-slate-500 mt-1 uppercase font-bold">
-              <span>Statisch</span>
-              <span>Dynamisch</span>
-            </div>
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Camera Equipment</label>
+            <select 
+              value={cameraEquipment} 
+              onChange={(e) => setCameraEquipment(e.target.value)}
+              className="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 shadow-inner mb-4"
+            >
+              <option value="">-- None --</option>
+              {EQUIPMENTS.map(eq => <option key={eq} value={eq}>{eq}</option>)}
+            </select>
+
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Camera Movement</label>
+            <select 
+              value={cameraMovement} 
+              onChange={(e) => setCameraMovement(e.target.value)}
+              className="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 shadow-inner mb-4"
+            >
+              <option value="">-- None --</option>
+              {MOVEMENTS.map(mv => <option key={mv} value={mv}>{mv}</option>)}
+            </select>
+
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Camera Timing</label>
+            <select 
+              value={cameraTiming} 
+              onChange={(e) => setCameraTiming(e.target.value)}
+              className="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 shadow-inner"
+            >
+              <option value="">-- None --</option>
+              {TIMINGS.map(tm => <option key={tm} value={tm}>{tm}</option>)}
+            </select>
           </div>
         </div>
 
