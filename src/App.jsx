@@ -50,6 +50,11 @@ const SideHustleRadar = lazy(() => import('./components/SideHustleRadar'))
 const AIAgencyBlueprint = lazy(() => import('./components/AIAgencyBlueprint'))
 const DigitalProductArchitect = lazy(() => import('./components/DigitalProductArchitect'))
 const ProfitMatrix = lazy(() => import('./components/ProfitMatrix'))
+const SocialMediaEngine = lazy(() => import('./components/SocialMediaEngine'));
+const AgentSimulation = lazy(() => import('./components/AgentSimulation'));
+const DataInsightHub = lazy(() => import('./components/DataInsightHub'));
+const CinemaStudioPro = lazy(() => import('./components/CinemaStudioPro'));
+
 
 import { useLanguage } from "./context/LanguageContext";
 function AppContent() {
@@ -412,6 +417,12 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Navigate to="home" replace />} />
           
+        
+        <Route path="social-engine" element={<Suspense fallback={<LoadingCore />}><SocialMediaEngine /></Suspense>} />
+        <Route path="agent-sim" element={<Suspense fallback={<LoadingCore />}><AgentSimulation /></Suspense>} />
+        <Route path="data-hub" element={<Suspense fallback={<LoadingCore />}><DataInsightHub /></Suspense>} />
+        <Route path="cinema-studio" element={<Suspense fallback={<LoadingCore />}><CinemaStudioPro /></Suspense>} />
+
         <Route path="analytics" element={<Suspense fallback={<LoadingCore />}><CreatorDashboard /></Suspense>} />
 
           
@@ -623,7 +634,7 @@ function AppContent() {
 }
 
 import { LanguageProvider } from "./context/LanguageContext";
-export default 
+
 const LoadingCore = () => (
   <div className="flex flex-col items-center justify-center h-64 w-full">
     <div className="relative flex items-center justify-center w-24 h-24">
@@ -647,4 +658,4 @@ const LoadingCore = () => (
 );
 
 
-function App() { return <LanguageProvider><CreditsProvider><AppContent /></CreditsProvider></LanguageProvider>; }
+function App() { return <LanguageProvider><CreditsProvider><AppContent /></CreditsProvider></LanguageProvider>; }export default App;

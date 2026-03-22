@@ -9,6 +9,9 @@ export const tabs = [
   { id: 'assetlab', name: '🧊 3D & Asset Labor', category: 'KREATION & GENERATOREN', desc: 'Game Assets & 3D Modelle' },
   { id: 'voice-avatar', name: '🎙️ Deep Voice & Avatar Studio', category: 'KREATION & GENERATOREN', desc: 'KI-Stimmen & Video-Avatare' },
   { id: 'storyboard', name: '🎬 AI Storyboard Studio', category: 'KREATION & GENERATOREN', desc: 'Visual Narrative & Mega-Prompt Builder' },
+  { id: 'cinema-studio', name: '🎥 Cinema Studio Pro', category: 'KREATION & GENERATOREN', desc: 'Deterministische Video-Prompts' },
+  { id: 'agent-sim', name: '🧠 Agent Simulation', category: 'KREATION & GENERATOREN', desc: 'Multimodal Chain of Thought' },
+
 
   // --- BIBLIOTHEKEN & INSPIRATION ---
   { id: 'images', name: '🖼️ Bild-Prompts', category: 'BIBLIOTHEKEN & INSPIRATION', desc: 'Prompts für Midjourney, DALL-E' },
