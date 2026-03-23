@@ -134,17 +134,17 @@ export default function SocialMediaEngine() {
                 <div>
                   <div className="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
                     <div className="flex items-center gap-3">
-                      <span className="text-pink-400 font-bold">{'/// ' + t.social.scriptReady}</span>
+                      <span className="text-pink-400 font-bold">{'/// ' + t.socialEngine.scriptReady}</span>
                       <button 
                         onClick={executeWithAI}
                         disabled={isExecuting}
                         className="flex items-center gap-1 text-xs bg-pink-500/20 hover:bg-pink-500/40 text-pink-300 px-3 py-1 rounded-lg transition-colors border border-pink-500/30 disabled:opacity-50"
                       >
                         {isExecuting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Bot className="w-3 h-3" />}
-                        {isExecuting ? t.social.aiLoading : `${t.social.aiExecuteBtn} (2 ⚡)`}
+                        {isExecuting ? t.socialEngine.aiLoading : `${t.socialEngine.aiExecuteBtn} (2 ⚡)`}
                       </button>
                     </div>
-                    <span className="text-xs text-gray-500">{t.social.format} {platform.toUpperCase()}</span>
+                    <span className="text-xs text-gray-500">{t.socialEngine.format} {platform.toUpperCase()}</span>
                   </div>
                   {generatedScript}
                   
@@ -155,7 +155,7 @@ export default function SocialMediaEngine() {
                       className="mt-6 p-4 bg-gray-950/80 border border-pink-500/30 rounded-xl relative"
                     >
                       <div className="absolute -top-3 left-4 bg-gray-900 px-2 text-xs font-bold text-pink-400 flex items-center gap-1">
-                        <Bot className="w-3 h-3" /> {t.social.aiResponse} (OpenRouter)
+                        <Bot className="w-3 h-3" /> {t.socialEngine.aiResponse} (OpenRouter)
                       </div>
                       <div className="text-gray-200 mt-2">
                         {aiResult}

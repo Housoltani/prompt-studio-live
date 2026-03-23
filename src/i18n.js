@@ -7,7 +7,7 @@ export const translations = {
       masterPrompt: "Master Prompt",
       copyToGen: "Kopieren"
     },
-    social: {
+    socialEngine: {
       aiExecuteBtn: "Mit KI ausführen",
       aiLoading: "KI arbeitet...",
       scriptReady: "SCRIPT_READY",
@@ -165,7 +165,7 @@ export const translations = {
       masterPrompt: "Master Prompt",
       copyToGen: "Copy"
     },
-    social: {
+    socialEngine: {
       aiExecuteBtn: "Run via AI",
       aiLoading: "AI is working...",
       scriptReady: "SCRIPT_READY",
@@ -493,7 +493,7 @@ export const translations = {
       masterPrompt: "الموجه الرئيسي",
       copyToGen: "نسخ"
     },
-    social: {
+    socialEngine: {
       aiExecuteBtn: "تنفيذ بالذكاء الاصطناعي",
       aiLoading: "الذكاء الاصطناعي يعمل...",
       scriptReady: "السكريبت جاهز",
