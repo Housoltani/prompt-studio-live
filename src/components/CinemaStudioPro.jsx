@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Camera, Film, Aperture, Sun, Move, MonitorPlay, Sparkles, Copy, Check } from 'lucide-react';
+import { Camera, Film, Aperture, Sun, Move, MonitorPlay, Sparkles, Copy, Check, Bot, Loader2 } from 'lucide-react';
+import { executePromptViaAI } from '../services/aiService.js';
+import { useAuth } from '../context/AuthContext.jsx';
+import { supabase } from '../supabaseClient.js';
+import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import { useCredits } from '../context/CreditsContext.jsx';
 
 export default function CinemaStudioPro() {
   const [subject, setSubject] = useState('');
@@ -12,8 +18,63 @@ export default function CinemaStudioPro() {
   
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [copied, setCopied] = useState(false);
+  const [isExecuting, setIsExecuting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [aiResult, setAiResult] = useState('');
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { spendCredits } = useCredits();
+
+
+  const executeWithAI = async () => {
+    if (!generatedPrompt) return;
+    if (!spendCredits(5, "KI Pre-Vis (Director)")) return;
+    setIsExecuting(true);
+    setAiResult('');
+    try {
+      // Ask the AI to act as a Director and visualize the prompt
+      const aiPrompt = "You are a master cinematographer. Read this Midjourney prompt and vividly describe the final image as a Director's Pre-Visualization (Pre-Vis) in 2-3 sentences. Focus on lighting, mood, and composition.\n\nPrompt: " + generatedPrompt;
+      const result = await executePromptViaAI(aiPrompt);
+      setAiResult(result);
+    } catch (error) {
+      setAiResult('Error: ' + error.message);
+    } finally {
+      setIsExecuting(false);
+    }
+  };
+
+
+  const saveToVault = async () => {
+    if (!user) {
+      toast.error('Zugriff verweigert. Bitte im Hauptquartier einloggen!', { icon: '🔒' });
+      navigate('/auth');
+      return;
+    }
+    if (!generatedPrompt) return;
+    
+    setIsSaving(true);
+    try {
+      const { error } = await supabase.from('prompts').insert([
+        { 
+          user_id: user.id, 
+          title: 'Cinema Studio Prompt', 
+          content: generatedPrompt, 
+          description: subject || 'Unbenannt', 
+          category: 'Midjourney', 
+          is_public: false 
+        }
+      ]);
+      if (error) throw error;
+      toast.success('Prompt erfolgreich im Tresor gesichert!', { icon: '🗄️' });
+    } catch (error) {
+      toast.error('Fehler beim Speichern: ' + error.message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const generatePrompt = () => {
+    setAiResult('');
     const prompt = `A cinematic video shot on ${filmStock}, using a ${lens} lens at ${aperture} aperture. 
 The subject is: ${subject || 'A mysterious figure walking through a neon-lit cyberpunk street'}. 
 Lighting setup: ${lighting}, creating dramatic depth and atmosphere. 
@@ -183,9 +244,21 @@ Real optical physics, sharp focus on the subject, beautiful bokeh, 8k resolution
             animate={{ opacity: 1, x: 0 }}
             className="lg:col-span-1 bg-gray-900/80 backdrop-blur-xl border border-gray-800 p-6 rounded-2xl flex flex-col shadow-2xl"
           >
-            <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-amber-500 border-b border-gray-800 pb-4">
-              <Sparkles className="w-5 h-5" /> Master Prompt
-            </h2>
+            <div className="flex justify-between items-center mb-4 border-b border-gray-800 pb-4">
+              <h2 className="text-xl font-bold flex items-center gap-2 text-amber-500">
+                <Sparkles className="w-5 h-5" /> Master Prompt
+              </h2>
+              {generatedPrompt && (
+                <button 
+                  onClick={executeWithAI}
+                  disabled={isExecuting}
+                  className="flex items-center gap-2 text-xs bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 px-3 py-1.5 rounded-lg transition-colors border border-amber-500/30 disabled:opacity-50 font-sans"
+                >
+                  {isExecuting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bot className="w-4 h-4" />}
+                  {isExecuting ? 'Visualizing...' : 'KI Pre-Vis (5 ⚡)'}
+                </button>
+              )}
+            </div>
             
             <div className="flex-1 bg-black/60 rounded-xl border border-gray-800 p-5 font-mono text-sm text-amber-100 whitespace-pre-wrap flex flex-col">
               {generatedPrompt ? (
@@ -193,13 +266,36 @@ Real optical physics, sharp focus on the subject, beautiful bokeh, 8k resolution
                   <div className="flex-1 text-gray-300 leading-relaxed">
                     {generatedPrompt}
                   </div>
-                  <button 
-                    onClick={copyToClipboard}
-                    className="mt-4 flex items-center justify-center gap-2 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors border border-gray-700"
-                  >
+                  <div className="mt-4 flex flex-col gap-3 w-full">
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={saveToVault}
+                      disabled={isSaving}
+                      className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-900 hover:bg-gray-800 text-amber-400 rounded-lg transition-colors border border-amber-500/30 font-bold"
+                    >
+                      {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>}
+                      In Tresor speichern
+                    </button>
+                    <button 
+                      onClick={copyToClipboard}
+                      className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors border border-gray-700 font-bold"
+                    >
                     {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
                     {copied ? 'Copied!' : 'Copy to Generator'}
-                  </button>
+                    </button>
+                  </div>
+                  
+                  {aiResult && (
+                    <div className="mt-4 p-4 bg-gray-900 border border-amber-500/30 rounded-lg relative text-left">
+                      <div className="text-xs font-bold text-amber-400 flex items-center gap-2 mb-2">
+                        <Bot className="w-3 h-3" /> DIRECTOR'S PRE-VIS
+                      </div>
+                      <div className="text-gray-300 text-xs leading-relaxed font-sans">
+                        {aiResult}
+                      </div>
+                    </div>
+                  )}
+                </div>
                 </>
               ) : (
                 <div className="flex-1 flex flex-col items-center justify-center text-gray-600 gap-4 opacity-50">

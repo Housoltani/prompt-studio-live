@@ -3,6 +3,9 @@ import { toast } from 'react-hot-toast';
 import { useCredits } from '../context/CreditsContext';
 import { marketplacePrompts as initialPrompts } from '../data.js';
 import { useLanguage } from '../context/LanguageContext';
+import { supabase } from '../supabaseClient';
+import { useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 export default function Marketplace() {
   const { credits, spendCredits } = useCredits();
@@ -11,6 +14,34 @@ export default function Marketplace() {
   const [activeCategory, setActiveCategory] = useState('Alle');
   const { t } = useLanguage();
 
+  const { user } = useAuth();
+  
+  useEffect(() => {
+    fetchPublicPrompts();
+  }, []);
+
+  const fetchPublicPrompts = async () => {
+    try {
+      const { data, error } = await supabase.from('prompts').select('id, title, description, category, user_id, content').eq('is_public', true).limit(50);
+      if (error) throw error;
+      if (data && data.length > 0) {
+        const mappedPrompts = data.map(p => ({
+          id: p.id,
+          title: p.title,
+          desc: p.description,
+          price: '50 ⚡',
+          creator: 'Community',
+          category: p.category || 'General',
+          content: p.content,
+          isDbPrompt: true
+        }));
+        setPrompts([...mappedPrompts, ...initialPrompts]);
+      }
+    } catch (err) {
+      console.error('Error fetching marketplace prompts:', err);
+    }
+  };
+
   const categories = [t.Marketplace.all, t.Marketplace.categoryMidjourney, t.Marketplace.categoryStableDiffusion, t.Marketplace.categoryGPT4, t.Marketplace.categoryVideo, t.Marketplace.categoryWebDev];
 
   const handleBuyPrompt = (item) => {
@@ -18,6 +49,19 @@ export default function Marketplace() {
     const cost = parseInt(item.price.replace(/\D/g, '')) || 50;
     
     if (spendCredits(cost, `${t.Marketplace.costPrefix} ${item.title}`)) {
+      if (item.isDbPrompt && user) {
+        // Add purchased prompt to user vault
+        supabase.from('prompts').insert([{
+          user_id: user.id,
+          title: item.title,
+          content: item.content,
+          description: item.desc,
+          category: item.category,
+          is_public: false
+        }]).then(({error}) => {
+           if (error) toast.error('Konnte nicht in Tresor gespeichert werden!');
+        });
+      }
       toast.success(t.Marketplace.successMessage.replace('{title}', item.title), {
         icon: '🛍️',
         style: { background: '#10b981', color: '#fff' }

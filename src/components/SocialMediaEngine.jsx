@@ -1,14 +1,36 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Video, Type, Wand2, Sparkles, Share2, Clapperboard, Hash } from 'lucide-react';
+import { Video, Type, Wand2, Sparkles, Share2, Clapperboard, Hash, Bot, Loader2 } from 'lucide-react';
+import { executePromptViaAI } from '../services/aiService.js';
+import { useCredits } from '../context/CreditsContext.jsx';
 
 export default function SocialMediaEngine() {
   const [topic, setTopic] = useState('');
   const [platform, setPlatform] = useState('TikTok');
   const [tone, setTone] = useState('Viral & Energetic');
   const [generatedScript, setGeneratedScript] = useState('');
+  const [isExecuting, setIsExecuting] = useState(false);
+  const [aiResult, setAiResult] = useState('');
+  const { spendCredits } = useCredits();
+
+
+  const executeWithAI = async () => {
+    if (!generatedScript) return;
+    if (!spendCredits(2, "AI Script Runner")) return;
+    setIsExecuting(true);
+    setAiResult('');
+    try {
+      const result = await executePromptViaAI(generatedScript);
+      setAiResult(result);
+    } catch (error) {
+      setAiResult('Error: ' + error.message);
+    } finally {
+      setIsExecuting(false);
+    }
+  };
 
   const generateScript = () => {
+    setAiResult('');
     setGeneratedScript(`[HOOK - 0:00-0:03]\n(Fast zoom in, dynamic text on screen)\n"Stop scrolling! If you care about ${topic || 'this'}, you need to hear this."\n\n[BODY - 0:03-0:15]\n(Quick cuts, B-roll of ${topic || 'the subject'}, text overlays)\n"Did you know that 99% of people get ${topic || 'this'} wrong? The secret is actually leveraging ${tone} strategies to hack the algorithm. Here is the step-by-step breakdown..."\n\n[CALL TO ACTION - 0:15-0:20]\n(Point to screen, text pop-up)\n"Save this video for later and follow for more ${platform} secrets!"\n\n[SUGGESTED HASHTAGS]\n#${topic.replace(/\s+/g, '') || 'viral'} #${platform.toLowerCase()}growth #${tone.split(' ')[0].toLowerCase()} #mindblown`);
   };
 
@@ -109,10 +131,35 @@ export default function SocialMediaEngine() {
               {generatedScript ? (
                 <div>
                   <div className="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
-                    <span className="text-pink-400 font-bold">/// SCRIPT_READY</span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-pink-400 font-bold">/// SCRIPT_READY</span>
+                      <button 
+                        onClick={executeWithAI}
+                        disabled={isExecuting}
+                        className="flex items-center gap-1 text-xs bg-pink-500/20 hover:bg-pink-500/40 text-pink-300 px-3 py-1 rounded-lg transition-colors border border-pink-500/30 disabled:opacity-50"
+                      >
+                        {isExecuting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Bot className="w-3 h-3" />}
+                        {isExecuting ? 'KI arbeitet...' : 'Mit KI ausführen (2 ⚡)'}
+                      </button>
+                    </div>
                     <span className="text-xs text-gray-500">FORMAT: {platform.toUpperCase()}</span>
                   </div>
                   {generatedScript}
+                  
+                  {aiResult && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-6 p-4 bg-gray-950/80 border border-pink-500/30 rounded-xl relative"
+                    >
+                      <div className="absolute -top-3 left-4 bg-gray-900 px-2 text-xs font-bold text-pink-400 flex items-center gap-1">
+                        <Bot className="w-3 h-3" /> KI ANTWORT (OpenRouter)
+                      </div>
+                      <div className="text-gray-200 mt-2">
+                        {aiResult}
+                      </div>
+                    </motion.div>
+                  )}
                 </div>
               ) : (
                 <div className="h-full flex flex-col items-center justify-center text-gray-600 gap-4">
