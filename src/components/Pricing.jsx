@@ -192,7 +192,7 @@ export default function Pricing() {
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="font-bold text-lg text-white">$${mod.price}</span>
+                        <span className="font-bold text-lg text-white">${mod.price}</span>
                         <div className={`w-6 h-6 rounded-full flex items-center justify-center border ${selectedModules.includes(mod.id) ? 'bg-cyan-500 border-cyan-400 text-white' : 'border-gray-600 text-transparent'}`}>
                           <Check className="w-4 h-4" />
                         </div>
@@ -219,7 +219,7 @@ export default function Pricing() {
                         return (
                           <div key={id} className="flex justify-between items-center text-sm">
                             <span className="text-gray-300 flex items-center gap-2">{m.icon} {m.name}</span>
-                            <span className="text-white font-mono">$${m.price}/m</span>
+                            <span className="text-white font-mono">${m.price}/m</span>
                           </div>
                         );
                       })}
@@ -233,7 +233,7 @@ export default function Pricing() {
                   <div className="border-t border-gray-800 pt-6 mb-6">
                     <div className="flex justify-between items-end mb-1">
                       <span className="text-gray-400 font-bold">Total (Monatlich)</span>
-                      <span className="text-3xl font-black text-cyan-400">$${calculateAlacarteTotal()}</span>
+                      <span className="text-3xl font-black text-cyan-400">${calculateAlacarteTotal()}</span>
                     </div>
                   </div>
 

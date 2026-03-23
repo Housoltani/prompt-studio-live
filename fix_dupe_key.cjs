@@ -4,13 +4,12 @@ const path = require('path');
 const targetFile = path.join(__dirname, 'src', 'i18n.js');
 let content = fs.readFileSync(targetFile, 'utf8');
 
-// I injected social: { aiExecuteBtn... } right after de: { and en: { and ar: {
-content = content.replace(/social: \{\n      aiExecuteBtn:/g, "socialEngine: {\n      aiExecuteBtn:");
+// The naive replacement added duplicates. Let's fix.
+// Just a clean search and replace for the exact lines.
+content = content.replace(
+  'pricing: "💎 Pricing & Arsenal",\n      pricing: "💎 Das Arsenal (Preise)",',
+  'pricing: "💎 Pricing & Arsenal",'
+);
 
 fs.writeFileSync(targetFile, content);
-
-const targetComponent = path.join(__dirname, 'src', 'components', 'SocialMediaEngine.jsx');
-let compContent = fs.readFileSync(targetComponent, 'utf8');
-compContent = compContent.replace(/t\.social\./g, "t.socialEngine.");
-fs.writeFileSync(targetComponent, compContent);
-console.log("Fixed duplicate key");
+console.log('Fixed duplicate keys in i18n.js');
