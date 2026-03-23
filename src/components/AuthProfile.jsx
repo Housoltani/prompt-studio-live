@@ -5,9 +5,11 @@ import { toast } from 'react-hot-toast';
 import { soundEngine } from '../utils/SoundEngine';
 import { useCredits } from '../context/CreditsContext';
 import { communityPrompts, marketplacePrompts } from '../data';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function AuthProfile() {
   const { credits } = useCredits();
+  const { t } = useLanguage();
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
@@ -289,9 +291,9 @@ export default function AuthProfile() {
           <div className="animate-fade-in">
             {activeTab === 'tresor' && (
               <div className="space-y-4">
-                <h3 className="text-xl font-bold text-white mb-6">Dein Persönlicher Tresor</h3>
+                <h3 className="text-xl font-bold text-white mb-6">{t.vault.title}</h3>
                 {myPrompts.length === 0 ? (
-                  <p className="text-gray-400 text-center py-10">Dein Tresor ist leer. Generiere und speichere Prompts in den Studios!</p>
+                  <p className="text-gray-400 text-center py-10">{t.vault.empty}</p>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {myPrompts.map(prompt => (
@@ -304,7 +306,7 @@ export default function AuthProfile() {
                             onClick={() => togglePublic(prompt)}
                             className={`text-xs px-3 py-1 rounded-full font-bold ${prompt.is_public ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-gray-700 text-gray-300'}`}
                           >
-                            {prompt.is_public ? 'Live im Markt' : 'Privat (Veröffentlichen)'}
+                            {prompt.is_public ? t.vault.publicBtn : t.vault.privateBtn}
                           </button>
                         </div>
                       </div>

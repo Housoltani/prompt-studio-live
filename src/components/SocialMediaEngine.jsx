@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Video, Type, Wand2, Sparkles, Share2, Clapperboard, Hash, Bot, Loader2 } from 'lucide-react';
 import { executePromptViaAI } from '../services/aiService.js';
 import { useCredits } from '../context/CreditsContext.jsx';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function SocialMediaEngine() {
   const [topic, setTopic] = useState('');
@@ -12,6 +13,7 @@ export default function SocialMediaEngine() {
   const [isExecuting, setIsExecuting] = useState(false);
   const [aiResult, setAiResult] = useState('');
   const { spendCredits } = useCredits();
+  const { t } = useLanguage();
 
 
   const executeWithAI = async () => {
@@ -132,17 +134,17 @@ export default function SocialMediaEngine() {
                 <div>
                   <div className="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
                     <div className="flex items-center gap-3">
-                      <span className="text-pink-400 font-bold">/// SCRIPT_READY</span>
+                      <span className="text-pink-400 font-bold">{'/// ' + t.social.scriptReady}</span>
                       <button 
                         onClick={executeWithAI}
                         disabled={isExecuting}
                         className="flex items-center gap-1 text-xs bg-pink-500/20 hover:bg-pink-500/40 text-pink-300 px-3 py-1 rounded-lg transition-colors border border-pink-500/30 disabled:opacity-50"
                       >
                         {isExecuting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Bot className="w-3 h-3" />}
-                        {isExecuting ? 'KI arbeitet...' : 'Mit KI ausführen (2 ⚡)'}
+                        {isExecuting ? t.social.aiLoading : `${t.social.aiExecuteBtn} (2 ⚡)`}
                       </button>
                     </div>
-                    <span className="text-xs text-gray-500">FORMAT: {platform.toUpperCase()}</span>
+                    <span className="text-xs text-gray-500">{t.social.format} {platform.toUpperCase()}</span>
                   </div>
                   {generatedScript}
                   
@@ -153,7 +155,7 @@ export default function SocialMediaEngine() {
                       className="mt-6 p-4 bg-gray-950/80 border border-pink-500/30 rounded-xl relative"
                     >
                       <div className="absolute -top-3 left-4 bg-gray-900 px-2 text-xs font-bold text-pink-400 flex items-center gap-1">
-                        <Bot className="w-3 h-3" /> KI ANTWORT (OpenRouter)
+                        <Bot className="w-3 h-3" /> {t.social.aiResponse} (OpenRouter)
                       </div>
                       <div className="text-gray-200 mt-2">
                         {aiResult}

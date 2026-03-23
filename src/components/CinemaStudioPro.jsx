@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { supabase } from '../supabaseClient.js';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
 import { useCredits } from '../context/CreditsContext.jsx';
 
 export default function CinemaStudioPro() {
@@ -23,6 +24,7 @@ export default function CinemaStudioPro() {
   const [aiResult, setAiResult] = useState('');
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { spendCredits } = useCredits();
 
 
@@ -255,7 +257,7 @@ Real optical physics, sharp focus on the subject, beautiful bokeh, 8k resolution
                   className="flex items-center gap-2 text-xs bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 px-3 py-1.5 rounded-lg transition-colors border border-amber-500/30 disabled:opacity-50 font-sans"
                 >
                   {isExecuting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bot className="w-4 h-4" />}
-                  {isExecuting ? 'Visualizing...' : 'KI Pre-Vis (5 ⚡)'}
+                  {isExecuting ? t.cinema.preVisLoading : `${t.cinema.preVisBtn} (5 ⚡)`}
                 </button>
               )}
             </div>
