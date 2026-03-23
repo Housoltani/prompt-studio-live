@@ -43,6 +43,7 @@ export const tabs = [
   // --- SYSTEM & LERNEN ---
   { id: 'learning', name: '🎓 KI Academy', category: 'SYSTEM & LERNEN', desc: 'Tools & Tutorials zum Starten' },
   { id: 'credits', name: '⚡ Sparks & Credits', category: 'SYSTEM & LERNEN', desc: 'Sparks für Premium KI aufladen' },
+  { id: 'pricing', name: '💎 Das Arsenal (Preise)', category: 'SYSTEM & LERNEN', desc: 'Abonnements & A-la-Carte' },
   { id: 'feedback', name: '💬 Feedback', category: 'SYSTEM & LERNEN', desc: 'Lass uns wissen, was du denkst' },
   { id: 'offers', name: '🎁 Angebote', category: 'SYSTEM & LERNEN', desc: 'Rabatte & Deals des Monats' },
   { id: 'auth', name: '🔐 Profil & Settings', category: 'SYSTEM & LERNEN', desc: 'Account verwalten' }

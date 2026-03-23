@@ -1,4 +1,9 @@
-import React, { useState } from 'react';
+const fs = require('fs');
+const path = require('path');
+
+const targetFile = path.join(__dirname, 'src', 'components', 'Pricing.jsx');
+
+const newContent = `import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, Layers, Shield, Check, ShoppingCart, Plus, Sparkles, Video, Code, Palette, Briefcase } from 'lucide-react';
 import { toast } from 'react-hot-toast';
@@ -30,7 +35,7 @@ export default function Pricing() {
   };
 
   const handleCheckout = (planName) => {
-    toast.success(`Sichere Verbindung zum Zahlungs-Gateway für ${planName}...`, { icon: '🔒', style: { background: '#1e293b', color: '#fff' } });
+    toast.success(\`Sichere Verbindung zum Zahlungs-Gateway für \${planName}...\`, { icon: '🔒', style: { background: '#1e293b', color: '#fff' } });
   };
 
   return (
@@ -60,21 +65,21 @@ export default function Pricing() {
           <div className="bg-gray-900/80 p-1.5 rounded-2xl border border-gray-800 flex flex-wrap md:flex-nowrap gap-2 shadow-2xl backdrop-blur-xl">
             <button 
               onClick={() => setActiveTab('passes')}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${activeTab === 'passes' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}
+              className={\`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all \${activeTab === 'passes' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg' : 'text-gray-400 hover:text-white hover:bg-gray-800'}\`}
             >
               <Shield className="w-5 h-5" />
               Spezialeinheiten (Pässe)
             </button>
             <button 
               onClick={() => setActiveTab('alacarte')}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${activeTab === 'alacarte' ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}
+              className={\`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all \${activeTab === 'alacarte' ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg' : 'text-gray-400 hover:text-white hover:bg-gray-800'}\`}
             >
               <Layers className="w-5 h-5" />
               A-la-Carte (Modular)
             </button>
             <button 
               onClick={() => setActiveTab('sparks')}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${activeTab === 'sparks' ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}
+              className={\`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all \${activeTab === 'sparks' ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg' : 'text-gray-400 hover:text-white hover:bg-gray-800'}\`}
             >
               <Zap className="w-5 h-5" />
               Energon (Pay-per-Use)
@@ -96,8 +101,8 @@ export default function Pricing() {
             >
               <div className="flex justify-center mb-8">
                 <div className="bg-gray-900 p-1 rounded-full border border-gray-800 flex">
-                  <button onClick={() => setIsYearly(false)} className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${!isYearly ? 'bg-gray-700 text-white' : 'text-gray-500 hover:text-gray-300'}`}>Monatlich</button>
-                  <button onClick={() => setIsYearly(true)} className={`px-6 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${isYearly ? 'bg-gray-700 text-white' : 'text-gray-500 hover:text-gray-300'}`}>Jährlich <span className="bg-green-500/20 text-green-400 text-[10px] px-2 py-0.5 rounded-full">-20%</span></button>
+                  <button onClick={() => setIsYearly(false)} className={\`px-6 py-2 rounded-full text-sm font-bold transition-all \${!isYearly ? 'bg-gray-700 text-white' : 'text-gray-500 hover:text-gray-300'}\`}>Monatlich</button>
+                  <button onClick={() => setIsYearly(true)} className={\`px-6 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 \${isYearly ? 'bg-gray-700 text-white' : 'text-gray-500 hover:text-gray-300'}\`}>Jährlich <span className="bg-green-500/20 text-green-400 text-[10px] px-2 py-0.5 rounded-full">-20%</span></button>
                 </div>
               </div>
 
@@ -108,7 +113,7 @@ export default function Pricing() {
                   <h3 className="text-2xl font-bold text-white mb-2">Creator Pass</h3>
                   <p className="text-gray-400 text-sm mb-6 h-10">Perfekt für Content Creator, Filmemacher und Social Media Manager.</p>
                   <div className="mb-6">
-                    <span className="text-4xl font-black">${isYearly ? '12' : '15'}</span>
+                    <span className="text-4xl font-black">\${isYearly ? '12' : '15'}</span>
                     <span className="text-gray-500"> / Monat</span>
                   </div>
                   <ul className="space-y-4 mb-8 flex-1">
@@ -128,7 +133,7 @@ export default function Pricing() {
                   <h3 className="text-2xl font-bold text-white mb-2">Architect Pass</h3>
                   <p className="text-blue-200/60 text-sm mb-6 h-10">Für Agenturinhaber, Developer und System-Architekten.</p>
                   <div className="mb-6">
-                    <span className="text-4xl font-black">${isYearly ? '29' : '39'}</span>
+                    <span className="text-4xl font-black">\${isYearly ? '29' : '39'}</span>
                     <span className="text-gray-500"> / Monat</span>
                   </div>
                   <ul className="space-y-4 mb-8 flex-1">
@@ -146,7 +151,7 @@ export default function Pricing() {
                   <h3 className="text-2xl font-bold text-white mb-2">Prime Pass</h3>
                   <p className="text-gray-400 text-sm mb-6 h-10">Der Matrix-Schlüssel. Alles freigeschaltet. Keine Limits.</p>
                   <div className="mb-6">
-                    <span className="text-4xl font-black">${isYearly ? '49' : '59'}</span>
+                    <span className="text-4xl font-black">\${isYearly ? '49' : '59'}</span>
                     <span className="text-gray-500"> / Monat</span>
                   </div>
                   <ul className="space-y-4 mb-8 flex-1">
@@ -180,20 +185,20 @@ export default function Pricing() {
                     <div 
                       key={mod.id} 
                       onClick={() => toggleModule(mod.id)}
-                      className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center justify-between ${selectedModules.includes(mod.id) ? `bg-${mod.color}-900/20 border-${mod.color}-500 shadow-[0_0_15px_rgba(var(--${mod.color}-500),0.2)]` : 'bg-gray-900 border-gray-800 hover:border-gray-700'}`}
+                      className={\`p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center justify-between \${selectedModules.includes(mod.id) ? \`bg-\${mod.color}-900/20 border-\${mod.color}-500 shadow-[0_0_15px_rgba(var(--\${mod.color}-500),0.2)]\` : 'bg-gray-900 border-gray-800 hover:border-gray-700'}\`}
                     >
                       <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-lg ${selectedModules.includes(mod.id) ? `bg-${mod.color}-500/20 text-${mod.color}-400` : 'bg-gray-800 text-gray-400'}`}>
+                        <div className={\`p-2 rounded-lg \${selectedModules.includes(mod.id) ? \`bg-\${mod.color}-500/20 text-\${mod.color}-400\` : 'bg-gray-800 text-gray-400'}\`}>
                           {mod.icon}
                         </div>
                         <div>
-                          <div className={`font-bold ${selectedModules.includes(mod.id) ? 'text-white' : 'text-gray-300'}`}>{mod.name}</div>
+                          <div className={\`font-bold \${selectedModules.includes(mod.id) ? 'text-white' : 'text-gray-300'}\`}>{mod.name}</div>
                           <div className="text-xs text-gray-500">Unbegrenzter Zugriff</div>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="font-bold text-lg text-white">$${mod.price}</span>
-                        <div className={`w-6 h-6 rounded-full flex items-center justify-center border ${selectedModules.includes(mod.id) ? 'bg-cyan-500 border-cyan-400 text-white' : 'border-gray-600 text-transparent'}`}>
+                        <span className="font-bold text-lg text-white">$\${mod.price}</span>
+                        <div className={\`w-6 h-6 rounded-full flex items-center justify-center border \${selectedModules.includes(mod.id) ? 'bg-cyan-500 border-cyan-400 text-white' : 'border-gray-600 text-transparent'}\`}>
                           <Check className="w-4 h-4" />
                         </div>
                       </div>
@@ -219,7 +224,7 @@ export default function Pricing() {
                         return (
                           <div key={id} className="flex justify-between items-center text-sm">
                             <span className="text-gray-300 flex items-center gap-2">{m.icon} {m.name}</span>
-                            <span className="text-white font-mono">$${m.price}/m</span>
+                            <span className="text-white font-mono">$\${m.price}/m</span>
                           </div>
                         );
                       })}
@@ -233,7 +238,7 @@ export default function Pricing() {
                   <div className="border-t border-gray-800 pt-6 mb-6">
                     <div className="flex justify-between items-end mb-1">
                       <span className="text-gray-400 font-bold">Total (Monatlich)</span>
-                      <span className="text-3xl font-black text-cyan-400">$${calculateAlacarteTotal()}</span>
+                      <span className="text-3xl font-black text-cyan-400">$\${calculateAlacarteTotal()}</span>
                     </div>
                   </div>
 
@@ -305,3 +310,7 @@ export default function Pricing() {
     </div>
   );
 }
+`;
+
+fs.writeFileSync(targetFile, newContent);
+console.log('Pricing.jsx completely rewritten with 3 monetization models.');

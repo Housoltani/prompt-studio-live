@@ -266,6 +266,8 @@ export const translations = {
       "ebook-studio": "📚 E-Book Studio",
       learning: "🎓 KI Academy",
       credits: "⚡ Sparks & Credits",
+      pricing: "💎 Pricing & Arsenal",
+      pricing: "💎 Das Arsenal (Preise)",
       repair: "🛠️ Tech Repair",
       feedback: "💬 Feedback",
       arena: "⚔️ Prompt Arena",
