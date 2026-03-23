@@ -267,7 +267,6 @@ export const translations = {
       learning: "🎓 KI Academy",
       credits: "⚡ Sparks & Credits",
       pricing: "💎 Das Arsenal (Preise)",
-      pricing: "💎 Pricing & Arsenal",
       repair: "🛠️ Tech Repair",
       feedback: "💬 Feedback",
       arena: "⚔️ Prompt Arena",
