@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Terminal, Settings, Send, Bot, User, Slider, Code, Cpu, Shield, Globe, FolderCode, PlaySquare, Trash2, Loader2 } from 'lucide-react';
+import { Terminal, Settings, Send, Bot, User, SlidersHorizontal as Slider, Code, Cpu, Shield, Globe, FolderCode, PlaySquare, Trash2, Loader2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 const DevArchitect = () => {
