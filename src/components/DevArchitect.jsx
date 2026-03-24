@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Terminal, Settings, Send, Bot, User, SlidersHorizontal as Slider, Code, Cpu, Shield, Globe, FolderCode, PlaySquare, Trash2, Loader2 } from 'lucide-react';
+import { Terminal, Settings, Send, Bot, User, SlidersHorizontal as Slider, Code, Cpu, Shield, Globe, FolderCode, PlaySquare, Trash2, Loader2, X } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 const DevArchitect = () => {
@@ -10,6 +10,7 @@ const DevArchitect = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   
   // Right Sidebar Settings
   const [model, setModel] = useState('openai/gpt-4-turbo-preview');
@@ -111,9 +112,14 @@ const DevArchitect = () => {
               <p className="text-xs text-gray-400">Status: <span className="text-emerald-400">Live (OpenRouter API)</span> • Rolle: {role}</p>
             </div>
           </div>
-          <button onClick={handleClear} className="p-2 hover:bg-white/10 rounded-lg text-gray-400 hover:text-red-400 transition-colors" title="Workspace leeren">
-            <Trash2 size={20} />
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setIsSettingsOpen(true)} className="md:hidden p-2 bg-emerald-500/20 hover:bg-emerald-500/30 rounded-lg text-emerald-400 transition-colors" title="Settings öffnen">
+              <Settings size={20} />
+            </button>
+            <button onClick={handleClear} className="p-2 hover:bg-white/10 rounded-lg text-gray-400 hover:text-red-400 transition-colors" title="Workspace leeren">
+              <Trash2 size={20} />
+            </button>
+          </div>
         </div>
 
         {/* Messages Area */}
@@ -212,8 +218,35 @@ const DevArchitect = () => {
         </div>
       </div>
 
+      {/* MOBILE BACKDROP */}
+      {isSettingsOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-40 md:hidden transition-opacity" 
+          onClick={() => setIsSettingsOpen(false)}
+        />
+      )}
+
       {/* RIGHT: AGENT CONTROL CENTER */}
-      <div className="w-full md:w-[320px] flex flex-col gap-4">
+      <div className={`
+        fixed md:static top-0 right-0 h-full md:h-auto 
+        w-[85vw] sm:w-80 md:w-[320px] 
+        bg-slate-900 md:bg-transparent 
+        z-50 md:z-auto p-4 md:p-0 
+        overflow-y-auto md:overflow-visible
+        transition-transform duration-300 ease-in-out border-l border-slate-800 md:border-none
+        ${isSettingsOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'}
+        flex flex-col gap-4
+      `}>
+        
+        {/* Mobile Sidebar Header */}
+        <div className="flex md:hidden justify-between items-center mb-2 pb-4 border-b border-white/10">
+          <h3 className="font-bold text-emerald-400 flex items-center gap-2">
+            <Settings size={18} /> Kontrollzentrum
+          </h3>
+          <button onClick={() => setIsSettingsOpen(false)} className="p-2 bg-gray-800 rounded-full text-gray-400 hover:text-white">
+            <X size={18} />
+          </button>
+        </div>
         
         {/* Settings Panel */}
         <div className="bg-gray-900/60 backdrop-blur-md rounded-2xl border border-white/5 p-5 shadow-xl">
