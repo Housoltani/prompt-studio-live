@@ -378,7 +378,7 @@ function AppContent() {
         </div>
       </div>
 
-      <div className={`flex-1 p-4 md:p-8 pt-20 md:pt-8 transition-all duration-300 ${lang === 'ar' ? 'md:mr-72' : 'md:ml-72'}`}>
+      <div className={`flex-1 p-4 md:p-8 pt-20 md:pt-8 pb-24 md:pb-8 transition-all duration-300 ${lang === 'ar' ? 'md:mr-72' : 'md:ml-72'}`}>
 
         {/* --- GLOBAL SEARCH BAR (HEADER) --- */}
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between mb-8 sticky top-16 md:top-0 glass-panel z-10 py-4 px-4 md:px-6 rounded-2xl border border-slate-700/50 md:mt-4 shadow-lg gap-4">
@@ -628,6 +628,27 @@ function AppContent() {
           </div>
         </div>
       )}
+
+
+      {/* --- MOBILE BOTTOM NAVIGATION (APP STYLE) --- */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-900/90 backdrop-blur-xl border-t border-slate-800/80 z-40 flex items-center justify-around shadow-[0_-10px_30px_rgba(0,0,0,0.5)] safe-area-pb">
+        <NavLink to="/app/home" className={({ isActive }) => `flex flex-col items-center justify-center w-full h-full gap-1 transition-colors ${isActive ? 'text-blue-400' : 'text-slate-500 hover:text-slate-300'}`}>
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          <span className="text-[10px] font-bold tracking-widest uppercase">Home</span>
+        </NavLink>
+        <NavLink to="/app/studio" className={({ isActive }) => `flex flex-col items-center justify-center w-full h-full gap-1 transition-colors ${isActive ? 'text-emerald-400' : 'text-slate-500 hover:text-slate-300'}`}>
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+          <span className="text-[10px] font-bold tracking-widest uppercase">Studio</span>
+        </NavLink>
+        <NavLink to="/app/community" className={({ isActive }) => `flex flex-col items-center justify-center w-full h-full gap-1 transition-colors ${isActive ? 'text-purple-400' : 'text-slate-500 hover:text-slate-300'}`}>
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+          <span className="text-[10px] font-bold tracking-widest uppercase">Feed</span>
+        </NavLink>
+        <NavLink to="/app/auth" className={({ isActive }) => `flex flex-col items-center justify-center w-full h-full gap-1 transition-colors ${isActive ? 'text-amber-400' : 'text-slate-500 hover:text-slate-300'}`}>
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+          <span className="text-[10px] font-bold tracking-widest uppercase">Profil</span>
+        </NavLink>
+      </nav>
 
     </div>
   )
