@@ -1,3 +1,4 @@
+import { LanguageProvider } from "./context/LanguageContext";
 import React, { useState, useEffect, Suspense, lazy } from 'react'
 import { Routes, Route, NavLink, Navigate, useNavigate } from 'react-router-dom'
 import { Toaster, toast } from 'react-hot-toast'
@@ -287,15 +288,27 @@ function AppContent() {
 
       {/* --- MOBILE HEADER --- */}
       <div className="md:hidden fixed top-0 left-0 right-0 h-16 glass-panel border-b border-slate-800/50 z-20 flex items-center justify-between px-4 shadow-lg">
-        <h1 className="text-xl font-extrabold text-gradient from-blue-400 via-indigo-400 to-emerald-400 tracking-tight">
+        <h1 className="text-xl font-extrabold text-gradient from-blue-400 via-indigo-400 to-emerald-400 tracking-tight truncate max-w-[150px]">
           {t.appTitle || "Prompt Studio"}
         </h1>
-        <button 
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-          className="p-2 text-slate-300 hover:text-white bg-slate-800/80 rounded-lg border border-slate-700 transition-colors"
-        >
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => {
+              if (lang === 'de') setLang('en');
+              else if (lang === 'en') setLang('ar');
+              else setLang('de');
+            }}
+            className="flex items-center gap-1 p-1.5 px-3 text-xs font-bold text-slate-300 bg-slate-800/80 rounded-lg border border-slate-700"
+          >
+            <span>🌐</span> {lang.toUpperCase()}
+          </button>
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+            className="p-1.5 text-slate-300 hover:text-white bg-slate-800/80 rounded-lg border border-slate-700 transition-colors"
+          >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </button>
+        </div>
       </div>
 
       
@@ -381,7 +394,7 @@ function AppContent() {
       <div className={`flex-1 p-4 md:p-8 pt-20 md:pt-8 pb-24 md:pb-8 transition-all duration-300 ${lang === 'ar' ? 'md:mr-72' : 'md:ml-72'}`}>
 
         {/* --- GLOBAL SEARCH BAR (HEADER) --- */}
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between mb-8 sticky top-16 md:top-0 glass-panel z-10 py-4 px-4 md:px-6 rounded-2xl border border-slate-700/50 md:mt-4 shadow-lg gap-4">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between mb-8 relative md:sticky md:top-0 glass-panel z-10 py-4 px-4 md:px-6 rounded-2xl border border-slate-700/50 md:mt-4 shadow-lg gap-4">
           <div className="relative w-full md:w-[400px]">
             <svg className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -654,7 +667,7 @@ function AppContent() {
   )
 }
 
-import { LanguageProvider } from "./context/LanguageContext";
+
 
 const LoadingCore = () => (
   <div className="flex flex-col items-center justify-center h-64 w-full">
