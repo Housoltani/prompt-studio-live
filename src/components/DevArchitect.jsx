@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Terminal, Settings, Send, Bot, User, Slider, Code, Cpu, Shield, Globe, FolderCode, PlaySquare, Trash2 } from 'lucide-react';
+import { Terminal, Settings, Send, Bot, User, Slider, Code, Cpu, Shield, Globe, FolderCode, PlaySquare, Trash2, Loader2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 const DevArchitect = () => {
@@ -9,9 +9,10 @@ const DevArchitect = () => {
     { role: 'system', content: 'Developer Agent initialisiert. Verbindung zum Mainframe steht. Wie kann ich dir bei deiner Architektur oder dem Code helfen?', timestamp: new Date().toLocaleTimeString() }
   ]);
   const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   
   // Right Sidebar Settings
-  const [model, setModel] = useState('gpt-4-turbo');
+  const [model, setModel] = useState('openai/gpt-4-turbo-preview');
   const [role, setRole] = useState('Senior Fullstack Engineer');
   const [temperature, setTemperature] = useState(0.5);
   const [maxTokens, setMaxTokens] = useState(2000);
@@ -27,24 +28,66 @@ const DevArchitect = () => {
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, isLoading]);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
     
     const newUserMsg = { role: 'user', content: input, timestamp: new Date().toLocaleTimeString() };
-    setMessages(prev => [...prev, newUserMsg]);
+    const chatHistory = [...messages, newUserMsg];
+    setMessages(chatHistory);
     setInput('');
-    
-    // Simulate thinking and response
-    setTimeout(() => {
-      const aiResponse = { 
-        role: 'assistant', 
-        content: `Als **${role}** analysiere ich deine Anfrage (Temperatur: ${temperature}).\n\n\`\`\`javascript\n// Analysiere Logik basierend auf deinen Vorgaben...\nconsole.log("Verarbeite Architektur-Design");\n\`\`\`\n\nDas ist ein Dummy-Response vom Developer Agent. Hier wird später die echte KI-Anbindung (z.B. GPT-4 oder Claude) integriert, die dir echten Code liefert!`, 
-        timestamp: new Date().toLocaleTimeString() 
-      };
-      setMessages(prev => [...prev, aiResponse]);
-    }, 1500);
+    setIsLoading(true);
+
+    try {
+      const openRouterMessages = [
+        { role: 'system', content: `Du bist ein ${role}. Antworte auf Deutsch (sofern nicht explizit etwas anderes gefordert ist). Schreibe validen Code in Markdown-Codeblöcken. Fokussiere dich auf Best Practices und moderne Architektur.` },
+        ...chatHistory.filter(m => m.role !== 'system').map(m => ({
+          role: m.role === 'assistant' ? 'assistant' : 'user',
+          content: m.content
+        }))
+      ];
+
+      const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
+      if (!apiKey) {
+        throw new Error('OpenRouter API Key fehlt in der .env Datei.');
+      }
+
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+          "HTTP-Referer": "http://localhost:5173", 
+          "X-Title": "Prompt Studio Live", 
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: model,
+          messages: openRouterMessages,
+          temperature: temperature,
+          max_tokens: maxTokens
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.choices && data.choices.length > 0) {
+        const aiResponse = { 
+          role: 'assistant', 
+          content: data.choices[0].message.content, 
+          timestamp: new Date().toLocaleTimeString() 
+        };
+        setMessages(prev => [...prev, aiResponse]);
+      } else {
+        console.error("OpenRouter Error:", data);
+        toast.error("Agent konnte nicht antworten. Überprüfe die Logs.");
+      }
+    } catch (error) {
+      console.error("API Fetch Error:", error);
+      toast.error(error.message || "Verbindungsfehler zur AI-Schnittstelle.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleClear = () => {
@@ -65,7 +108,7 @@ const DevArchitect = () => {
             </div>
             <div>
               <h2 className="text-xl font-bold text-emerald-300">Developer Agent Workspace</h2>
-              <p className="text-xs text-gray-400">Status: <span className="text-emerald-400">Online</span> • Rolle: {role}</p>
+              <p className="text-xs text-gray-400">Status: <span className="text-emerald-400">Live (OpenRouter API)</span> • Rolle: {role}</p>
             </div>
           </div>
           <button onClick={handleClear} className="p-2 hover:bg-white/10 rounded-lg text-gray-400 hover:text-red-400 transition-colors" title="Workspace leeren">
@@ -127,6 +170,16 @@ const DevArchitect = () => {
               )}
             </div>
           ))}
+          {isLoading && (
+            <div className="flex gap-4 justify-start">
+               <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30 flex-shrink-0 mt-1 animate-pulse">
+                 <Bot size={20} className="text-emerald-300" />
+               </div>
+               <div className="bg-gray-800/60 border border-white/5 rounded-2xl rounded-tl-none p-4 shadow-md flex items-center gap-2 text-emerald-400 text-sm">
+                 <Loader2 size={16} className="animate-spin" /> Denke nach...
+               </div>
+            </div>
+          )}
           <div ref={chatEndRef} />
         </div>
 
@@ -147,7 +200,7 @@ const DevArchitect = () => {
             />
             <button 
               onClick={handleSend}
-              disabled={!input.trim()}
+              disabled={!input.trim() || isLoading}
               className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:hover:bg-emerald-600 p-3 rounded-lg text-white transition-all flex-shrink-0 shadow-lg shadow-emerald-500/20 mb-1 mr-1"
             >
               <Send size={18} />
@@ -177,10 +230,10 @@ const DevArchitect = () => {
                 onChange={(e) => setModel(e.target.value)}
                 className="w-full bg-gray-800 border border-white/10 rounded-lg p-2.5 text-sm text-white focus:border-emerald-500 outline-none appearance-none cursor-pointer"
               >
-                <option value="gpt-4-turbo">GPT-4 Turbo (Smart & Fast)</option>
-                <option value="claude-3-opus">Claude 3 Opus (Architect)</option>
-                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Context Heavy)</option>
-                <option value="qwen-coder">Qwen 2.5 Coder (Open Source)</option>
+                <option value="openai/gpt-4-turbo-preview">GPT-4 Turbo (Smart & Fast)</option>
+                <option value="anthropic/claude-3-opus">Claude 3 Opus (Architect)</option>
+                <option value="google/gemini-1.5-pro">Gemini 1.5 Pro (Context Heavy)</option>
+                <option value="qwen/qwen-2.5-coder-32b-instruct">Qwen 2.5 Coder (Open Source)</option>
               </select>
             </div>
 
