@@ -8,8 +8,9 @@ import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useCredits } from '../context/CreditsContext.jsx';
+import { ErrorBoundary } from './ErrorBoundary.jsx';
 
-export default function CinemaStudioPro() {
+function CinemaStudioProInner() {
   const [subject, setSubject] = useState('');
   const [lens, setLens] = useState('50mm Prime');
   const [aperture, setAperture] = useState('f/2.8');
@@ -22,19 +23,19 @@ export default function CinemaStudioPro() {
   const [isExecuting, setIsExecuting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [aiResult, setAiResult] = useState('');
-  const { user } = useAuth();
+  const { user } = useAuth() || {};
   const navigate = useNavigate();
-  const { t } = useLanguage();
-  const { spendCredits } = useCredits();
-
+  const languageCtx = useLanguage();
+  const t = languageCtx?.t || {};
+  const creditsCtx = useCredits() || {};
+  const spendCredits = creditsCtx.spendCredits;
 
   const executeWithAI = async () => {
     if (!generatedPrompt) return;
-    if (!spendCredits(5, "KI Pre-Vis (Director)")) return;
+    if (spendCredits && !spendCredits(5, "KI Pre-Vis (Director)")) return;
     setIsExecuting(true);
     setAiResult('');
     try {
-      // Ask the AI to act as a Director and visualize the prompt
       const aiPrompt = "You are a master cinematographer. Read this Midjourney prompt and vividly describe the final image as a Director's Pre-Visualization (Pre-Vis) in 2-3 sentences. Focus on lighting, mood, and composition.\n\nPrompt: " + generatedPrompt;
       const result = await executePromptViaAI(aiPrompt);
       setAiResult(result);
@@ -44,7 +45,6 @@ export default function CinemaStudioPro() {
       setIsExecuting(false);
     }
   };
-
 
   const saveToVault = async () => {
     if (!user) {
@@ -77,11 +77,7 @@ export default function CinemaStudioPro() {
 
   const generatePrompt = () => {
     setAiResult('');
-    const prompt = `A cinematic video shot on ${filmStock}, using a ${lens} lens at ${aperture} aperture. 
-The subject is: ${subject || 'A mysterious figure walking through a neon-lit cyberpunk street'}. 
-Lighting setup: ${lighting}, creating dramatic depth and atmosphere. 
-Camera movement: ${movement}, perfectly smooth and deterministic. 
-Real optical physics, sharp focus on the subject, beautiful bokeh, 8k resolution, highly detailed.`;
+    const prompt = `A cinematic video shot on ${filmStock}, using a ${lens} lens at ${aperture} aperture. \nThe subject is: ${subject || 'A mysterious figure walking through a neon-lit cyberpunk street'}. \nLighting setup: ${lighting}, creating dramatic depth and atmosphere. \nCamera movement: ${movement}, perfectly smooth and deterministic. \nReal optical physics, sharp focus on the subject, beautiful bokeh, 8k resolution, highly detailed.`;
     setGeneratedPrompt(prompt);
     setCopied(false);
   };
@@ -95,8 +91,6 @@ Real optical physics, sharp focus on the subject, beautiful bokeh, 8k resolution
   return (
     <div className="min-h-screen bg-gray-950 text-white p-6 pb-24 font-sans">
       <div className="max-w-6xl mx-auto space-y-6">
-        
-        {/* Header */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -115,8 +109,6 @@ Real optical physics, sharp focus on the subject, beautiful bokeh, 8k resolution
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          {/* Controls Console */}
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -142,11 +134,7 @@ Real optical physics, sharp focus on the subject, beautiful bokeh, 8k resolution
                   <label className="block text-sm font-medium text-gray-400 mb-2 flex items-center gap-2">
                     <Aperture className="w-4 h-4 text-amber-500" /> Lens / Brennweite
                   </label>
-                  <select 
-                    value={lens}
-                    onChange={(e) => setLens(e.target.value)}
-                    className="w-full bg-black/50 border border-gray-800 rounded-xl p-3 text-white outline-none"
-                  >
+                  <select value={lens} onChange={(e) => setLens(e.target.value)} className="w-full bg-black/50 border border-gray-800 rounded-xl p-3 text-white outline-none">
                     <option>24mm Wide Angle (Establishing)</option>
                     <option>35mm Prime (Storytelling)</option>
                     <option>50mm Prime (Human Eye)</option>
@@ -160,11 +148,7 @@ Real optical physics, sharp focus on the subject, beautiful bokeh, 8k resolution
                   <label className="block text-sm font-medium text-gray-400 mb-2 flex items-center gap-2">
                     <Aperture className="w-4 h-4 text-amber-500" /> Aperture (f-stop)
                   </label>
-                  <select 
-                    value={aperture}
-                    onChange={(e) => setAperture(e.target.value)}
-                    className="w-full bg-black/50 border border-gray-800 rounded-xl p-3 text-white outline-none"
-                  >
+                  <select value={aperture} onChange={(e) => setAperture(e.target.value)} className="w-full bg-black/50 border border-gray-800 rounded-xl p-3 text-white outline-none">
                     <option>f/1.2 (Extreme Bokeh, Shallow DOF)</option>
                     <option>f/1.8 (Soft Background)</option>
                     <option>f/2.8 (Standard Cinematic Portrait)</option>
@@ -178,11 +162,7 @@ Real optical physics, sharp focus on the subject, beautiful bokeh, 8k resolution
                   <label className="block text-sm font-medium text-gray-400 mb-2 flex items-center gap-2">
                     <Sun className="w-4 h-4 text-amber-500" /> Lighting Physics
                   </label>
-                  <select 
-                    value={lighting}
-                    onChange={(e) => setLighting(e.target.value)}
-                    className="w-full bg-black/50 border border-gray-800 rounded-xl p-3 text-white outline-none"
-                  >
+                  <select value={lighting} onChange={(e) => setLighting(e.target.value)} className="w-full bg-black/50 border border-gray-800 rounded-xl p-3 text-white outline-none">
                     <option>Volumetric Cinematic Lighting</option>
                     <option>High-Contrast Chiaroscuro (Film Noir)</option>
                     <option>Neon Cyberpunk (Practical LED tubes)</option>
@@ -196,11 +176,7 @@ Real optical physics, sharp focus on the subject, beautiful bokeh, 8k resolution
                   <label className="block text-sm font-medium text-gray-400 mb-2 flex items-center gap-2">
                     <Move className="w-4 h-4 text-amber-500" /> Camera Movement
                   </label>
-                  <select 
-                    value={movement}
-                    onChange={(e) => setMovement(e.target.value)}
-                    className="w-full bg-black/50 border border-gray-800 rounded-xl p-3 text-white outline-none"
-                  >
+                  <select value={movement} onChange={(e) => setMovement(e.target.value)} className="w-full bg-black/50 border border-gray-800 rounded-xl p-3 text-white outline-none">
                     <option>Static Tripod / Locked off</option>
                     <option>Slow Push In (Dolly)</option>
                     <option>Slow Pull Out (Dolly)</option>
@@ -216,11 +192,7 @@ Real optical physics, sharp focus on the subject, beautiful bokeh, 8k resolution
                 <label className="block text-sm font-medium text-gray-400 mb-2 flex items-center gap-2">
                   <Film className="w-4 h-4 text-amber-500" /> Film Stock / Sensor
                 </label>
-                <select 
-                  value={filmStock}
-                  onChange={(e) => setFilmStock(e.target.value)}
-                  className="w-full bg-black/50 border border-gray-800 rounded-xl p-3 text-white outline-none"
-                >
+                <select value={filmStock} onChange={(e) => setFilmStock(e.target.value)} className="w-full bg-black/50 border border-gray-800 rounded-xl p-3 text-white outline-none">
                   <option>ARRI Alexa 65 (Digital Cinema)</option>
                   <option>RED Monstro 8K VV (Ultra Sharp)</option>
                   <option>Kodak Vision3 500T (35mm Film Grain)</option>
@@ -240,7 +212,6 @@ Real optical physics, sharp focus on the subject, beautiful bokeh, 8k resolution
             </button>
           </motion.div>
 
-          {/* Output Dashboard */}
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -257,7 +228,7 @@ Real optical physics, sharp focus on the subject, beautiful bokeh, 8k resolution
                   className="flex items-center gap-2 text-xs bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 px-3 py-1.5 rounded-lg transition-colors border border-amber-500/30 disabled:opacity-50 font-sans"
                 >
                   {isExecuting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bot className="w-4 h-4" />}
-                  {isExecuting ? t.cinema.preVisLoading : `${t.cinema.preVisBtn} (5 ⚡)`}
+                  {isExecuting ? (t.cinema?.preVisLoading || 'Visualizing...') : `${t.cinema?.preVisBtn || 'AI Pre-Vis'} (5 ⚡)`}
                 </button>
               )}
             </div>
@@ -283,7 +254,7 @@ Real optical physics, sharp focus on the subject, beautiful bokeh, 8k resolution
                       className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors border border-gray-700 font-bold"
                     >
                     {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
-                    {copied ? 'Copied!' : 'Copy to Generator'}
+                    {copied ? 'Copied!' : 'Copy'}
                     </button>
                   </div>
                   
@@ -317,5 +288,13 @@ Real optical physics, sharp focus on the subject, beautiful bokeh, 8k resolution
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CinemaStudioPro() {
+  return (
+    <ErrorBoundary>
+      <CinemaStudioProInner />
+    </ErrorBoundary>
   );
 }
