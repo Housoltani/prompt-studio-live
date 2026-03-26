@@ -288,7 +288,7 @@ function AppContent() {
 
       {/* --- MOBILE HEADER --- */}
       <div className="md:hidden fixed top-0 left-0 right-0 h-16 glass-panel border-b border-slate-800/50 z-20 flex items-center justify-between px-4 shadow-lg">
-        <h1 className="text-xl font-extrabold text-gradient from-blue-400 via-indigo-400 to-emerald-400 tracking-tight truncate max-w-[150px]">
+        <h1 className="text-xl font-extrabold text-gradient from-purple-400 via-fuchsia-400 to-cyan-400 tracking-tight truncate max-w-[150px]">
           {t.appTitle || "Prompt Studio"}
         </h1>
         <div className="flex items-center gap-2">
@@ -314,7 +314,7 @@ function AppContent() {
       
       {/* Sidebar Navigation */}
       <div className={`w-72 glass-panel border-r border-slate-800/50 p-6 flex flex-col fixed h-full overflow-y-auto z-40 shadow-[4px_0_24px_-10px_rgba(0,0,0,0.5)] transition-transform duration-300 ease-in-out ${lang === 'ar' ? 'border-l right-0' : 'border-r left-0'} ${isMobileMenuOpen ? 'translate-x-0' : (lang === 'ar' ? 'translate-x-full md:translate-x-0' : '-translate-x-full md:translate-x-0')}`}>
-        <h1 className="text-3xl font-extrabold mb-4 text-gradient from-blue-400 via-indigo-400 to-emerald-400 tracking-tight">
+        <h1 className="text-3xl font-extrabold mb-4 text-gradient from-purple-400 via-fuchsia-400 to-cyan-400 tracking-tight">
           {t.appTitle}
         </h1>
 
@@ -369,7 +369,7 @@ function AppContent() {
                     to={`/app/${tab.id}`}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={({ isActive }) =>
-                      `w-full ${lang === 'ar' ? 'text-right' : 'text-left'} p-2.5 rounded-lg transition-all flex flex-col ${isActive ? 'bg-blue-600/20 border border-blue-500/50 text-blue-400 font-bold shadow-inner' : 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 border border-transparent hover:border-slate-700/50'}`
+                      `w-full ${lang === 'ar' ? 'text-right' : 'text-left'} p-2.5 rounded-lg transition-all flex flex-col ${isActive ? 'bg-purple-600/20 border border-purple-500/50 text-purple-400 font-bold shadow-inner' : 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 border border-transparent hover:border-slate-700/50'}`
                     }
                   >
                     <span className="font-semibold text-sm flex items-center justify-between w-full">
@@ -383,12 +383,7 @@ function AppContent() {
           )}
         </nav>
         
-        {/* --- LANGUAGE SWITCHER --- */}
-        <div className="mt-8 border-t border-slate-700/50 pt-4 flex justify-between gap-2">
-          <button onClick={() => setLang('de')} className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors ${lang === 'de' ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>DE</button>
-          <button onClick={() => setLang('en')} className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors ${lang === 'en' ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>EN</button>
-          <button onClick={() => setLang('ar')} className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-colors ${lang === 'ar' ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>AR</button>
-        </div>
+        
       </div>
 
       <div className={`flex-1 p-4 md:p-8 pt-20 md:pt-8 pb-24 md:pb-8 transition-all duration-300 ${lang === 'ar' ? 'md:mr-72' : 'md:ml-72'}`}>
@@ -404,10 +399,28 @@ function AppContent() {
               placeholder="Suche nach Prompts, Kategorien..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-2.5 pl-12 pr-4 text-sm text-slate-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all shadow-inner"
+              className="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-2.5 pl-12 pr-4 text-sm text-slate-200 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all shadow-inner"
             />
           </div>
           <div className="flex items-center gap-4">
+             {/* Desktop Language Switcher (Globe) */}
+             <div className="hidden md:flex relative group">
+                <button 
+                  onClick={() => {
+                    if (lang === 'de') setLang('en');
+                    else if (lang === 'en') setLang('ar');
+                    else setLang('de');
+                  }}
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-800/50 border border-slate-700 hover:bg-purple-500/20 hover:border-purple-500/50 transition-all shadow-lg overflow-hidden"
+                  title="Sprache wechseln"
+                >
+                  <span className="text-xl group-hover:rotate-[360deg] transition-transform duration-700">🔮</span>
+                </button>
+                <div className="absolute -top-1 -right-1 bg-gradient-to-tr from-fuchsia-600 to-purple-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase shadow-lg border border-white/20">
+                  {lang}
+                </div>
+              </div>
+
              
              <NavLink to="/app/credits" className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-full text-sm font-bold transition-colors">
                <span className="animate-pulse">⚡</span> {credits} Sparks
@@ -420,7 +433,7 @@ function AppContent() {
                   </div>
                 </div>
              ) : (
-                <NavLink to="/app/auth" className="text-sm font-bold bg-blue-600/20 text-blue-400 border border-blue-500/50 px-4 py-2 rounded-xl hover:bg-blue-600/40 transition-colors">
+                <NavLink to="/app/auth" className="text-sm font-bold bg-purple-600/20 text-purple-400 border border-purple-500/50 px-4 py-2 rounded-xl hover:bg-purple-600/40 transition-colors">
                   Einloggen
                 </NavLink>
              )}
@@ -600,7 +613,7 @@ function AppContent() {
                           setIsCommandPaletteOpen(false);
                           setCmdSearchQuery('');
                         }}
-                        className="flex items-center justify-between p-3 bg-slate-800/50 hover:bg-blue-600/20 hover:border-blue-500/50 border border-transparent rounded-xl cursor-pointer transition-colors group"
+                        className="flex items-center justify-between p-3 bg-slate-800/50 hover:bg-purple-600/20 hover:border-purple-500/50 border border-transparent rounded-xl cursor-pointer transition-colors group"
                       >
                         <div className="flex items-center gap-3">
                           <span className="text-xl">{link.icon}</span>
@@ -645,7 +658,7 @@ function AppContent() {
 
       {/* --- MOBILE BOTTOM NAVIGATION (APP STYLE) --- */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-900/90 backdrop-blur-xl border-t border-slate-800/80 z-40 flex items-center justify-around shadow-[0_-10px_30px_rgba(0,0,0,0.5)] safe-area-pb">
-        <NavLink to="/app/home" className={({ isActive }) => `flex flex-col items-center justify-center w-full h-full gap-1 transition-colors ${isActive ? 'text-blue-400' : 'text-slate-500 hover:text-slate-300'}`}>
+        <NavLink to="/app/home" className={({ isActive }) => `flex flex-col items-center justify-center w-full h-full gap-1 transition-colors ${isActive ? 'text-purple-400' : 'text-slate-500 hover:text-slate-300'}`}>
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
           <span className="text-[10px] font-bold tracking-widest uppercase">Home</span>
         </NavLink>
