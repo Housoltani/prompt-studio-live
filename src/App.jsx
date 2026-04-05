@@ -11,50 +11,43 @@ import {
 } from './data.js'
 import { translations } from './i18n.js'
 import { CreditsProvider, useCredits } from './context/CreditsContext'
-import InteractivePrompt from './components/InteractivePrompt'
-import GlobalChat from './components/GlobalChat'
-const PromptMixer = lazy(() => import('./components/PromptMixer'))
-const AssetLab = lazy(() => import('./components/AssetLab'))
-const LiveGenerator = lazy(() => import('./components/LiveGenerator'))
-const PromptExtractor = lazy(() => import('./components/PromptExtractor'))
-const VideoGenerator = lazy(() => import('./components/VideoGenerator'))
-const PromptAnalyzer = lazy(() => import('./components/PromptAnalyzer'))
-const ModelCompare = lazy(() => import('./components/ModelCompare'))
-const MusicGenerator = lazy(() => import('./components/MusicGenerator'))
-const CommunityFeed = lazy(() => import('./components/CommunityFeed'))
-const AgentsHub = lazy(() => import('./components/AgentsHub'))
-const CommandCenter = lazy(() => import('./components/CommandCenter'))
-const FlowBuilder = lazy(() => import('./components/FlowBuilder'))
-const EbookStudio = lazy(() => import('./components/EbookStudio'))
-const AuthProfile = lazy(() => import('./components/AuthProfile'))
-const NotebookLM = lazy(() => import('./components/NotebookLM'))
-const CommandDashboard = lazy(() => import('./components/CommandDashboard'))
-const CreatorDashboard = lazy(() => import('./components/CreatorDashboard'))
-const EarnCredits = lazy(() => import('./components/EarnCredits'))
-const Pricing = lazy(() => import('./components/Pricing'))
-const AIAcademy = lazy(() => import('./components/AIAcademy'))
-const Studio = lazy(() => import('./components/Studio'))
-const Marketplace = lazy(() => import('./components/Marketplace'))
-const ImageLibrary = lazy(() => import('./components/ImageLibrary'))
-const VideoLibrary = lazy(() => import('./components/VideoLibrary'))
-const MusicLibrary = lazy(() => import('./components/MusicLibrary'))
-const Feedback = lazy(() => import('./components/Feedback'))
-const Offers = lazy(() => import('./components/Offers'))
-const PromptArena = lazy(() => import('./components/PromptArena'))
-const AITrendsRadar = lazy(() => import('./components/AITrendsRadar'))
-const ApiNexus = lazy(() => import('./components/ApiNexus'))
-const VoiceAvatarStudio = lazy(() => import('./components/VoiceAvatarStudio'))
-const DevArchitect = lazy(() => import('./components/DevArchitect'))
-const PromptVersioning = lazy(() => import('./components/PromptVersioning'))
-const AIStoryboard = lazy(() => import('./components/AIStoryboard'))
-const SideHustleRadar = lazy(() => import('./components/SideHustleRadar'))
-const AIAgencyBlueprint = lazy(() => import('./components/AIAgencyBlueprint'))
-const DigitalProductArchitect = lazy(() => import('./components/DigitalProductArchitect'))
-const ProfitMatrix = lazy(() => import('./components/ProfitMatrix'))
-const SocialMediaEngine = lazy(() => import('./components/SocialMediaEngine'));
-const AgentSimulation = lazy(() => import('./components/AgentSimulation'));
-const DataInsightHub = lazy(() => import('./components/DataInsightHub'));
-const CinemaStudioPro = lazy(() => import('./components/CinemaStudioPro'));
+import InteractivePrompt from './components/prompts/InteractivePrompt'
+const PromptMixer = lazy(() => import('./components/prompts/PromptMixer'))
+const AssetLab = lazy(() => import('./components/studio/AssetLab'))
+const LiveGenerator = lazy(() => import('./components/studio/LiveGenerator'))
+const PromptExtractor = lazy(() => import('./components/prompts/PromptExtractor'))
+const VideoGenerator = lazy(() => import('./components/studio/VideoGenerator'))
+const PromptAnalyzer = lazy(() => import('./components/prompts/PromptAnalyzer'))
+const ModelCompare = lazy(() => import('./components/prompts/ModelCompare'))
+const MusicGenerator = lazy(() => import('./components/studio/MusicGenerator'))
+const CommunityFeed = lazy(() => import('./components/community/CommunityFeed'))
+const AgentsHub = lazy(() => import('./components/agents/AgentsHub'))
+const FlowBuilder = lazy(() => import('./components/prompts/FlowBuilder'))
+const EbookStudio = lazy(() => import('./components/studio/EbookStudio'))
+const AuthProfile = lazy(() => import('./components/system/AuthProfile'))
+const NotebookLM = lazy(() => import('./components/prompts/NotebookLM'))
+const CommandDashboard = lazy(() => import('./components/system/CommandDashboard'))
+const Pricing = lazy(() => import('./components/business/Pricing'))
+const AIAcademy = lazy(() => import('./components/agents/AIAcademy'))
+const Studio = lazy(() => import('./components/studio/Studio'))
+const Marketplace = lazy(() => import('./components/business/Marketplace'))
+const VisualLibrary = lazy(() => import('./components/community/VisualLibrary'))
+const GlobalChat = lazy(() => import('./components/community/GlobalChat'));
+const Feedback = lazy(() => import('./components/system/Feedback'));
+const MotionLibrary = lazy(() => import('./components/community/MotionLibrary'))
+const SonicLibrary = lazy(() => import('./components/community/SonicLibrary'))
+const PromptArena = lazy(() => import('./components/prompts/PromptArena'))
+const ApiNexus = lazy(() => import('./components/system/ApiNexus'))
+const VoiceAvatarStudio = lazy(() => import('./components/studio/VoiceAvatarStudio'))
+const DevArchitect = lazy(() => import('./components/agents/DevArchitect'))
+const PromptVersioning = lazy(() => import('./components/prompts/PromptVersioning'))
+const AIStoryboard = lazy(() => import('./components/studio/AIStoryboard'))
+const AIAgencyBlueprint = lazy(() => import('./components/business/AIAgencyBlueprint'))
+const PromptMarketplace = lazy(() => import('./components/business/PromptMarketplace'))
+const AffiliateSystem = lazy(() => import('./components/business/AffiliateSystem'))
+const SocialMediaEngine = lazy(() => import('./components/community/SocialMediaEngine'));
+const AgentSimulation = lazy(() => import('./components/agents/AgentSimulation'));
+const CinemaStudioPro = lazy(() => import('./components/studio/CinemaStudioPro'));
 
 
 import { useLanguage } from "./context/LanguageContext";
@@ -64,6 +57,9 @@ function AppContent() {
   const { credits } = useCredits()
 
   const [user, setUser] = useState(null)
+  const [prompts, setPrompts] = useState([]);
+  const [isLoadingPrompts, setIsLoadingPrompts] = useState(false);
+
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('')
   
@@ -75,7 +71,7 @@ function AppContent() {
     { title: 'Bibliothek: Musik & Audio', url: '/app/music', icon: '🎵', type: 'Bib' },
     { title: 'Lernen: Prompt Academy (Masterclass)', url: '/app/learning', icon: '🎓', type: 'Wissen' },
     { title: 'Community: Globaler Feed', url: '/app/community', icon: '🌍', type: 'Netzwerk' },
-    { title: 'Workflow: Visual Flow Builder', url: '/app/flows', icon: '⚡', type: 'Tool' },
+    { title: 'Workflow: Visual Flow Builder', url: '/app/flows', icon: '💠', type: 'Tool' },
     { title: 'Hilfe: Bug Report & Feedback', url: '/app/feedback', icon: '💬', type: 'System' }
   ];
 
@@ -102,6 +98,12 @@ function AppContent() {
   // NEW: Share Menu State
   const [shareMenuOpen, setShareMenuOpen] = useState(null)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('nexusTheme') || 'system';
+    }
+    return 'system';
+  });
   const [expandedCategories, setExpandedCategories] = useState(() => {
     const saved = localStorage.getItem('promptStudioMenuState');
     if (saved) {
@@ -132,6 +134,39 @@ function AppContent() {
   }
 
   useEffect(() => {
+    // Theme Watcher
+    localStorage.setItem('nexusTheme', theme);
+    const root = document.documentElement;
+    const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = theme === 'dark' || (theme === 'system' && isSystemDark);
+    
+    if (!isDark) {
+      root.classList.add('light-mode-active');
+      document.body.classList.add('light-mode-active');
+    } else {
+      root.classList.remove('light-mode-active');
+      document.body.classList.remove('light-mode-active');
+    }
+
+    // System theme change listener
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e) => {
+      if (theme === 'system') {
+        if (!e.matches) {
+          root.classList.add('light-mode-active');
+          document.body.classList.add('light-mode-active');
+        } else {
+          root.classList.remove('light-mode-active');
+          document.body.classList.remove('light-mode-active');
+        }
+      }
+    };
+    mediaQuery.addEventListener('change', handleChange);
+    
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, [theme]);
+
+  useEffect(() => {
     // 1. Auth Listener
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
@@ -150,7 +185,7 @@ function AppContent() {
           .order('created_at', { ascending: false })
 
         if (error) {
-          console.error('Fehler beim Laden der Prompts aus Supabase:', error)
+          console.warn('Supabase Prompts Warnung (Ignoriert):', error.message)
           setIsLoadingPrompts(false)
           return
         }
@@ -180,7 +215,7 @@ function AppContent() {
           if (dbMarket.length > 0) setMarketplacePrompts(dbMarket)
         }
       } catch (err) {
-        console.error('Unerwarteter Fehler beim Abrufen der Prompts:', err)
+        console.warn('Unerwarteter Fehler beim Abrufen der Prompts (Ignoriert)')
       } finally {
         setIsLoadingPrompts(false)
       }
@@ -218,7 +253,7 @@ function AppContent() {
   // Generic Share Handler
   const handleShare = (platform, title) => {
     const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent(`Schau dir diesen Prompt an: ${title} auf Prompt Studio!`);
+    const text = encodeURIComponent(`Schau dir diesen Prompt an: ${title} auf Nexus Studio!`);
     
     let shareUrl = '';
     if (platform === 'twitter') shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
@@ -276,7 +311,7 @@ function AppContent() {
   return (
     <div dir={lang === 'ar' ? 'rtl' : 'ltr'} className={`min-h-screen bg-slate-900 text-slate-100 flex selection:bg-blue-500/30 selection:text-white ${lang === 'ar' ? 'font-arabic' : 'font-sans'}`}>
       <Toaster position="bottom-right" reverseOrder={false} />
-      <GlobalChat />
+      
 
       {/* --- MOBILE OVERLAY --- */}
       {isMobileMenuOpen && (
@@ -287,50 +322,101 @@ function AppContent() {
       )}
 
       {/* --- MOBILE HEADER --- */}
-      <div className="md:hidden fixed top-0 left-0 right-0 h-16 glass-panel border-b border-slate-800/50 z-20 flex items-center justify-between px-4 shadow-lg">
-        <h1 className="text-xl font-extrabold text-gradient from-purple-400 via-fuchsia-400 to-cyan-400 tracking-tight truncate max-w-[150px]">
-          {t.appTitle || "Prompt Studio"}
-        </h1>
+      <div className="md:hidden fixed top-0 left-0 right-0 h-14 bg-[#020617]/95 backdrop-blur-xl border-b border-slate-800/60 z-20 flex items-center justify-between px-4">
+        {/* Logo */}
+        <div className="flex items-center">
+          <picture>
+            <source srcSet="/logo.svg" media="(prefers-color-scheme: dark)" />
+            <img src="/logo-light.svg" alt="Houcem Studio" className="h-8 w-auto" />
+          </picture>
+        </div>
+
         <div className="flex items-center gap-2">
-          <button 
-            onClick={() => {
-              if (lang === 'de') setLang('en');
-              else if (lang === 'en') setLang('ar');
-              else setLang('de');
-            }}
-            className="flex items-center gap-1 p-1.5 px-3 text-xs font-bold text-slate-300 bg-slate-800/80 rounded-lg border border-slate-700"
-          >
-            <span>🌐</span> {lang.toUpperCase()}
+          {/* Credits pill */}
+          <NavLink to="/app/pricing" className="flex items-center gap-1 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 px-2.5 py-1 rounded-full text-xs font-bold">
+            <span>💠</span> {credits}
+          </NavLink>
+          {/* Lang */}
+          <button
+            onClick={() => { if (lang === 'de') setLang('en'); else if (lang === 'en') setLang('ar'); else setLang('de'); }}
+            className="w-8 h-8 rounded-lg bg-slate-800/80 border border-slate-700/50 text-xs font-bold text-slate-400 flex items-center justify-center">
+            {lang.toUpperCase()}
           </button>
-          <button 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-            className="p-1.5 text-slate-300 hover:text-white bg-slate-800/80 rounded-lg border border-slate-700 transition-colors"
-          >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-        </button>
+          {/* Hamburger for full sidebar */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="w-8 h-8 rounded-lg bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-slate-400">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
         </div>
       </div>
 
       
       {/* Sidebar Navigation */}
-      <div className={`w-72 glass-panel border-r border-slate-800/50 p-6 flex flex-col fixed h-full overflow-y-auto z-40 shadow-[4px_0_24px_-10px_rgba(0,0,0,0.5)] transition-transform duration-300 ease-in-out ${lang === 'ar' ? 'border-l right-0' : 'border-r left-0'} ${isMobileMenuOpen ? 'translate-x-0' : (lang === 'ar' ? 'translate-x-full md:translate-x-0' : '-translate-x-full md:translate-x-0')}`}>
-        <h1 className="text-3xl font-extrabold mb-4 text-gradient from-purple-400 via-fuchsia-400 to-cyan-400 tracking-tight">
-          {t.appTitle}
-        </h1>
+      <div className={`w-72 bg-[#020617]/98 backdrop-blur-3xl border-r border-white/5 p-5 flex flex-col fixed h-full overflow-y-auto z-40 shadow-[4px_0_40px_-10px_rgba(6,182,212,0.15)] transition-transform duration-300 ease-in-out ${lang === 'ar' ? 'border-l right-0' : 'border-r left-0'} ${isMobileMenuOpen ? 'translate-x-0' : (lang === 'ar' ? 'translate-x-full md:translate-x-0' : '-translate-x-full md:translate-x-0')}`}>
 
-        {/* 7-Day Overdrive Trial Badge */}
-        <div className="mb-8 p-3 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 rounded-xl relative overflow-hidden group cursor-pointer hover:border-amber-500/60 transition-colors">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-500 opacity-70"></div>
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-amber-500/20 text-amber-500 flex items-center justify-center text-lg animate-pulse shadow-[0_0_15px_rgba(245,158,11,0.3)]">
-              🚀
+        {/* Animated background grid */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+          style={{ backgroundImage: 'linear-gradient(rgba(6,182,212,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.5) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+
+        {/* Logo */}
+        <div className="relative z-10 mb-5">
+          <div className="flex items-center gap-2 mb-1">
+            <img src="/logo.svg" alt="Houcem Studio" className="h-10 w-auto" />
+            <div className="w-2 h-2 bg-emerald-500 rounded-full border-2 border-[#020617] animate-pulse flex-shrink-0" />
+          </div>
+          <div className="h-px bg-gradient-to-r from-cyan-500/50 via-blue-500/30 to-transparent mt-3" />
+        </div>
+
+        {/* Overdrive Badge */}
+        <div className="mb-5 relative group cursor-pointer w-full">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl blur opacity-0 group-hover:opacity-30 transition duration-500"></div>
+          <div className="relative p-3 bg-gradient-to-br from-cyan-950/80 to-blue-950/80 border border-cyan-500/20 group-hover:border-cyan-500/40 rounded-2xl flex flex-col gap-2 shadow-xl transition-all">
+            <div className="flex items-center gap-3">
+              <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-500/30 to-blue-600/30 flex items-center justify-center text-lg border border-cyan-500/30 flex-shrink-0">
+                ⚡
+                <div className="absolute inset-0 rounded-xl bg-cyan-400/10 animate-ping opacity-50" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-xs font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 truncate">Nexus Overdrive</h4>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0"></span>
+                  <p className="text-[10px] text-emerald-400 font-bold">Aktiv</p>
+                </div>
+              </div>
             </div>
-            <div>
-              <h4 className="text-xs font-black text-amber-400 uppercase tracking-widest">Overdrive Aktiv</h4>
-              <p className="text-[10px] text-slate-400 font-bold">6 Tage verbleibend</p>
+            <div className="w-full bg-slate-800/80 rounded-full h-1 overflow-hidden">
+              <div className="bg-gradient-to-r from-cyan-400 to-blue-500 h-1 rounded-full w-[85%] relative">
+                <div className="absolute right-0 top-0 h-full w-4 bg-white/40 animate-[shimmer_1.5s_ease-in-out_infinite] rounded-full" />
+              </div>
             </div>
+            <p className="text-[9px] text-slate-500 text-right">6 Tage verbleibend</p>
           </div>
         </div>
+
+        {/* HOME Button — ganz oben */}
+        <NavLink to="/app/home"
+          onClick={() => setIsMobileMenuOpen(false)}
+          className={({ isActive }) =>
+            `flex items-center gap-3 w-full px-3 py-2.5 rounded-xl font-bold text-sm transition-all mb-4 ${
+              isActive
+                ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/10 border border-cyan-500/40 text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.15)]'
+                : 'bg-slate-800/40 border border-slate-700/40 text-slate-400 hover:text-white hover:bg-slate-800/70 hover:border-slate-600/50'
+            }`
+          }
+        >
+          {({ isActive }) => (
+            <>
+              <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-base transition-all ${isActive ? 'bg-cyan-500/20' : 'bg-slate-800'}`}>
+                🏠
+              </div>
+              <span>Home</span>
+              {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />}
+            </>
+          )}
+        </NavLink>
 
         <nav className="flex-1 space-y-4">
           {Object.entries(
@@ -369,12 +455,18 @@ function AppContent() {
                     to={`/app/${tab.id}`}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={({ isActive }) =>
-                      `w-full ${lang === 'ar' ? 'text-right' : 'text-left'} p-2.5 rounded-lg transition-all flex flex-col ${isActive ? 'bg-purple-600/20 border border-purple-500/50 text-purple-400 font-bold shadow-inner' : 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 border border-transparent hover:border-slate-700/50'}`
+                      `w-full ${lang === 'ar' ? 'text-right' : 'text-left'} p-2.5 rounded-xl transition-all flex items-center justify-between group relative overflow-hidden ${isActive ? 'bg-gradient-to-r from-purple-600/20 to-blue-600/10 border border-purple-500/40 text-purple-300 font-bold shadow-[0_0_12px_rgba(147,51,234,0.15)]' : 'text-slate-500 hover:bg-slate-800/60 hover:text-slate-200 border border-transparent hover:border-slate-700/40'}`
                     }
                   >
-                    <span className="font-semibold text-sm flex items-center justify-between w-full">
-                      {t.tabs[tab.id] || tab.name}
-                    </span>
+                    {({ isActive }) => (
+                      <>
+                        {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-purple-400 rounded-full shadow-[0_0_8px_rgba(147,51,234,0.8)]" />}
+                        <span className="font-semibold text-sm pl-1 flex-1 truncate">
+                          {t.tabs[tab.id] || tab.name}
+                        </span>
+                        {isActive && <span className="text-purple-400 text-xs opacity-60">→</span>}
+                      </>
+                    )}
                   </NavLink>
                 ))}
               </div>
@@ -382,49 +474,94 @@ function AppContent() {
           )}
           )}
         </nav>
-        
-        
+
+        {/* Sidebar Bottom */}
+        <div className="mt-4 pt-4 border-t border-slate-800/60 space-y-1">
+          {/* 💰 Geld verdienen */}
+          <NavLink to="/app/affiliate" onClick={() => setIsMobileMenuOpen(false)}
+            className={({ isActive }) => `flex items-center gap-3 w-full px-3 py-2 rounded-xl text-sm font-bold transition-all border ${isActive ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'border-transparent text-slate-500 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
+            {({ isActive }) => (<>
+              <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-sm flex-shrink-0">💰</div>
+              <span>Geld verdienen</span>
+            </>)}
+          </NavLink>
+
+          {/* 🛒 Marktplatz */}
+          <NavLink to="/app/marketplace" onClick={() => setIsMobileMenuOpen(false)}
+            className={({ isActive }) => `flex items-center gap-3 w-full px-3 py-2 rounded-xl text-sm font-bold transition-all border ${isActive ? 'bg-purple-500/10 border-purple-500/30 text-purple-400' : 'border-transparent text-slate-500 hover:text-purple-400 hover:bg-purple-500/10'}`}>
+            {({ isActive }) => (<>
+              <div className="w-7 h-7 rounded-lg bg-purple-500/10 flex items-center justify-center text-sm flex-shrink-0">🛒</div>
+              <span>Marktplatz</span>
+            </>)}
+          </NavLink>
+
+          <a href="/"
+            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-slate-500 hover:text-white hover:bg-slate-800/60 border border-transparent hover:border-slate-700/40 transition-all group">
+            <div className="w-7 h-7 rounded-lg bg-slate-800/80 group-hover:bg-gradient-to-br group-hover:from-cyan-500/20 group-hover:to-blue-500/20 flex items-center justify-center transition-all border border-slate-700/50">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+            </div>
+            <span className="text-sm font-semibold">
+              {lang === 'ar' ? 'الصفحة الرئيسية' : lang === 'en' ? 'Homepage' : 'Zur Hauptseite'}
+            </span>
+          </a>
+          <div className="flex items-center justify-between px-3 py-2">
+            <span className="text-[10px] text-slate-700 font-mono">Nexus v2.0</span>
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[10px] text-emerald-700 font-bold">Online</span>
+            </div>
+          </div>
+        </div>
+
       </div>
 
-      <div className={`flex-1 p-4 md:p-8 pt-20 md:pt-8 pb-24 md:pb-8 transition-all duration-300 ${lang === 'ar' ? 'md:mr-72' : 'md:ml-72'}`}>
+      <div className={`flex-1 p-4 md:p-8 pt-16 md:pt-8 pb-28 md:pb-8 transition-all duration-300 ${lang === 'ar' ? 'md:mr-72' : 'md:ml-72'}`}>
 
-        {/* --- GLOBAL SEARCH BAR (HEADER) --- */}
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between mb-8 relative md:sticky md:top-0 glass-panel z-10 py-4 px-4 md:px-6 rounded-2xl border border-slate-700/50 md:mt-4 shadow-lg gap-4">
-          <div className="relative w-full md:w-[400px]">
-            <svg className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        {/* HEADER */}
+        <div className="max-w-7xl mx-auto flex items-center justify-between mb-8 md:sticky md:top-0 bg-[#020617]/80 backdrop-blur-xl z-10 py-3 px-4 rounded-2xl border border-slate-800/60 md:mt-4 gap-3">
+          {/* Search */}
+          <div className="relative flex-1 max-w-xs">
+            <svg className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <input 
-              type="text" 
-              placeholder="Suche nach Prompts, Kategorien..." 
+            <input
+              type="text"
+              placeholder={lang === 'ar' ? 'بحث...' : lang === 'en' ? 'Search...' : 'Suchen...'}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-2.5 pl-12 pr-4 text-sm text-slate-200 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all shadow-inner"
+              className="w-full bg-slate-900/60 border border-slate-800 rounded-xl py-2 pl-9 pr-3 text-sm text-slate-300 focus:outline-none focus:border-slate-600 transition-all placeholder:text-slate-600"
             />
           </div>
-          <div className="flex items-center gap-4">
-             {/* Desktop Language Switcher (Globe) */}
-             <div className="hidden md:flex relative group">
-                <button 
-                  onClick={() => {
-                    if (lang === 'de') setLang('en');
-                    else if (lang === 'en') setLang('ar');
-                    else setLang('de');
-                  }}
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-800/50 border border-slate-700 hover:bg-purple-500/20 hover:border-purple-500/50 transition-all shadow-lg overflow-hidden"
-                  title="Sprache wechseln"
-                >
-                  <span className="text-xl group-hover:rotate-[360deg] transition-transform duration-700">🔮</span>
-                </button>
-                <div className="absolute -top-1 -right-1 bg-gradient-to-tr from-fuchsia-600 to-purple-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase shadow-lg border border-white/20">
-                  {lang}
-                </div>
-              </div>
+          <div className="flex items-center gap-2">
+             {/* Language */}
+             <button
+               onClick={() => { if (lang === 'de') setLang('en'); else if (lang === 'en') setLang('ar'); else setLang('de'); }}
+               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-600 text-xs font-bold text-slate-400 hover:text-white transition-all"
+             >
+               <span>🌐</span> {lang.toUpperCase()}
+             </button>
 
              
-             <NavLink to="/app/credits" className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-full text-sm font-bold transition-colors">
-               <span className="animate-pulse">⚡</span> {credits} Sparks
+             {/* Credits */}
+             <NavLink to="/app/pricing" className="flex items-center gap-1.5 bg-cyan-500/10 border border-cyan-500/20 hover:bg-cyan-500/20 text-cyan-400 px-3 py-1.5 rounded-xl text-sm font-bold transition-all">
+               <span className="text-xs">💠</span> {credits}
              </NavLink>
+
+             {/* Donate */}
+             <button
+               onClick={() => {
+                 fetch('/api/stripe-checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                   body: JSON.stringify({ planId: 'donation', planName: 'Support Nexus Studio', priceEur: 3 }) })
+                 .then(r => r.json()).then(d => { if (d.url) window.location.href = d.url; }).catch(() => {});
+               }}
+               className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold transition-all bg-amber-500/10 border border-amber-500/20 hover:border-amber-400/50 text-amber-400 hover:text-amber-300"
+             >
+               <span className="absolute inset-0 rounded-xl border border-amber-400/30 animate-ping opacity-20 pointer-events-none" />
+               <span>☕</span>
+             </button>
+
              {user ? (
                 <div className="flex items-center gap-3 bg-slate-800/50 pl-3 pr-1 py-1 rounded-full border border-slate-700">
                   <span className="text-sm font-bold text-slate-300 ml-2">{user.email.split('@')[0]}</span>
@@ -434,7 +571,7 @@ function AppContent() {
                 </div>
              ) : (
                 <NavLink to="/app/auth" className="text-sm font-bold bg-purple-600/20 text-purple-400 border border-purple-500/50 px-4 py-2 rounded-xl hover:bg-purple-600/40 transition-colors">
-                  Einloggen
+                  Connect
                 </NavLink>
              )}
           </div>
@@ -442,15 +579,14 @@ function AppContent() {
 
         <Routes>
           <Route path="/" element={<Navigate to="home" replace />} />
+          <Route path="credits" element={<Navigate to="pricing" replace />} />
           
         
         <Route path="social-engine" element={<Suspense fallback={<LoadingCore />}><SocialMediaEngine /></Suspense>} />
         <Route path="agent-sim" element={<Suspense fallback={<LoadingCore />}><AgentSimulation /></Suspense>} />
-        <Route path="data-hub" element={<Suspense fallback={<LoadingCore />}><DataInsightHub /></Suspense>} />
-        <Route path="cinema-studio" element={<Suspense fallback={<LoadingCore />}><CinemaStudioPro /></Suspense>} />
+                <Route path="cinema-studio" element={<Suspense fallback={<LoadingCore />}><CinemaStudioPro /></Suspense>} />
 
-        <Route path="analytics" element={<Suspense fallback={<LoadingCore />}><CreatorDashboard /></Suspense>} />
-
+        
           
         <Route path="notebook" element={<Suspense fallback={<LoadingCore />}><NotebookLM /></Suspense>} />
 
@@ -460,12 +596,16 @@ function AppContent() {
           {/* --- 1. MEIN STUDIO (MIT SHARE BUTTONS) --- */}
         <Route path="studio" element={<Suspense fallback={<LoadingCore />}><Studio /></Suspense>} />
 
-        {/* --- MARKTPLATZ (MIT SHARE BUTTON) --- */}
+        {/* --- MARKTPLATZ --- */}
         <Route path="marketplace" element={
-  <Suspense fallback={<LoadingCore />}><Marketplace /></Suspense>} />
+          <Suspense fallback={<LoadingCore />}><PromptMarketplace /></Suspense>} />
+
+        {/* --- AFFILIATE SYSTEM --- */}
+        <Route path="affiliate" element={
+          <Suspense fallback={<LoadingCore />}><AffiliateSystem /></Suspense>} />
         {/* --- KI BILDER BIBLIOTHEK --- */}
         <Route path="images" element={
-          <Suspense fallback={<LoadingCore />}><ImageLibrary /></Suspense>
+          <Suspense fallback={<LoadingCore />}><VisualLibrary /></Suspense>
         } />
 
 
@@ -488,7 +628,7 @@ function AppContent() {
         {/* --- VIDEO GENERATOR --- */}
         {/* --- KI VIDEO BIBLIOTHEK --- */}
         <Route path="videos" element={
-          <Suspense fallback={<LoadingCore />}><VideoLibrary /></Suspense>
+          <Suspense fallback={<LoadingCore />}><MotionLibrary /></Suspense>
         } />
 
         {/* --- MODEL COMPARE --- */}
@@ -499,12 +639,14 @@ function AppContent() {
         {/* --- MUSIC GENERATOR --- */}
         {/* --- KI MUSIK BIBLIOTHEK --- */}
         <Route path="music" element={
-          <Suspense fallback={<LoadingCore />}><MusicLibrary /></Suspense>
+          <Suspense fallback={<LoadingCore />}><SonicLibrary /></Suspense>
         } />
 
         {/* --- COMMUNITY FEED --- */}
         <Route path="community" element={
   <Suspense fallback={<LoadingCore />}><CommunityFeed /></Suspense>} />
+
+        <Route path="feedback" element={<Suspense fallback={<LoadingCore />}><Feedback /></Suspense>} />
 
         {/* --- FLOW BUILDER --- */}
         <Route path="flows" element={
@@ -517,9 +659,7 @@ function AppContent() {
 
         
         {/* --- AGENTEN HUB --- */}
-                <Route path="command-center" element={
-          <Suspense fallback={<LoadingCore />}><CommandCenter /></Suspense>
-        } />
+                
         <Route path="ebook-studio" element={
           <Suspense fallback={<LoadingCore />}><EbookStudio /></Suspense>
         } />
@@ -528,8 +668,7 @@ function AppContent() {
 
         
         {/* --- EARN CREDITS --- */}
-        <Route path="credits" element={<Suspense fallback={<LoadingCore />}><EarnCredits /></Suspense>} />
-
+        
         {/* --- PRICING --- */}
         <Route path="pricing" element={<Suspense fallback={<LoadingCore />}><Pricing /></Suspense>} />
 
@@ -540,38 +679,54 @@ function AppContent() {
         <Route path="arena" element={<Suspense fallback={<LoadingCore />}><PromptArena /></Suspense>} />
 
         {/* --- KI TRENDS RADAR --- */}
-        <Route path="radar" element={<Suspense fallback={<LoadingCore />}><AITrendsRadar /></Suspense>} />
-
+        
         {/* --- API NEXUS --- */}
         <Route path="api-nexus" element={<Suspense fallback={<LoadingCore />}><ApiNexus /></Suspense>} />
 
         {/* --- FEEDBACK --- */}
-        <Route path="feedback" element={<Suspense fallback={<LoadingCore />}><Feedback /></Suspense>} />
-
+        
         {/* --- OFFERS --- */}
-        <Route path="offers" element={<Suspense fallback={<LoadingCore />}><Offers /></Suspense>} />
-
+        
         <Route path="voice-avatar" element={<Suspense fallback={<LoadingCore />}><VoiceAvatarStudio /></Suspense>} />
 
         <Route path="dev-architect" element={<Suspense fallback={<LoadingCore />}><DevArchitect /></Suspense>} />
 
         <Route path="storyboard" element={<Suspense fallback={<LoadingCore />}><AIStoryboard /></Suspense>} />
 
-        <Route path="side-hustle" element={<Suspense fallback={<LoadingCore />}><SideHustleRadar /></Suspense>} />
-        <Route path="agency-blueprint" element={<Suspense fallback={<LoadingCore />}><AIAgencyBlueprint /></Suspense>} />
-        <Route path="digital-product" element={<Suspense fallback={<LoadingCore />}><DigitalProductArchitect /></Suspense>} />
-        <Route path="profit-matrix" element={<Suspense fallback={<LoadingCore />}><ProfitMatrix /></Suspense>} />
-
+                <Route path="agency-blueprint" element={<Suspense fallback={<LoadingCore />}><AIAgencyBlueprint /></Suspense>} />
+                
         <Route path="prompt-versioning" element={<Suspense fallback={<LoadingCore />}><PromptVersioning /></Suspense>} />
 
-        {/* --- PLACEHOLDER FOR OTHERS --- */}
-        <Route path="*" element={<>
-          <div className="max-w-4xl animate-fade-in flex flex-col items-center justify-center h-96 bg-slate-800 rounded-xl border border-slate-700 border-dashed mt-4">
-             <h2 className="text-2xl font-bold mb-2 text-slate-300">Share-Buttons hinzugefügt!</h2>
-             <p className="text-slate-500">Schau dir den "Mein Studio" oder "Marktplatz" Tab an, um das neue Teilen-Feature (X, Facebook, WhatsApp) zu sehen.</p>
+        {/* --- 404 Page --- */}
+        <Route path="*" element={
+          <div className="flex flex-col items-center justify-center min-h-[70vh] text-center px-6 animate-fade-in">
+            <div className="relative mb-8">
+              <div className="text-[120px] font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-cyan-500 leading-none select-none">404</div>
+              <div className="absolute inset-0 text-[120px] font-black text-purple-500/10 leading-none blur-2xl select-none">404</div>
+            </div>
+            <div className="text-5xl mb-6">🛸</div>
+            <h2 className="text-2xl font-bold text-white mb-3">
+              {lang === 'ar' ? 'الصفحة غير موجودة' : lang === 'en' ? 'Page not found' : 'Seite nicht gefunden'}
+            </h2>
+            <p className="text-slate-400 max-w-md mb-8">
+              {lang === 'ar' ? 'هذه الصفحة غير موجودة أو لا تزال قيد الإنشاء.' : lang === 'en' ? 'This page does not exist or is still being built.' : 'Diese Seite existiert noch nicht oder wird gerade gebaut.'}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <a href="/app/home" className="px-6 py-3 bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-bold rounded-xl hover:shadow-[0_0_20px_rgba(147,51,234,0.4)] transition-all">
+                🏠 {lang === 'ar' ? 'لوحة التحكم' : lang === 'en' ? 'Dashboard' : 'Zum Dashboard'}
+              </a>
+              <a href="/app/pricing" className="px-6 py-3 bg-slate-800 border border-slate-700 text-white font-bold rounded-xl hover:bg-slate-700 transition-all">
+                💠 {lang === 'ar' ? 'شحن الرصيد' : lang === 'en' ? 'Top up Credits' : 'Credits aufladen'}
+              </a>
+            </div>
           </div>
-          </>} />
+        } />
         </Routes>
+        
+        {/* Global Chat Widget */}
+        <Suspense fallback={null}>
+          <GlobalChat />
+        </Suspense>
 
       </div>
 
@@ -657,23 +812,66 @@ function AppContent() {
 
 
       {/* --- MOBILE BOTTOM NAVIGATION (APP STYLE) --- */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-900/90 backdrop-blur-xl border-t border-slate-800/80 z-40 flex items-center justify-around shadow-[0_-10px_30px_rgba(0,0,0,0.5)] safe-area-pb">
-        <NavLink to="/app/home" className={({ isActive }) => `flex flex-col items-center justify-center w-full h-full gap-1 transition-colors ${isActive ? 'text-purple-400' : 'text-slate-500 hover:text-slate-300'}`}>
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-          <span className="text-[10px] font-bold tracking-widest uppercase">Home</span>
-        </NavLink>
-        <NavLink to="/app/studio" className={({ isActive }) => `flex flex-col items-center justify-center w-full h-full gap-1 transition-colors ${isActive ? 'text-emerald-400' : 'text-slate-500 hover:text-slate-300'}`}>
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-          <span className="text-[10px] font-bold tracking-widest uppercase">Studio</span>
-        </NavLink>
-        <NavLink to="/app/community" className={({ isActive }) => `flex flex-col items-center justify-center w-full h-full gap-1 transition-colors ${isActive ? 'text-purple-400' : 'text-slate-500 hover:text-slate-300'}`}>
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-          <span className="text-[10px] font-bold tracking-widest uppercase">Feed</span>
-        </NavLink>
-        <NavLink to="/app/auth" className={({ isActive }) => `flex flex-col items-center justify-center w-full h-full gap-1 transition-colors ${isActive ? 'text-amber-400' : 'text-slate-500 hover:text-slate-300'}`}>
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-          <span className="text-[10px] font-bold tracking-widest uppercase">Profil</span>
-        </NavLink>
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#020617]/98 backdrop-blur-xl border-t border-slate-800/60" style={{paddingBottom: 'env(safe-area-inset-bottom)'}}>
+        <div className="flex items-center justify-around px-1 py-2">
+
+          {/* Home */}
+          <NavLink to="/app/home" onClick={() => setIsMobileMenuOpen(false)}
+            className={({ isActive }) => `flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl transition-all min-w-[56px] ${isActive ? 'text-cyan-400' : 'text-slate-600'}`}>
+            {({ isActive }) => (<>
+              <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${isActive ? 'bg-cyan-500/20' : ''}`}>
+                <svg className="w-5 h-5" fill={isActive ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+              </div>
+              <span className="text-[9px] font-bold">Home</span>
+            </>)}
+          </NavLink>
+
+          {/* Create */}
+          <NavLink to="/app/generator" onClick={() => setIsMobileMenuOpen(false)}
+            className={({ isActive }) => `flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl transition-all min-w-[56px] ${isActive ? 'text-purple-400' : 'text-slate-600'}`}>
+            {({ isActive }) => (<>
+              <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-lg transition-all ${isActive ? 'bg-purple-500/20' : ''}`}>✨</div>
+              <span className="text-[9px] font-bold">Create</span>
+            </>)}
+          </NavLink>
+
+          {/* FAB Center Button */}
+          <div className="flex flex-col items-center -mt-4">
+            <NavLink to="/app/generator" onClick={() => setIsMobileMenuOpen(false)}
+              className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-[0_0_25px_rgba(6,182,212,0.5)] border-4 border-[#020617] active:scale-95 transition-transform">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+            </NavLink>
+            <span className="text-[9px] font-bold text-cyan-400 mt-1">Neu</span>
+          </div>
+
+          {/* Library */}
+          <NavLink to="/app/images" onClick={() => setIsMobileMenuOpen(false)}
+            className={({ isActive }) => `flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl transition-all min-w-[56px] ${isActive ? 'text-emerald-400' : 'text-slate-600'}`}>
+            {({ isActive }) => (<>
+              <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-lg transition-all ${isActive ? 'bg-emerald-500/20' : ''}`}>🖼️</div>
+              <span className="text-[9px] font-bold">Library</span>
+            </>)}
+          </NavLink>
+
+          {/* Profile */}
+          <NavLink to="/app/auth" onClick={() => setIsMobileMenuOpen(false)}
+            className={({ isActive }) => `flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl transition-all min-w-[56px] ${isActive ? 'text-blue-400' : 'text-slate-600'}`}>
+            {({ isActive }) => (<>
+              <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${isActive ? 'bg-blue-500/20' : ''}`}>
+                {user
+                  ? <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-emerald-400 flex items-center justify-center text-xs font-black text-white">{user.email[0].toUpperCase()}</div>
+                  : <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                }
+              </div>
+              <span className="text-[9px] font-bold">{user ? 'Profil' : 'Login'}</span>
+            </>)}
+          </NavLink>
+
+        </div>
       </nav>
 
     </div>
